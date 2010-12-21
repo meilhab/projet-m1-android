@@ -21,7 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
  
 public class tutomobileGPS extends Activity implements OnClickListener, LocationListener{
-	private LocationManager lManager;
+	private LocationManager lManagerrr;
     private Location location;
     private String choix_source = "";
  
