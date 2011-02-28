@@ -70,9 +70,9 @@ casErreur insertionArete(TypGraphe **graphe, int sommetDebut,
 	ajouterDebut(&((*graphe)->listesAdjencences[sommetDebut-1]), 
 		sommetSuivant-1, poids);
 
-	return 0;
+	return PAS_ERREUR;
 }
-
+//TODO : continuer modif a partir d'ici
 /* supprime le sommet et tous les autres sommets qui ont une 
 arète en commun avec lui */
 int suppressionSommet(TypGraphe **graphe, int sommet){
