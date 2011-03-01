@@ -58,16 +58,18 @@ void actionsMenu(TypGraphe* grapheCourant) {
 	}
 	
 	switch(reponse) {
-		case 1 : //Creation d’un graphe
-			int maxSommet;
+		//Creation d’un graphe
+		case 1 :
 			if(demandeSuppression(grapheCourant) == 0){
 				printf("Combien de sommets, au maximum, ");
 				printf("possedera votre graphe ?\n");
+				int maxSommet;
 				scanf("%d", &maxSommet);
 				initialisationGraphe(&grapheCourant, maxSommet); 
 			}
 			break;
-		case 2 : //Lecture d’un graphe dans un fichier texte
+		//Lecture d’un graphe dans un fichier texte
+		case 2 :
 			if(demandeSuppression(grapheCourant) == 0) {
 				char chemin[250];
 				printf("Veuillez entrer le chemin du fichier ");
@@ -76,7 +78,8 @@ void actionsMenu(TypGraphe* grapheCourant) {
 				chargementFichier(chemin,&grapheCourant);
 			}
 			break;
-		case 3 : //Insertion d’un sommet dans le graphe
+		//Insertion d’un sommet dans le graphe
+		case 3 :
 			if(grapheCourant != NULL) {
 				int id=-1;
 				do {
@@ -91,7 +94,8 @@ void actionsMenu(TypGraphe* grapheCourant) {
 			else
 				printf("Aucun graphe n'existe, veuillez en creer un.\n");
 			break;
-		case 4 : //Insertion d’une arete entre deux sommets du graphe
+		//Insertion d’une arete entre deux sommets du graphe
+		case 4 :
 			if(grapheCourant != NULL){
 				int s1, s2, poids, orientee;
 				do {
@@ -122,7 +126,8 @@ void actionsMenu(TypGraphe* grapheCourant) {
 			else
 				printf("Aucun graphe n'existe, veuillez en creer un.\n");
 			break;
-		case 5 : //Suppression d’un sommet du graphe
+		//Suppression d’un sommet du graphe
+		case 5 :
 			if(grapheCourant != NULL){
 				int id=-1;
 				do {
@@ -137,7 +142,8 @@ void actionsMenu(TypGraphe* grapheCourant) {
 			else
 				printf("Aucun graphe n'existe, veuillez en creer un.\n");
 			break;
-		case 6 : //Suppression d’une arete entre deux sommets du graphe
+		//Suppression d’une arete entre deux sommets du graphe
+		case 6 :
 			if(grapheCourant != NULL){
 				int s1, s2;
 				do {
@@ -155,14 +161,15 @@ void actionsMenu(TypGraphe* grapheCourant) {
 			else
 				printf("Aucun graphe n'existe, veuillez en creer un.\n");
 			break;
-			break;
-		case 7 : //Affichage du graphe
+		//Affichage du graphe
+		case 7 :
 			if(grapheCourant != NULL)
 				afficherGraphe(grapheCourant);
 			else
 				printf("Aucun graphe n'existe, veuillez en creer un.\n");
 			break;
-		case 8 : //Sauvegarde du graphe dans un fichier
+		//Sauvegarde du graphe dans un fichier
+		case 8 :
 			if(grapheCourant != NULL){
 				char chemin[250];
 				printf("Donnez un chemin pour le fichier ? ");
@@ -178,16 +185,17 @@ void actionsMenu(TypGraphe* grapheCourant) {
 			break;
 		case 11 :
 			break;
-		case 12 : //Quitter
+		//Quitter
+		case 12 :
 			if(grapheCourant != NULL){
 				supprimerGraphe(&grapheCourant);
 			}
 			exit(0);
 			break;
-		default : //mauvais choix
+		//mauvais choix
+		default :
 			printf("Erreur lors de la saisie de votre choix, ");
 			printf("Veuillez recommencer.\n");
-			break;
 	}
 
 }
@@ -222,6 +230,48 @@ int demandeSuppression(TypGraphe* grapheCourant) {
 	}
 	
 	return retour;
+	
+}
+
+void afficherErreur(casErreur erreur) {
+
+	char* erreur2String="";
+
+	switch(erreur) {
+	
+		case ECHEC_ALLOC_PL : erreur2String="Pointeur sur liste non alloue";
+			break;
+		case ECHEC_ALLOC_L : erreur2String="Liste non allouee";
+			break;
+		case ECHEC_ALLOC_PG : erreur2String="Pointeur sur graphe non alloue";
+			break;
+		case ECHEC_ALLOC_G : erreur2String="Graphe non alloue";
+			break;
+		case INSERT_SOMMET_INCORRECT : 
+			break;
+		case INSERT_ARETE_SOMMET_INCORRECT : 
+			break;
+		case INSERT_ARETE_SOMMET_EXISTE_PAS : 
+			break;
+		case SUPPR_SOMMET_SOMMET_INEXISTANT : 
+			break;
+		case SUPPR_ARETE_SOMMET_INEXISTANT : 
+			break;
+		case ECHEC_OUVERTURE_FICHIER : 
+			break;
+		case NB_SOMMET_INF_0 : 
+			break;
+		case STRUCT_FICHIER_INCORRECTE : 
+			break;
+		case FICHIER_SOMMET_SUP_MAX : 
+			break;
+		case FICHIER_REF_SOMMET_INEXISTANT : 
+			break;
+		default : break;
+		
+	}
+
+	printf("%s\n",erreur2String);
 	
 }
 

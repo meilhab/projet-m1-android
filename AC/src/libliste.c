@@ -145,7 +145,6 @@ void affichageListe(TypVoisins *liste){
 /* vérifie qu'un pointeur sur liste est bien initialisé */
 casErreur verifAllocationPL(TypVoisins **liste){	
 	if(*liste == NULL || liste == NULL)
-//printf("Pointeur sur liste non alloue\n");
 		return ECHEC_ALLOC_PL;
 
 	return PAS_ERREUR;
@@ -154,7 +153,6 @@ casErreur verifAllocationPL(TypVoisins **liste){
 /* vérifie qu'une liste est bien initialisée */
 casErreur verifAllocationL(TypVoisins *liste){
 	if(liste == NULL)
-//printf("Liste non allouee\n");
 		return ECHEC_ALLOC_L;
 
 	return PAS_ERREUR;
