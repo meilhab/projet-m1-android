@@ -48,6 +48,7 @@ void afficherMenu(TypGraphe* grapheCourant) {
 void actionsMenu(TypGraphe* grapheCourant) {
 
 	int reponse = 0;
+	casErreur erreur = PAS_ERREUR;
 	
 	scanf("%d",&reponse);
 	if(grapheCourant == NULL) {
@@ -65,7 +66,14 @@ void actionsMenu(TypGraphe* grapheCourant) {
 				printf("possedera votre graphe ?\n");
 				int maxSommet;
 				scanf("%d", &maxSommet);
-				initialisationGraphe(&grapheCourant, maxSommet); 
+				
+				erreur=initialisationGraphe(&grapheCourant, maxSommet); 
+				if(erreur==PAS_ERREUR)
+					printf("Creation du graphe effectuee\n");
+				else {
+					printf("Erreur lors de la creation du graphe : ");
+					afficherErreur(erreur);
+				}
 			}
 			break;
 		//Lecture d’un graphe dans un fichier texte
@@ -75,7 +83,14 @@ void actionsMenu(TypGraphe* grapheCourant) {
 				printf("Veuillez entrer le chemin du fichier ");
 				printf("contenant le graphe\n");
 				scanf("%s", chemin);
-				chargementFichier(chemin,&grapheCourant);
+				
+				erreur=chargementFichier(chemin,&grapheCourant);
+				if(erreur==PAS_ERREUR)
+					printf("Chargement du fichier '%s' effectuee\n",chemin);
+				else {
+					printf("Erreur lors du chargement du fichier %s : ",chemin);
+					afficherErreur(erreur);
+				}
 			}
 			break;
 		//Insertion d’un sommet dans le graphe
@@ -89,7 +104,13 @@ void actionsMenu(TypGraphe* grapheCourant) {
 					
 				} while (id>=grapheCourant->nbMaxSommets || id<0);
 				
-				nouveauSommet(grapheCourant, id);
+				erreur=insertionSommet(&grapheCourant, id);
+				if(erreur==PAS_ERREUR)
+					printf("Insertion d'un nouveau sommet %d effectuee\n",id);
+				else {
+					printf("Erreur lors de l'insertion d'un nouveau sommet %d : ",id);
+					afficherErreur(erreur);
+				}
 			}
 			else
 				printf("Aucun graphe n'existe, veuillez en creer un.\n");
@@ -120,8 +141,14 @@ void actionsMenu(TypGraphe* grapheCourant) {
 				
 				//verification que les sommets extremites existent et que
 				//cette arete n’est pas deja presente dans le graphe
+				erreur=insertionArete(&grapheCourant, s1, s2, poids, orientee);
+				if(erreur==PAS_ERREUR)
+					printf("Insertion d'une arete entre les sommets %d et %d effectuee\n",s1,s2);
+				else {
+					printf("Erreur lors de l'insertion d'une arete entre les sommets %d et %d : ",s1,s2);
+					afficherErreur(erreur);
+				}
 				
-				insertionArete(&grapheCourant, s1, s2, poids, orientee);
 			}
 			else
 				printf("Aucun graphe n'existe, veuillez en creer un.\n");
@@ -137,7 +164,13 @@ void actionsMenu(TypGraphe* grapheCourant) {
 					
 				} while (id>=grapheCourant->nbMaxSommets || id<0);
 				
-				supprimerSommet(grapheCourant, id);
+				erreur=suppressionSommet(&grapheCourant, id);
+				if(erreur==PAS_ERREUR)
+					printf("Suppression du sommet %d effectuee\n",id);
+				else {
+					printf("Erreur lors de la suppression du sommet %d : ",id);
+					afficherErreur(erreur);
+				}
 			}
 			else
 				printf("Aucun graphe n'existe, veuillez en creer un.\n");
@@ -156,7 +189,13 @@ void actionsMenu(TypGraphe* grapheCourant) {
 					scanf("%d", &s2);
 				} while(s2>=grapheCourant->nbMaxSommets || s2<0);
 				
-				supprimerArete(grapheCourant, s1, s2);
+				erreur=suppressionArete(&grapheCourant, s1, s2);
+				if(erreur==PAS_ERREUR)
+					printf("Suppression de l'arete entre le sommet %d et %d effectuee\n",s1,s2);
+				else {
+					printf("Erreur lors de la suppression de l'arete entre le sommet %d et %d : ",s1,s2);
+					afficherErreur(erreur);
+				}
 			}
 			else
 				printf("Aucun graphe n'existe, veuillez en creer un.\n");
@@ -164,7 +203,7 @@ void actionsMenu(TypGraphe* grapheCourant) {
 		//Affichage du graphe
 		case 7 :
 			if(grapheCourant != NULL)
-				afficherGraphe(grapheCourant);
+				affichageGraphe(grapheCourant);
 			else
 				printf("Aucun graphe n'existe, veuillez en creer un.\n");
 			break;
@@ -174,10 +213,16 @@ void actionsMenu(TypGraphe* grapheCourant) {
 				char chemin[250];
 				printf("Donnez un chemin pour le fichier ? ");
 				scanf("%s", chemin);
-				ecritureFichier(chemin, grapheCourant);
+				erreur=ecritureFichier(chemin, grapheCourant);
+				if(erreur==PAS_ERREUR)
+					printf("Ecriture du graphe dans le fichier '%s' effectuee\n",chemin);
+				else {
+					printf("Erreur lors de l'ecriture du graphe dans le fichier '%s' : ",chemin);
+					afficherErreur(erreur);
+				}
 			}
 			else
-				printf("No graph is defined\n");
+				printf("Aucun graphe n'existe, veuillez en creer un.\n");
 			break;
 		case 9 :
 			break;
@@ -187,9 +232,16 @@ void actionsMenu(TypGraphe* grapheCourant) {
 			break;
 		//Quitter
 		case 12 :
-			if(grapheCourant != NULL){
-				supprimerGraphe(&grapheCourant);
+			if(grapheCourant != NULL) {
+				erreur=supprimerGraphe(&grapheCourant);
+				if(erreur==PAS_ERREUR)
+					printf("Vidage de la memoire effectue\n");
+				else {
+					printf("Erreur lors du vidage de la memoire : ");
+					afficherErreur(erreur);
+				}
 			}
+			printf("Fermeture de l'application\n");
 			exit(0);
 			break;
 		//mauvais choix
