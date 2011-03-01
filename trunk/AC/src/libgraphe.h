@@ -19,6 +19,10 @@ casErreur verifAllocationPG(TypGraphe **graphe);
 casErreur verifAllocationG(TypGraphe *graphe);	
 casErreur supprimerGraphe(TypGraphe **graphe);
 int nombreMaxSommetsGraphe(TypGraphe *graphe);
+casErreur chargementFichier(char*, TypGraphe**);
+casErreur ecritureFichier(char*, TypGraphe*);
+casErreur controleCoherenceFichier(char *nomFichier);
+casErreur passerCommentaire(FILE* fichier, int* ligne);
 
 
 #endif //LIBGRAPHE_H
