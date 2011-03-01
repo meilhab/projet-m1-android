@@ -1,7 +1,8 @@
 #include "libgraphe.h"
+//#include "menu.h"
 
-int chargementFichier(char*, TypGraphe**);
-int ecritureFichier(char*, TypGraphe*);
+casErreur chargementFichier(char*, TypGraphe**);
+casErreur ecritureFichier(char*, TypGraphe*);
 
 int main(){
 	TypGraphe *graphe = NULL;
@@ -11,6 +12,13 @@ int main(){
 	ecritureFichier("fichierResultat.txt", graphe);
 
 	supprimerGraphe(&graphe);
+	
+	/*
+	while(1) {
+		afficherMenu(graphe);
+		actionsMenu(graphe);
+	}
+	*/
 	return 0;
 
 	/*
@@ -42,41 +50,42 @@ int main(){
 
 
 
-int passerCommentaire(FILE* fichier, int* ligne){
+casErreur passerCommentaire(FILE* fichier, int* ligne){
 	char c;
 
 	if((c = fgetc(fichier)) != '#'){
 		printf("Structure de fichier incorrecte à la ligne %d\n", *ligne);
-		return -1;
+		return STRUCT_FICHIER_INCORRECTE;
 	}
 
 	while((c = fgetc(fichier)) != '\n'){}
 
 	(*ligne)++;
 
-	return 0;
+	return PAS_ERREUR;
 }
 
 
-int controleCoherenceFichier(char *nomFichier){
+casErreur controleCoherenceFichier(char *nomFichier){
 	int nbMaxSommets = 0, a;
 
 	FILE *fichier = NULL;
 	fichier = fopen(nomFichier, "r");
-	if(fichier == NULL){
-		printf("Probleme dans l'ouverture du fichier %s\n", nomFichier);
-		return -1;
-	}
+	if(fichier == NULL)
+		//printf("Probleme dans l'ouverture du fichier %s\n", nomFichier);
+		return ECHEC_OUVERTURE_FICHIER;
 
-	if(passerCommentaire(fichier, &a) < 0)
-		return -1;
+	casErreur erreur = passerCommentaire(fichier, &a);
+	if(erreur != PAS_ERREUR)
+		return erreur;
 
 	fscanf(fichier, "%d\n", &nbMaxSommets);
 	if(nbMaxSommets <= 0)
-		return -1;
+		return NB_SOMMET_INF_0;
 
-	if(passerCommentaire(fichier, &a) < 0)
-		return -1;
+	erreur = passerCommentaire(fichier, &a);
+	if(erreur != PAS_ERREUR)
+		return erreur;
 
 	int tabS[nbMaxSommets];
 	int i;
@@ -85,11 +94,11 @@ int controleCoherenceFichier(char *nomFichier){
 	i = 0;
 	while(fscanf(fichier, "%d : ", &tabS[i]) != EOF){
 		if(tabS[i] > nbMaxSommets)
-			return -1;
+			return FICHIER_SOMMET_SUP_MAX;
 
 		while(fscanf(fichier, "(%d/%d), ", &sv, &pv)){
 			if(sv > nbMaxSommets)
-				return -1;
+				return FICHIER_SOMMET_SUP_MAX;
 		}
 		i++;
 	}
@@ -110,35 +119,33 @@ int controleCoherenceFichier(char *nomFichier){
 				i++;
 			}
 			if(terminer != 1)
-				return -1;
+				return FICHIER_REF_SOMMET_INEXISTANT;
 		}
 	}
 
 	fclose(fichier);
 
-	return 0;
+	return PAS_ERREUR;
 }
 
 
-int chargementFichier(char *nomFichier, TypGraphe **graphe){
+casErreur chargementFichier(char *nomFichier, TypGraphe **graphe){
 	FILE* fichier = NULL;
 	int ligne = 0;
 	int nbMaxSommets = 0;
 
-
-	if(controleCoherenceFichier(nomFichier) < 0){
-		printf("Structure de fichier incorrecte ou erreur interne\n");
-		return -1;
-	}
+	casErreur erreur = controleCoherenceFichier(nomFichier);
+	if(erreur != PAS_ERREUR)
+		return erreur;
 
 	fichier = fopen(nomFichier, "r");
-	if(fichier == NULL){
-		printf("Probleme dans l'ouverture du fichier %s\n", nomFichier);
-		return -1;
-	}
+	if(fichier == NULL)
+		//printf("Probleme dans l'ouverture du fichier %s\n", nomFichier);
+		return ECHEC_OUVERTURE_FICHIER;
 
-	if(passerCommentaire(fichier, &ligne) < 0)
-		return -1;
+	erreur = passerCommentaire(fichier, &ligne);
+	if(erreur != PAS_ERREUR)
+		return erreur;
 
 	fscanf(fichier, "%d\n", &nbMaxSommets);
 	ligne++;
@@ -147,8 +154,9 @@ int chargementFichier(char *nomFichier, TypGraphe **graphe){
 	initialisationGraphe(graphe, nbMaxSommets);
 	//
 
-	if(passerCommentaire(fichier, &ligne) < 0)
-		return -1;
+	erreur = passerCommentaire(fichier, &ligne);
+	if(erreur != PAS_ERREUR)
+		return erreur;
 
 	int tab[nbMaxSommets];
 	int i = 0;
@@ -157,12 +165,16 @@ int chargementFichier(char *nomFichier, TypGraphe **graphe){
 	while(fscanf(fichier, "%d : ", &tab[i]) != EOF){
 		printf("sommet entré : %d\n", tab[i]);
 		//
-		insertionSommet(graphe, tab[i]);
+		erreur = insertionSommet(graphe, tab[i]);
+			if(erreur != PAS_ERREUR)
+				return erreur;
 		//
 		while(fscanf(fichier, "(%d/%d), ", &a, &b)){
 			printf("\t\tVers %d avec le poids %d\n", a, b);
 			//TODO revoir ici l'insertion d'élément n'existant pas
-			insertionArete(graphe, tab[i], a, b);
+			erreur = insertionArete(graphe, tab[i], a, b);
+			if(erreur != PAS_ERREUR)
+				return erreur;
 			//
 		}
 		i++;
@@ -172,19 +184,19 @@ int chargementFichier(char *nomFichier, TypGraphe **graphe){
 	printf("nombre de lignes du fichier : %d\n\n", ligne);
 	fclose(fichier);
 
-	return 0;
+	return PAS_ERREUR;
 }
 
-int ecritureFichier(char *nomFichier, TypGraphe *graphe){
-	if(verifAllocationG(graphe) < 0)
-		return -1;
+casErreur ecritureFichier(char *nomFichier, TypGraphe *graphe){
+	casErreur erreur = verifAllocationG(graphe);
+	if(erreur != PAS_ERREUR)
+		return erreur;
 
 	FILE *fichier = NULL;
 	fichier = fopen(nomFichier, "w");	
-	if(fichier == NULL){
-		printf("Probleme dans l'ouverture du fichier %s\n", nomFichier);
-		return -1;	
-	}
+	if(fichier == NULL)
+		//printf("Probleme dans l'ouverture du fichier %s\n", nomFichier);
+		return ECHEC_OUVERTURE_FICHIER;	
 
 	int i;
 	int taille = nombreMaxSommetsGraphe(graphe);
@@ -212,6 +224,6 @@ int ecritureFichier(char *nomFichier, TypGraphe *graphe){
 	}
 
 
-	return 0;
+	return PAS_ERREUR;
 }
 
