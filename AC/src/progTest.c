@@ -1,5 +1,5 @@
 #include "libgraphe.h"
-//#include "menu.h"
+#include "menu.h"
 
 int main(){
 	TypGraphe *graphe = NULL;
@@ -10,12 +10,12 @@ int main(){
 
 	supprimerGraphe(&graphe);
 	
-	/*
+	
 	while(1) {
 		afficherMenu(graphe);
 		actionsMenu(graphe);
 	}
-	*/
+	
 	return 0;
 
 	/*
