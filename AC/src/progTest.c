@@ -3,20 +3,21 @@
 
 int main(){
 	TypGraphe *graphe = NULL;
-	printf("%d\n", chargementFichier("fichierTest.txt", &graphe));
-//	affichageGraphe(graphe);
+	casErreur erreur = chargementFichier("fichierTest.txt", &graphe);
+	if(erreur==PAS_ERREUR)
+		printf("Pas d'erreur\n");
+	else
+		afficherErreur(erreur);
+	affichageGraphe(graphe);
 
 	ecritureFichier("fichierResultat.txt", graphe);
-
+	
 	supprimerGraphe(&graphe);
 	
 	
-	while(1) {
-		afficherMenu(graphe);
-		actionsMenu(graphe);
-	}
+	graphe = NULL;
 	
-	return 0;
+	menu(graphe);
 
 	/*
 	   TypGraphe *graphe;

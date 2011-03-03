@@ -1,5 +1,3 @@
-#include "menu.h"
-
 /*
 ******************************************************************************
 *
@@ -14,6 +12,16 @@
 *
 ******************************************************************************
 */
+
+#include "menu.h"
+
+
+void menu(TypGraphe* grapheCourant) { 
+	while(1) {
+		afficherMenu(grapheCourant);
+		actionsMenu(grapheCourant);
+	}
+}
 
 /**
  * Affiche le menu
@@ -53,9 +61,9 @@ void actionsMenu(TypGraphe* grapheCourant) {
 	scanf("%d",&reponse);
 	if(grapheCourant == NULL) {
 		if(reponse<1 || reponse>3)
-			reponse=-1;
-		if(reponse==3)
-			reponse=12;
+			reponse = -1;
+		if(reponse == 3)
+			reponse = 12;
 	}
 	
 	switch(reponse) {
@@ -67,8 +75,8 @@ void actionsMenu(TypGraphe* grapheCourant) {
 				int maxSommet;
 				scanf("%d", &maxSommet);
 				
-				erreur=initialisationGraphe(&grapheCourant, maxSommet); 
-				if(erreur==PAS_ERREUR)
+				erreur = initialisationGraphe(&grapheCourant, maxSommet); 
+				if(erreur == PAS_ERREUR)
 					printf("Creation du graphe effectuee\n");
 				else {
 					printf("Erreur lors de la creation du graphe : ");
@@ -84,11 +92,11 @@ void actionsMenu(TypGraphe* grapheCourant) {
 				printf("contenant le graphe\n");
 				scanf("%s", chemin);
 				
-				erreur=chargementFichier(chemin,&grapheCourant);
-				if(erreur==PAS_ERREUR)
-					printf("Chargement du fichier '%s' effectuee\n",chemin);
+				erreur = chargementFichier(chemin, &grapheCourant);
+				if(erreur == PAS_ERREUR)
+					printf("Chargement du fichier '%s' effectuee\n", chemin);
 				else {
-					printf("Erreur lors du chargement du fichier %s : ",chemin);
+					printf("Erreur lors du chargement du fichier %s : ", chemin);
 					afficherErreur(erreur);
 				}
 			}
@@ -96,16 +104,16 @@ void actionsMenu(TypGraphe* grapheCourant) {
 		//Insertion d’un sommet dans le graphe
 		case 3 :
 			if(grapheCourant != NULL) {
-				int id=-1;
+				int id = -1;
 				do {
 					
 					printf("Quel est le numero du sommet ?\n");
 					scanf("%d", &id);
 					
-				} while (id>=grapheCourant->nbMaxSommets || id<0);
+				} while (id >= grapheCourant->nbMaxSommets || id<0);
 				
-				erreur=insertionSommet(&grapheCourant, id);
-				if(erreur==PAS_ERREUR)
+				erreur = insertionSommet(&grapheCourant, id);
+				if(erreur == PAS_ERREUR)
 					printf("Insertion d'un nouveau sommet %d effectuee\n",id);
 				else {
 					printf("Erreur lors de l'insertion d'un nouveau sommet %d : ",id);
@@ -118,31 +126,32 @@ void actionsMenu(TypGraphe* grapheCourant) {
 		//Insertion d’une arete entre deux sommets du graphe
 		case 4 :
 			if(grapheCourant != NULL){
-				int s1, s2, poids, orientee;
+				int s1, s2, poids;
+				//char orientee;
 				do {
 					printf("Quel est le premier sommet ?\n");
 					scanf("%d", &s1);
-				} while(s1>=grapheCourant->nbMaxSommets || s1<0);
+				} while(s1 >= grapheCourant->nbMaxSommets || s1<0);
 				
 				do {
 					printf("Quel est le deuxieme sommet ?\n");
 					scanf("%d", &s2);
-				} while(s2>=grapheCourant->nbMaxSommets || s2<0);
+				} while(s2 >= grapheCourant->nbMaxSommets || s2<0);
 				
 				do {
 					printf("Quel est le poids de l'arete ?\n");
 					scanf("%d", &poids);
 				} while(poids<0);
-				
+				/*
 				do {
 					printf("S'agit-il d'une arete orientee (o) ou non (n)?\n");
-					scanf("%d", &orientee);
+					scanf("%c", &orientee);
 				} while(orientee!='o' && orientee!='n');
-				
+				*/
 				//verification que les sommets extremites existent et que
 				//cette arete n’est pas deja presente dans le graphe
-				erreur=insertionArete(&grapheCourant, s1, s2, poids, orientee);
-				if(erreur==PAS_ERREUR)
+				erreur = insertionArete(&grapheCourant, s1, s2, poids);
+				if(erreur == PAS_ERREUR)
 					printf("Insertion d'une arete entre les sommets %d et %d effectuee\n",s1,s2);
 				else {
 					printf("Erreur lors de l'insertion d'une arete entre les sommets %d et %d : ",s1,s2);
@@ -156,16 +165,16 @@ void actionsMenu(TypGraphe* grapheCourant) {
 		//Suppression d’un sommet du graphe
 		case 5 :
 			if(grapheCourant != NULL){
-				int id=-1;
+				int id = -1;
 				do {
 					
 					printf("Quel est le numero du sommet a supprimer ?\n");
 					scanf("%d", &id);
 					
-				} while (id>=grapheCourant->nbMaxSommets || id<0);
+				} while (id >= grapheCourant->nbMaxSommets || id<0);
 				
-				erreur=suppressionSommet(&grapheCourant, id);
-				if(erreur==PAS_ERREUR)
+				erreur = suppressionSommet(&grapheCourant, id);
+				if(erreur == PAS_ERREUR)
 					printf("Suppression du sommet %d effectuee\n",id);
 				else {
 					printf("Erreur lors de la suppression du sommet %d : ",id);
@@ -182,15 +191,15 @@ void actionsMenu(TypGraphe* grapheCourant) {
 				do {
 					printf("Quel est le premier sommet ?\n");
 					scanf("%d", &s1);
-				} while(s1>=grapheCourant->nbMaxSommets || s1<0);
+				} while(s1 >= grapheCourant->nbMaxSommets || s1<0);
 				
 				do {
 					printf("Quel est le deuxieme sommet ?\n");
 					scanf("%d", &s2);
-				} while(s2>=grapheCourant->nbMaxSommets || s2<0);
+				} while(s2 >= grapheCourant->nbMaxSommets || s2<0);
 				
-				erreur=suppressionArete(&grapheCourant, s1, s2);
-				if(erreur==PAS_ERREUR)
+				erreur = suppressionArete(&grapheCourant, s1, s2);
+				if(erreur == PAS_ERREUR)
 					printf("Suppression de l'arete entre le sommet %d et %d effectuee\n",s1,s2);
 				else {
 					printf("Erreur lors de la suppression de l'arete entre le sommet %d et %d : ",s1,s2);
@@ -213,8 +222,8 @@ void actionsMenu(TypGraphe* grapheCourant) {
 				char chemin[250];
 				printf("Donnez un chemin pour le fichier ? ");
 				scanf("%s", chemin);
-				erreur=ecritureFichier(chemin, grapheCourant);
-				if(erreur==PAS_ERREUR)
+				erreur = ecritureFichier(chemin, grapheCourant);
+				if(erreur == PAS_ERREUR)
 					printf("Ecriture du graphe dans le fichier '%s' effectuee\n",chemin);
 				else {
 					printf("Erreur lors de l'ecriture du graphe dans le fichier '%s' : ",chemin);
@@ -233,8 +242,8 @@ void actionsMenu(TypGraphe* grapheCourant) {
 		//Quitter
 		case 12 :
 			if(grapheCourant != NULL) {
-				erreur=supprimerGraphe(&grapheCourant);
-				if(erreur==PAS_ERREUR)
+				erreur = supprimerGraphe(&grapheCourant);
+				if(erreur == PAS_ERREUR)
 					printf("Vidage de la memoire effectue\n");
 				else {
 					printf("Erreur lors du vidage de la memoire : ");
@@ -261,7 +270,7 @@ void actionsMenu(TypGraphe* grapheCourant) {
  */
 int demandeSuppression(TypGraphe* grapheCourant) {
 
-	int retour = 0, reponse=0;
+	int retour = 0, reponse = 0;
 	
 	if(grapheCourant != NULL){
 		do {
@@ -273,7 +282,7 @@ int demandeSuppression(TypGraphe* grapheCourant) {
 			if(reponse == 1)
 				supprimerGraphe(&grapheCourant);
 			else
-				retour=-1;
+				retour = -1;
 			if (( reponse != 2 ) && ( reponse != 1 ))
 				printf("Veuillez saisir un choix correct.\n");
 			
@@ -287,37 +296,37 @@ int demandeSuppression(TypGraphe* grapheCourant) {
 
 void afficherErreur(casErreur erreur) {
 
-	char* erreur2String="";
+	char* erreur2String = "";
 
 	switch(erreur) {
 	
-		case ECHEC_ALLOC_PL : erreur2String="Pointeur sur liste non alloue";
+		case ECHEC_ALLOC_PL : erreur2String = "Pointeur sur liste non alloue";
 			break;
-		case ECHEC_ALLOC_L : erreur2String="Liste non allouee";
+		case ECHEC_ALLOC_L : erreur2String = "Liste non allouee";
 			break;
-		case ECHEC_ALLOC_PG : erreur2String="Pointeur sur graphe non alloue";
+		case ECHEC_ALLOC_PG : erreur2String = "Pointeur sur graphe non alloue";
 			break;
-		case ECHEC_ALLOC_G : erreur2String="Graphe non alloue";
+		case ECHEC_ALLOC_G : erreur2String = "Graphe non alloue";
 			break;
-		case INSERT_SOMMET_INCORRECT : 
+		case INSERT_SOMMET_INCORRECT : erreur2String = "Le sommet est incorrect, dépassement de taille";
 			break;
-		case INSERT_ARETE_SOMMET_INCORRECT : 
+		case INSERT_ARETE_SOMMET_INCORRECT : erreur2String = "Un des sommets est incorrect, dépassement de taille";
 			break;
-		case INSERT_ARETE_SOMMET_EXISTE_PAS : 
+		case INSERT_ARETE_SOMMET_EXISTE_PAS : erreur2String = "Un des sommets n'a pas été ajouté";
 			break;
-		case SUPPR_SOMMET_SOMMET_INEXISTANT : 
+		case SUPPR_SOMMET_SOMMET_INEXISTANT : erreur2String = "Le sommet est incorrect, dépassement de taille";
 			break;
-		case SUPPR_ARETE_SOMMET_INEXISTANT : 
+		case SUPPR_ARETE_SOMMET_INEXISTANT : erreur2String = "Un des sommet est incorrect, dépassement de taille";
 			break;
-		case ECHEC_OUVERTURE_FICHIER : 
+		case ECHEC_OUVERTURE_FICHIER : erreur2String = "Impossible d'ouvrir le fichier";
 			break;
-		case NB_SOMMET_INF_0 : 
+		case NB_SOMMET_INF_0 : erreur2String = "Le nombre de sommet maximum est superieur a 0";
 			break;
-		case STRUCT_FICHIER_INCORRECTE : 
+		case STRUCT_FICHIER_INCORRECTE : erreur2String = "Structure de fichier incorrecte";
 			break;
-		case FICHIER_SOMMET_SUP_MAX : 
+		case FICHIER_SOMMET_SUP_MAX : erreur2String = "Un des sommets est superieur a la valeur maximal autorise";
 			break;
-		case FICHIER_REF_SOMMET_INEXISTANT : 
+		case FICHIER_REF_SOMMET_INEXISTANT : erreur2String = "une arete fait reference a un sommet qui n'a pas ete cree";
 			break;
 		default : break;
 		
@@ -326,13 +335,3 @@ void afficherErreur(casErreur erreur) {
 	printf("%s\n",erreur2String);
 	
 }
-
-/*
-int main() { 
-	while(1) {
-		afficherMenu();
-		actionsMenu();
-	}
-	return 0;
-}
-*/

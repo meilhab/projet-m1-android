@@ -128,9 +128,8 @@ int taille(TypVoisins *liste){
 
 /* simple fonction d'affichage pour une structure donnée */
 void affichageListe(TypVoisins *liste){
-	if(verifAllocationL(liste) != PAS_ERREUR){
+	if(verifAllocationL(liste) != PAS_ERREUR)
 		return ;
-	}
 
 	printf("->");
 	while(liste->voisin != -1){
