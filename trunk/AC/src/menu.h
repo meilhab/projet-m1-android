@@ -3,6 +3,7 @@
 
 #include "libgraphe.h"
 
+void menu(TypGraphe* grapheCourant);
 void afficherMenu(TypGraphe* grapheCourant);
 void actionsMenu(TypGraphe* grapheCourant);
 int demandeSuppression(TypGraphe* grapheCourant);
