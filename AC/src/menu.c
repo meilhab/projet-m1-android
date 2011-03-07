@@ -168,7 +168,8 @@ void afficherErreur(casErreur erreur) {
 			erreur2String = "Le sommet est incorrect, dépassement de taille";
 			break;
 		case INSERT_ARETE_SOMMET_INCORRECT : 
-			erreur2String = "Un des sommets est incorrect, dépassement de taille";
+			erreur2String = "Un des sommets est incorrect, ";
+			strcat(erreur2String,  "dépassement de taille");
 			break;
 		case INSERT_ARETE_SOMMET_EXISTE_PAS : 
 			erreur2String = "Un des sommets n'a pas été ajouté";
@@ -177,7 +178,8 @@ void afficherErreur(casErreur erreur) {
 			erreur2String = "Le sommet est incorrect, dépassement de taille";
 			break;
 		case SUPPR_ARETE_SOMMET_INEXISTANT : 
-			erreur2String = "Un des sommet est incorrect, dépassement de taille";
+			erreur2String = "Un des sommets est incorrect, ";
+			strcat(erreur2String,  "dépassement de taille");
 			break;
 		case ECHEC_OUVERTURE_FICHIER : 
 			erreur2String = "Impossible d'ouvrir le fichier";
@@ -189,10 +191,12 @@ void afficherErreur(casErreur erreur) {
 			erreur2String = "Structure de fichier incorrecte";
 			break;
 		case FICHIER_SOMMET_SUP_MAX : 
-			erreur2String = "Un des sommets est superieur a la valeur maximale autorise";
+			erreur2String = "Un des sommets est superieur ";
+			strcat(erreur2String,  "a la valeur maximale autorisée");
 			break;
 		case FICHIER_REF_SOMMET_INEXISTANT : 
-			erreur2String = "une arete fait reference a un sommet qui n'a pas ete cree";
+			erreur2String = "Une arete fait reference a un sommet ";
+			strcat(erreur2String,  "qui n'a pas été créé");
 			break;
 		default : break;
 
@@ -307,9 +311,11 @@ void insertionAreteGraphe(TypGraphe** grapheCourant){
 		erreur = insertionArete(grapheCourant, s2, s1, poids);
 
 	if(erreur == PAS_ERREUR)
-		printf("Insertion d'une arete entre les sommets %d et %d effectuee\n",s1,s2);
+		printf("Insertion d'une arete entre les sommets %d et %d effectuee\n", 
+			s1, s2);
 	else {
-		printf("Erreur lors de l'insertion d'une arete entre les sommets %d et %d : ",s1,s2);
+		printf("Erreur lors de l'insertion d'une arete ");
+		printf("entre les sommets %d et %d : ",s1,s2);
 		afficherErreur(erreur);
 	}
 
@@ -357,9 +363,11 @@ void supprimeAreteGraphe(TypGraphe** grapheCourant){
 
 	erreur = suppressionArete(grapheCourant, s1, s2);
 	if(erreur == PAS_ERREUR)
-		printf("Suppression de l'arete entre le sommet %d et %d effectuee\n",s1,s2);
+		printf("Suppression de l'arete entre le sommet %d et %d effectuee\n", 
+			s1, s2);
 	else {
-		printf("Erreur lors de la suppression de l'arete entre le sommet %d et %d : ",s1,s2);
+		printf("Erreur lors de la suppression de l'arete ");
+		printf("entre le sommet %d et %d : ",s1,s2);
 		afficherErreur(erreur);
 	}
 
@@ -377,7 +385,8 @@ void sauvegardeGraphe(TypGraphe** grapheCourant){
 	if(erreur == PAS_ERREUR)
 		printf("Ecriture du graphe dans le fichier '%s' effectuee\n",chemin);
 	else {
-		printf("Erreur lors de l'ecriture du graphe dans le fichier '%s' : ",chemin);
+		printf("Erreur lors de l'ecriture du graphe dans le fichier '%s' : ",
+			chemin);
 		afficherErreur(erreur);
 	}
 
@@ -399,36 +408,3 @@ void quitterMenuGraphe(TypGraphe** grapheCourant){
 
 	return;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -2,6 +2,7 @@
 #define MENU_H
 
 #include "libgraphe.h"
+#include <string.h>
 
 typedef enum {
 	CREATION = 1,
