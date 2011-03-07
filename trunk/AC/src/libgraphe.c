@@ -12,8 +12,9 @@ casErreur initialisationGraphe(TypGraphe **graphe, int nbSommets){
 	(*graphe)->listesAdjencences = 
 		(TypVoisins**) malloc(nbSommets * sizeof(TypVoisins*));
 
-	erreur = verifAllocationPL((*graphe)->listesAdjencences);
-//	if((*graphe)->listesAdjencences == NULL){
+//	erreur = verifAllocationL(*((*graphe)->listesAdjencences));
+	if((*graphe)->listesAdjencences == NULL)
+		return ECHEC_ALLOC_PL;
 //		printf("Probleme allocation memoire pour le graphe\n");
 	if(erreur != PAS_ERREUR)
 		return erreur;
@@ -22,7 +23,7 @@ casErreur initialisationGraphe(TypGraphe **graphe, int nbSommets){
 	for(i=0; i<nbSommets; i++)
 		(*graphe)->listesAdjencences[i] = NULL;
 	
-	return 0;
+	return PAS_ERREUR;
 }
 
 /* insère le sommet dans le graphe : initialisation de sa liste */
@@ -84,12 +85,17 @@ casErreur suppressionSommet(TypGraphe **graphe, int sommet){
 	erreur = PAS_ERREUR;
 	for(i = 0; i<(*graphe)->nbMaxSommets; i++)
 		if((*graphe)->listesAdjencences[i] != NULL)
-			erreur = supprimerVoisin(&((*graphe)->listesAdjencences[i]), sommet-1);
+			if(existeVoisin((*graphe)->listesAdjencences[i], sommet - 1)
+					== EXISTE){
+				erreur = supprimerVoisin(
+					&((*graphe)->listesAdjencences[i]), sommet-1);
+			}
 	
 	return erreur;
 }
 
-casErreur suppressionArete(TypGraphe **graphe, int sommetDebut, int sommetSuivant){
+casErreur suppressionArete(TypGraphe **graphe, 
+		int sommetDebut, int sommetSuivant){
 	casErreur erreur = verifAllocationPG(graphe);
 	if(erreur != PAS_ERREUR)
 		return erreur;
@@ -98,7 +104,7 @@ casErreur suppressionArete(TypGraphe **graphe, int sommetDebut, int sommetSuivan
 			(sommetSuivant - 1 > (*graphe)->nbMaxSommets))
 		return SUPPR_ARETE_SOMMET_INEXISTANT;
 
-	erreur = supprimerVoisin(&((*graphe)->listesAdjencences[sommetDebut-1]), 
+	erreur = supprimerVoisin(&((*graphe)->listesAdjencences[sommetDebut-1]),
 		sommetSuivant-1);
 
 	return erreur;
@@ -128,10 +134,11 @@ void affichageGraphe(TypGraphe *graphe){
 	TypVoisins *liste;
 	for(i=0; i<graphe->nbMaxSommets; i++){
 		liste = graphe->listesAdjencences[i];
-		if(estVide(liste) > 0){
+		if(estVide(liste) >= 0){
 			printf("Sommet entré : %d\n", i+1);
 			while(liste->voisin != -1){
-				printf("\t\tVers %d avec le poids %d\n", (liste->voisin)+1, liste->poidsVoisin);
+				printf("\t\tVers %d avec le poids %d\n", 
+					(liste->voisin)+1, liste->poidsVoisin);
 				liste = liste->voisinSuivant;
 			}
 		}
