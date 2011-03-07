@@ -17,7 +17,7 @@
 /*
  * Fonction :    initialisationListe
  *
- * Parametres :  TypVoisins**, liste des voisins du sommets
+ * Parametres :  TypVoisins**, liste des voisins
  *
  * Retour :      casErreur, code d'erreur de la fonction
  *
@@ -44,19 +44,19 @@ casErreur initialisationListe(TypVoisins **liste){
 
 
 /*
- * Fonction : ajouterDebut
+ * Fonction :    ajouterDebut
  *
- * Parametres : TypVoisins**, liste des voisins du sommets
- *              int, numéro de sommet
- *              int, poids du sommet
+ * Parametres :  TypVoisins**, liste des voisins
+ *               int voisin, numéro de sommet
+ *               int poidsVoisin, poids du sommet
  *
- * Retour : casErreur, code d'erreur de la fonction
+ * Retour :      casErreur, code d'erreur de la fonction
  *
- * Description : ajoute un sommet avec son poids associé au début d'une liste existante en 
-décalant les éléments, au minimum la sentinelle
+ * Description : ajoute un sommet avec son poids associé 
+ *               au début d'une liste existante en 
+ *               décalant les éléments, au minimum la sentinelle
  *
  */
-/*  */
 casErreur ajouterDebut(TypVoisins **liste, int voisin, int poidsVoisin){
 	casErreur erreur = verifAllocationPL(liste);
 	if(erreur != PAS_ERREUR)
@@ -79,16 +79,16 @@ casErreur ajouterDebut(TypVoisins **liste, int voisin, int poidsVoisin){
 }
 
 /*
- * Fonction : 
+ * Fonction : supprimerVoisin
  *
- * Parametres : 
+ * Parametres : TypVoisins**, liste des voisins
+ *              int voisin, numéro du sommet
  *
  * Retour : casErreur, code d'erreur de la fonction
  *
- * Description :
+ * Description : supprime un sommet s'il existe dans la liste
  *
  */
-/* supprime un voisin s'il existe d'une liste */
 casErreur supprimerVoisin(TypVoisins **liste, int voisin){	
 	casErreur erreur = verifAllocationPL(liste);
 	if(erreur != PAS_ERREUR)
@@ -119,16 +119,16 @@ casErreur supprimerVoisin(TypVoisins **liste, int voisin){
 }
 
 /*
- * Fonction : 
+ * Fonction :    nettoyerTout
  *
- * Parametres : 
+ * Parametres :  TypVoisins**, liste des voisins
  *
- * Retour : casErreur, code d'erreur de la fonction
+ * Retour :      casErreur, code d'erreur de la fonction
  *
- * Description :
+ * Description : vide la structure et libère la mémoire, ne gardant
+ *               que la sentinelle
  *
  */
-/* vide la structure et libère la mémoire */
 casErreur nettoyerTout(TypVoisins **liste){
 	casErreur erreur = verifAllocationPL(liste);
 	if(erreur != PAS_ERREUR)
@@ -149,16 +149,15 @@ casErreur nettoyerTout(TypVoisins **liste){
 }
 
 /*
- * Fonction : 
+ * Fonction :    supprimerTout
  *
- * Parametres : 
+ * Parametres :  TypVoisins**, liste des voisins
  *
- * Retour : casErreur, code d'erreur de la fonction
+ * Retour :      casErreur, code d'erreur de la fonction
  *
- * Description :
+ * Description : supprime totalement la liste et la remet à NULL
  *
  */
-/* supprimer totalement la liste */
 casErreur supprimerTout(TypVoisins **liste){
 	casErreur erreur = verifAllocationPL(liste);
 	if(erreur != PAS_ERREUR)
@@ -180,16 +179,15 @@ casErreur supprimerTout(TypVoisins **liste){
 }
 
 /*
- * Fonction : 
+ * Fonction :    taille
  *
- * Parametres : 
+ * Parametres :  TypVoisins*, liste des voisins
  *
- * Retour : casErreur, code d'erreur de la fonction
+ * Retour :      int, taille de la liste en paramètre
  *
- * Description :
+ * Description : retourne la taille de la liste passée en paramètre
  *
  */
-// retourne la taille de la liste
 int taille(TypVoisins *liste){
 	if(verifAllocationL(liste) != PAS_ERREUR)
 		return -1;
@@ -204,16 +202,15 @@ int taille(TypVoisins *liste){
 }
 
 /*
- * Fonction : 
+ * Fonction :    affichageListe
  *
- * Parametres : 
+ * Parametres :  TypVoisins*, liste des voisins
  *
- * Retour : casErreur, code d'erreur de la fonction
+ * Retour :      rien
  *
- * Description :
+ * Description : fonction d'affichage pour la structure
  *
  */
-/* simple fonction d'affichage pour une structure donnée */
 void affichageListe(TypVoisins *liste){
 	if(verifAllocationL(liste) != PAS_ERREUR)
 		return ;
@@ -229,16 +226,16 @@ void affichageListe(TypVoisins *liste){
 }
 
 /*
- * Fonction : 
+ * Fonction :    verifAllocationPL
  *
- * Parametres : 
+ * Parametres :  TypVoisins**, liste des voisins
  *
- * Retour : casErreur, code d'erreur de la fonction
+ * Retour :      casErreur, code d'erreur de la fonction
  *
- * Description :
+ * Description : vérifie qu'un pointeur sur le pointeur de la liste 
+ *               est bien initialisé
  *
  */
-/* vérifie qu'un pointeur sur liste est bien initialisé */
 casErreur verifAllocationPL(TypVoisins **liste){	
 	if(*liste == NULL || liste == NULL)
 		return ECHEC_ALLOC_PL;
@@ -247,16 +244,15 @@ casErreur verifAllocationPL(TypVoisins **liste){
 }
 
 /*
- * Fonction : 
+ * Fonction :    verifAllocationL
  *
- * Parametres : 
+ * Parametres :  TypVoisins*, liste des voisins
  *
- * Retour : casErreur, code d'erreur de la fonction
+ * Retour :      casErreur, code d'erreur de la fonction
  *
- * Description :
+ * Description : vérifie qu'un pointeur sur la liste est bien initialisé
  *
  */
-/* vérifie qu'une liste est bien initialisée */
 casErreur verifAllocationL(TypVoisins *liste){
 	if(liste == NULL)
 		return ECHEC_ALLOC_L;
@@ -265,16 +261,17 @@ casErreur verifAllocationL(TypVoisins *liste){
 }
 
 /*
- * Fonction : 
+ * Fonction :    existeVoisin
  *
- * Parametres : 
+ * Parametres :  TypVoisins*, liste des voisins
+ *               int voisin, numéro du sommet
  *
- * Retour : casErreur, code d'erreur de la fonction
+ * Retour :      casErreur, code d'erreur de la fonction
  *
- * Description :
+ * Description : vérifie si un sommet donné appartient ou non
+ *               à la liste donnée en paramètre
  *
  */
-/* donne l'existence ou non d'un voisin dans une liste */
 casErreur existeVoisin(TypVoisins *liste, int voisin){
 	casErreur erreur = verifAllocationL(liste);
 	if(erreur != PAS_ERREUR)
@@ -291,18 +288,19 @@ casErreur existeVoisin(TypVoisins *liste, int voisin){
 
 
 /*
- * Fonction : 
+ * Fonction :    estVide
  *
- * Parametres : 
+ * Parametres :  TypVoisins*, liste des voisins
  *
- * Retour : casErreur, code d'erreur de la fonction
+ * Retour :      int, informe si la liste est vide ou non
+ *                    0 : est vide
+ *                    >0 : pas vide
+ *                    -1 : pas initialisé
  *
- * Description :
+ * Description : permet de savoir rapidement si la liste est vide ou non sans 
+ *               contrainte de code d'erreur
  *
  */
-// 0 : est vide
-// >0 : pas vide
-// -1 : pas initialisé
 int estVide(TypVoisins *liste){
 	return taille(liste);
 }
