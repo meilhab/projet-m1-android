@@ -1,17 +1,17 @@
 /*
-******************************************************************************
-*
-* Programme : menu.c
-*
-* ecrit par : Guillaume MONTAVON & Benoit MEILHAC
-*
-* resume : permet l'affichage d'un menu donnant acces aux fonctionnalites
-*          demandees (creation, lecture, insertion, ...)
-*
-* date : 24/02/2011
-*
-******************************************************************************
-*/
+ ******************************************************************************
+ *
+ * Programme : menu.c
+ *
+ * ecrit par : Guillaume MONTAVON & Benoit MEILHAC
+ *
+ * resume : permet l'affichage d'un menu donnant acces aux fonctionnalites
+ *          demandees (creation, lecture, insertion, ...)
+ *
+ * date : 24/02/2011
+ *
+ ******************************************************************************
+ */
 
 #include "menu.h"
 
