@@ -77,11 +77,13 @@ void actionsMenu(TypGraphe** grapheCourant) {
 		//Creation d’un graphe
 		case 1 :
 			if(demandeSuppression(grapheCourant) == 0){
-				printf("Combien de sommets, au maximum, ");
-				printf("possedera votre graphe ?\n");
 				int maxSommet;
-				scanf("%d", &maxSommet);
-				clearScanf();
+				do{
+					printf("Combien de sommets, au maximum, ");
+					printf("possedera votre graphe ?\n");
+					scanf("%d", &maxSommet);
+					clearScanf();
+				}while(maxSommet <= 0);
 
 				erreur = initialisationGraphe(grapheCourant, maxSommet); 
 				if(erreur == PAS_ERREUR)
@@ -120,7 +122,7 @@ void actionsMenu(TypGraphe** grapheCourant) {
 					scanf("%d", &id);
 					clearScanf();
 
-				} while (id >= (*grapheCourant)->nbMaxSommets || id<0);
+				} while (id >= (*grapheCourant)->nbMaxSommets || id<=0);
 
 				erreur = insertionSommet(grapheCourant, id);
 				if(erreur == PAS_ERREUR)
@@ -140,13 +142,13 @@ void actionsMenu(TypGraphe** grapheCourant) {
 					printf("Quel est le premier sommet ?\n");
 					scanf("%d", &s1);
 					clearScanf();
-				} while(s1 >= (*grapheCourant)->nbMaxSommets || s1<0);
+				} while(s1 >= (*grapheCourant)->nbMaxSommets || s1<=0);
 
 				do {
 					printf("Quel est le deuxieme sommet ?\n");
 					scanf("%d", &s2);
 					clearScanf();
-				} while(s2 >= (*grapheCourant)->nbMaxSommets || s2<0);
+				} while(s2 >= (*grapheCourant)->nbMaxSommets || s2<=0);
 
 				do {
 					printf("Quel est le poids de l'arete ?\n");
@@ -184,7 +186,7 @@ void actionsMenu(TypGraphe** grapheCourant) {
 					scanf("%d", &id);
 					clearScanf();
 
-				} while (id >= (*grapheCourant)->nbMaxSommets || id<0);
+				} while (id >= (*grapheCourant)->nbMaxSommets || id<=0);
 
 				erreur = suppressionSommet(grapheCourant, id);
 				if(erreur == PAS_ERREUR)
@@ -203,13 +205,13 @@ void actionsMenu(TypGraphe** grapheCourant) {
 					printf("Quel est le premier sommet ?\n");
 					scanf("%d", &s1);
 					clearScanf();
-				} while(s1 >= (*grapheCourant)->nbMaxSommets || s1<0);
+				} while(s1 >= (*grapheCourant)->nbMaxSommets || s1<=0);
 
 				do {
 					printf("Quel est le deuxieme sommet ?\n");
 					scanf("%d", &s2);
 					clearScanf();
-				} while(s2 >= (*grapheCourant)->nbMaxSommets || s2<0);
+				} while(s2 >= (*grapheCourant)->nbMaxSommets || s2<=0);
 
 				erreur = suppressionArete(grapheCourant, s1, s2);
 				if(erreur == PAS_ERREUR)
