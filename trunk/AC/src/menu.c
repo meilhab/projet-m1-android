@@ -5,23 +5,43 @@
  *
  * ecrit par : Guillaume MONTAVON & Benoit MEILHAC
  *
- * resume : permet l'affichage d'un menu donnant acces aux fonctionnalites
- *          demandees (creation, lecture, insertion, ...)
+ * resume :    permet l'affichage d'un menu donnant acces aux fonctionnalites
+ *             demandees (creation, lecture, insertion, ...)
  *
- * date : 24/02/2011
+ * date :      24/02/2011
  *
  ******************************************************************************
  */
 
 #include "menu.h"
 
+/*
+ * Fonction :    clearScanf
+ *
+ * Parametres :  rien
+ *
+ * Retour :      rien
+ *
+ * Description : libere le buffer du scanf
+ *
+ */
 void clearScanf(void){                                                      
 	char c;
 	while((c = getchar()) != EOF && c != '\n'); 
 	return;
 }
 
-
+/*
+ * Fonction :    menu
+ *
+ * Parametres :  TypGraphe**, graphe courant
+ *
+ * Retour :      rien
+ *
+ * Description : affichage d'un menu qui donne acces a l'utilisateur a de
+ *               nombreuses fonctionnalites afin de modifier un graphe
+ *
+ */
 void menu(TypGraphe** grapheCourant) { 
 	while(1) {
 		afficherMenu(grapheCourant);
@@ -29,8 +49,16 @@ void menu(TypGraphe** grapheCourant) {
 	}
 }
 
-/**
- * Affiche le menu
+/*
+ * Fonction :    afficherMenu
+ *
+ * Parametres :  TypGraphe**, graphe courant
+ *
+ * Retour :      rien
+ *
+ * Description : affichage simplement le menu avec les differentes options
+ *               disponibles
+ *
  */
 void afficherMenu(TypGraphe** grapheCourant) {
 
@@ -53,8 +81,16 @@ void afficherMenu(TypGraphe** grapheCourant) {
 
 }
 
-/**
- * Gere les differentes actions qui peuvent etre demandees par l'utilisateur
+/*
+ * Fonction :    actionsMenu
+ *
+ * Parametres :  TypGraphe**, graphe courant
+ *
+ * Retour :      rien
+ *
+ * Description : Gere les differentes actions qui peuvent etre demandees par
+ *               l'utilisateur
+ *
  */
 void actionsMenu(TypGraphe** grapheCourant) {
 
@@ -70,7 +106,7 @@ void actionsMenu(TypGraphe** grapheCourant) {
 	}
 
 	switch(reponse) {
-		//Creation d'un graphe
+			//Creation d'un graphe
 		case CREATION :
 			creationGraphe(grapheCourant);
 			break;
@@ -114,12 +150,19 @@ void actionsMenu(TypGraphe** grapheCourant) {
 
 }
 
-/**
- * Si un graphe existe deja, on demande a l'utilisateur, s'il souhaite le
- * supprimer afin d'en creer un nouveau
- * retourne 0 si on peut continuer les operations (graphe supprime ou vide)
- * retourn -1 si l'utilisateur n'a pas voulu le supprimer, et donc
- * les operations suivantes doivent etre annulees
+/*
+ * Fonction :    demandeSuppression
+ *
+ * Parametres :  TypGraphe**, graphe courant
+ *
+ * Retour :      int, retourne 0 si on peut continuer les operations (graphe
+ *                    supprime ou vide), retourne -1 si l'utilisateur n'a pas
+ *                    voulu le supprimer, et donc les operations suivantes
+ *                    doivent etre annulees
+ *
+ * Description : Si un graphe existe deja, on demande a l'utilisateur, s'il
+ *               souhaite le supprimer afin d'en creer un nouveau
+ *
  */
 int demandeSuppression(TypGraphe** grapheCourant) {
 
@@ -148,6 +191,16 @@ int demandeSuppression(TypGraphe** grapheCourant) {
 
 }
 
+/*
+ * Fonction :    afficherErreur
+ *
+ * Parametres :  casErreur, code de l'erreur demande
+ *
+ * Retour :      rien
+ *
+ * Description : affiche une erreur suivant le code d'erreur donne en parametre
+ *
+ */
 void afficherErreur(casErreur erreur) {
 	char* erreur2String = "";
 
@@ -206,6 +259,16 @@ void afficherErreur(casErreur erreur) {
 
 }
 
+/*
+ * Fonction :    creationGraphe
+ *
+ * Parametres :  TypGraphe**, graphe courant
+ *
+ * Retour :      rien
+ *
+ * Description : gere dans le menu la creation d'un graphe
+ *
+ */
 void creationGraphe(TypGraphe **grapheCourant){
 	casErreur erreur = PAS_ERREUR;
 
@@ -230,6 +293,16 @@ void creationGraphe(TypGraphe **grapheCourant){
 	return;
 }
 
+/*
+ * Fonction :    lectureFichierExistant
+ *
+ * Parametres :  TypGraphe**, graphe courant
+ *
+ * Retour :      rien
+ *
+ * Description : gere dans le menu la lecture d'un graphe dans un fichier texte
+ *
+ */
 void lectureFichierExistant(TypGraphe** grapheCourant){
 	casErreur erreur = PAS_ERREUR;
 
@@ -252,6 +325,16 @@ void lectureFichierExistant(TypGraphe** grapheCourant){
 	return;
 }
 
+/*
+ * Fonction :    insertionSommetGraphe
+ *
+ * Parametres :  TypGraphe**, graphe courant
+ *
+ * Retour :      rien
+ *
+ * Description : gere dans le menu l'insertion d'un sommet dans le graphe
+ *
+ */
 void insertionSommetGraphe(TypGraphe** grapheCourant){
 	casErreur erreur = PAS_ERREUR;
 
@@ -275,6 +358,16 @@ void insertionSommetGraphe(TypGraphe** grapheCourant){
 	return;
 }
 
+/*
+ * Fonction :    insertionAreteGraphe
+ *
+ * Parametres :  TypGraphe**, graphe courant
+ *
+ * Retour :      rien
+ *
+ * Description : gere dans le menu l'insertion d'une arete entre deux sommets
+ *
+ */
 void insertionAreteGraphe(TypGraphe** grapheCourant){
 	casErreur erreur = PAS_ERREUR;
 
