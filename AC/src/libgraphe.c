@@ -8,6 +8,9 @@ casErreur initialisationGraphe(TypGraphe **graphe, int nbSommets){
 	if(erreur != PAS_ERREUR)
 		return erreur;
 
+	if(nbSommets <= 0)
+		return NB_SOMMET_INF_0;
+
 	(*graphe)->nbMaxSommets = nbSommets;
 	(*graphe)->listesAdjencences = 
 		(TypVoisins**) malloc(nbSommets * sizeof(TypVoisins*));
@@ -32,7 +35,7 @@ casErreur insertionSommet(TypGraphe **graphe, int sommet){
 	if(erreur != PAS_ERREUR)
 		return erreur;
 
-	if(sommet - 1 > (*graphe)->nbMaxSommets && sommet - 1 < 0)
+	if(sommet - 1 > (*graphe)->nbMaxSommets || sommet - 1 < 0)
 		return INSERT_SOMMET_INCORRECT;
 
 	erreur = initialisationListe(&((*graphe)->listesAdjencences[sommet-1]));
@@ -74,7 +77,7 @@ casErreur suppressionSommet(TypGraphe **graphe, int sommet){
 	if(erreur != PAS_ERREUR)
 		return erreur;
 	
-	if(sommet - 1 > (*graphe)->nbMaxSommets)
+	if(sommet - 1 > (*graphe)->nbMaxSommets || sommet - 1 < 0)
 		return SUPPR_SOMMET_SOMMET_INEXISTANT;
 
 	erreur = supprimerTout(&((*graphe)->listesAdjencences[sommet-1]));
@@ -100,8 +103,9 @@ casErreur suppressionArete(TypGraphe **graphe,
 	if(erreur != PAS_ERREUR)
 		return erreur;
 	
-	if((sommetDebut - 1 > (*graphe)->nbMaxSommets) || 
-			(sommetSuivant - 1 > (*graphe)->nbMaxSommets))
+	if(sommetDebut - 1 > (*graphe)->nbMaxSommets || 
+			sommetSuivant - 1 > (*graphe)->nbMaxSommets ||
+			sommetDebut - 1 < 0 || sommetSuivant - 1 < 0)
 		return SUPPR_ARETE_SOMMET_INEXISTANT;
 
 	erreur = supprimerVoisin(&((*graphe)->listesAdjencences[sommetDebut-1]),
@@ -154,9 +158,13 @@ casErreur supprimerGraphe(TypGraphe **graphe){
 
 	int i;
 	erreur = PAS_ERREUR;
-	for(i = 0; i<(*graphe)->nbMaxSommets; i++)
-		erreur = supprimerTout(&((*graphe)->listesAdjencences[i]));
-
+	for(i = 0; i<(*graphe)->nbMaxSommets; i++){
+		/*technique de ninja !*/
+		if(existeVoisin((*graphe)->listesAdjencences[i], -1) == EXISTE)
+			erreur = supprimerTout(&((*graphe)->listesAdjencences[i]));
+	}
+	free((*graphe)->listesAdjencences);
+	free((*graphe));
 	(*graphe) = NULL;
 	return erreur;
 }
@@ -289,6 +297,11 @@ casErreur chargementFichier(char *nomFichier, TypGraphe **graphe){
 		//
 		while(fscanf(fichier, "(%d/%d), ", &a, &b)){
 			printf("\t\tVers %d avec le poids %d\n", a, b);
+
+			erreur = insertionSommet(graphe, a);
+			//if(erreur != PAS_ERREUR)
+			//	return erreur;
+
 			//TODO revoir ici l'insertion d'élément n'existant pas
 			erreur = insertionArete(graphe, tab[i], a, b);
 			if(erreur != PAS_ERREUR)
