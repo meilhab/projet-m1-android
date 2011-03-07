@@ -1,6 +1,31 @@
+/*
+ ******************************************************************************
+ *
+ * Programme : libgraphe.c
+ *
+ * ecrit par : Guillaume MONTAVON & Benoit MEILHAC
+ *
+ * resume :    bibliothèque permettant la gestion du graphe (sommets)
+ *
+ * date :      24/02/2011
+ *
+ ******************************************************************************
+ */
+
 #include "libgraphe.h"
 
-/* initialise le graphe avec nbSommets maximum*/
+/*
+ * Fonction :    initialisationGraphe
+ *
+ * Parametres :  TypGraphe**, graphe a initialiser
+ *               int nbSommets, nombre de sommets maxi qu'acceptera le graphe 
+ *
+ * Retour :      casErreur, code d'erreur de la fonction
+ *
+ * Description : initialise le graphe en allouant la memoire du graphe et de
+ *               la liste d'adjacence et en initialisant le nbSommets maximum
+ *
+ */
 casErreur initialisationGraphe(TypGraphe **graphe, int nbSommets){
 	(*graphe) = (TypGraphe*) malloc(sizeof(TypGraphe));
 
@@ -18,7 +43,7 @@ casErreur initialisationGraphe(TypGraphe **graphe, int nbSommets){
 //	erreur = verifAllocationL(*((*graphe)->listesAdjencences));
 	if((*graphe)->listesAdjencences == NULL)
 		return ECHEC_ALLOC_PL;
-//		printf("Probleme allocation memoire pour le graphe\n");
+
 	if(erreur != PAS_ERREUR)
 		return erreur;
 
@@ -29,7 +54,18 @@ casErreur initialisationGraphe(TypGraphe **graphe, int nbSommets){
 	return PAS_ERREUR;
 }
 
-/* insère le sommet dans le graphe : initialisation de sa liste */
+/*
+ * Fonction :    insertionSommet
+ *
+ * Parametres :  TypGraphe**, graphe a modifier
+ *               int sommet, numero du sommet a ajouter
+ *
+ * Retour :      casErreur, code d'erreur de la fonction
+ *
+ * Description : insere un sommet dans le graphe, puis initialsation de sa
+ *               liste de voisins
+ *
+ */
 casErreur insertionSommet(TypGraphe **graphe, int sommet){
 	casErreur erreur = verifAllocationPG(graphe);
 	if(erreur != PAS_ERREUR)
@@ -47,8 +83,19 @@ casErreur insertionSommet(TypGraphe **graphe, int sommet){
 	return PAS_ERREUR;
 }
 
-/* insère une arète entre deux sommets avec son poids */
-/* fonction utile pour l'ajout manuel */
+/*
+ * Fonction :    insertionArete
+ *
+ * Parametres :  TypGraphe**, graphe a modifier
+ *               int sommetDebut, numero du premier sommet
+ *               int sommetSuivant, numero du deuxieme sommet
+ *               int poids, poids de l'arete a ajouter
+ *
+ * Retour :      casErreur, code d'erreur de la fonction
+ *
+ * Description : insère une arete entre deux sommets avec son poids
+ *
+ */
 casErreur insertionArete(TypGraphe **graphe, int sommetDebut, 
 		int sommetSuivant, int poids){
 	casErreur erreur = verifAllocationPG(graphe);
@@ -70,8 +117,18 @@ casErreur insertionArete(TypGraphe **graphe, int sommetDebut,
 	return erreur;
 }
 
-/* supprime le sommet et tous les autres sommets qui ont une 
-arète en commun avec lui */
+/*
+ * Fonction :    suppressionSommet
+ *
+ * Parametres :  TypGraphe**, graphe a modifier
+ *               int sommet, numero du sommet a supprimer
+ *
+ * Retour :      casErreur, code d'erreur de la fonction
+ *
+ * Description : supprime le sommet et tous les autres sommets qui ont une
+ *               arete en commun avec lui
+ *
+ */
 casErreur suppressionSommet(TypGraphe **graphe, int sommet){
 	casErreur erreur = verifAllocationPG(graphe);
 	if(erreur != PAS_ERREUR)
@@ -97,6 +154,18 @@ casErreur suppressionSommet(TypGraphe **graphe, int sommet){
 	return erreur;
 }
 
+/*
+ * Fonction :    suppressionArete
+ *
+ * Parametres :  TypGraphe**, graphe a modifier
+ *               int sommetDebut, numero du premier sommet
+ *               int sommetSuivant, numero du deuxieme sommet
+ *
+ * Retour :      casErreur, code d'erreur de la fonction
+ *
+ * Description : supprime une arete entre deux sommets
+ *
+ */
 casErreur suppressionArete(TypGraphe **graphe, 
 		int sommetDebut, int sommetSuivant){
 	casErreur erreur = verifAllocationPG(graphe);
@@ -114,7 +183,16 @@ casErreur suppressionArete(TypGraphe **graphe,
 	return erreur;
 }
 
-/* vérifie qu'un pointeur sur graphe est bien initialisé */
+/*
+ * Fonction :    verifAllocationPG
+ *
+ * Parametres :  TypGraphe**, graphe a tester
+ *
+ * Retour :      casErreur, code d'erreur de la fonction
+ *
+ * Description : verifie qu'un pointeur sur graphe est bien initialise
+ *
+ */
 casErreur verifAllocationPG(TypGraphe **graphe){	
 	if(*graphe == NULL || graphe == NULL)
 		return ECHEC_ALLOC_PG;
@@ -122,7 +200,16 @@ casErreur verifAllocationPG(TypGraphe **graphe){
 	return PAS_ERREUR;
 }
 
-/* vérifie qu'une graphe est bien initialisée */
+/*
+ * Fonction :    verifAllocationG
+ *
+ * Parametres :  TypGraphe**, graphe a tester
+ *
+ * Retour :      casErreur, code d'erreur de la fonction
+ *
+ * Description : verifie qu'une graphe est bien initialisee
+ *
+ */
 casErreur verifAllocationG(TypGraphe *graphe){
 	if(graphe == NULL)
 		return ECHEC_ALLOC_G;
@@ -130,6 +217,17 @@ casErreur verifAllocationG(TypGraphe *graphe){
 	return PAS_ERREUR;
 }
 
+/*
+ * Fonction :    affichageGraphe
+ *
+ * Parametres :  TypGraphe*, graphe a afficher
+ *
+ * Retour :      casErreur, code d'erreur de la fonction
+ *
+ * Description : affiche un graphe dans le meme format que celui du fichier
+ *               texte en entree
+ *
+ */
 void affichageGraphe(TypGraphe *graphe){
 	if(verifAllocationG(graphe) != PAS_ERREUR)
 		return;
@@ -151,6 +249,16 @@ void affichageGraphe(TypGraphe *graphe){
 	return;
 }
 
+/*
+ * Fonction :    supprimerGraphe
+ *
+ * Parametres :  TypGraphe**, graphe a supprimer
+ *
+ * Retour :      casErreur, code d'erreur de la fonction
+ *
+ * Description : supprime entierement un graphe en liberant toute la memoire
+ *
+ */
 casErreur supprimerGraphe(TypGraphe **graphe){
 	casErreur erreur = verifAllocationPG(graphe);
 	if(erreur != PAS_ERREUR)
@@ -169,6 +277,16 @@ casErreur supprimerGraphe(TypGraphe **graphe){
 	return erreur;
 }
 
+/*
+ * Fonction :    nombreMaxSommetsGraphe
+ *
+ * Parametres :  TypGraphe*, graphe a supprimer
+ *
+ * Retour :      int, nombre de sommets maxi du graphe
+ *
+ * Description : donne le nombre de sommets maxi du graphe
+ *
+ */
 int nombreMaxSommetsGraphe(TypGraphe *graphe){
 	if(verifAllocationG(graphe) != PAS_ERREUR)
 		return -1;
@@ -176,7 +294,17 @@ int nombreMaxSommetsGraphe(TypGraphe *graphe){
 	return graphe->nbMaxSommets;
 }
 
-
+/*
+ * Fonction :    passerCommentaire
+ *
+ * Parametres :  FILE*, fichier a importer
+ *               int* ligne, numero de la ligne
+ *
+ * Retour :      casErreur, code d'erreur de la fonction
+ *
+ * Description : permet de sauter la ligne qui contient un commentaire 
+ *
+ */
 casErreur passerCommentaire(FILE* fichier, int* ligne){
 	char c;
 
@@ -192,7 +320,16 @@ casErreur passerCommentaire(FILE* fichier, int* ligne){
 	return PAS_ERREUR;
 }
 
-
+/*
+ * Fonction :    controleCoherenceFichier
+ *
+ * Parametres :  char* nomFichier, chemin du fichier a tester
+ *
+ * Retour :      casErreur, code d'erreur de la fonction
+ *
+ * Description : controle si la structure du fichier est correct ou non
+ *
+ */
 casErreur controleCoherenceFichier(char *nomFichier){
 	int nbMaxSommets = 0, a;
 
@@ -254,7 +391,18 @@ casErreur controleCoherenceFichier(char *nomFichier){
 	return PAS_ERREUR;
 }
 
-
+/*
+ * Fonction :    chargementFichier
+ *
+ * Parametres :  char* nomFichier, chemin du fichier a charger
+ *               TypGraphe**, graphe qui contiendra le nouveau graphe importe
+ *
+ * Retour :      casErreur, code d'erreur de la fonction
+ *
+ * Description : charge le graphe contenu dans un fichier dans un graphe
+ *               donne en parametre
+ *
+ */
 casErreur chargementFichier(char *nomFichier, TypGraphe **graphe){
 	FILE* fichier = NULL;
 	int ligne = 0;
@@ -318,6 +466,17 @@ casErreur chargementFichier(char *nomFichier, TypGraphe **graphe){
 	return PAS_ERREUR;
 }
 
+/*
+ * Fonction :    ecritureFichier
+ *
+ * Parametres :  char* nomFichier, chemin du fichier dans lequel on sauvegarde
+ *               TypGraphe**, graphe qui contient le graphe a sauvegarder
+ *
+ * Retour :      casErreur, code d'erreur de la fonction
+ *
+ * Description : sauvegarde un graphe dans un fichier texte
+ *
+ */
 casErreur ecritureFichier(char *nomFichier, TypGraphe *graphe){
 	casErreur erreur = verifAllocationG(graphe);
 	if(erreur != PAS_ERREUR)
