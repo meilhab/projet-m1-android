@@ -3,6 +3,7 @@
 
 int main(){
 	TypGraphe *graphe = NULL;
+	/*
 	casErreur erreur = chargementFichier("fichierTest.txt", &graphe);
 	if(erreur==PAS_ERREUR)
 		printf("Pas d'erreur\n");
@@ -16,8 +17,8 @@ int main(){
 	
 	
 	graphe = NULL;
-	
-	menu(graphe);
+	*/
+	menu(&graphe);
 
 	/*
 	   TypGraphe *graphe;

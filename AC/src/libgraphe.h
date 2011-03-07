@@ -13,7 +13,8 @@ casErreur insertionSommet(TypGraphe **graphe, int sommet);
 casErreur insertionArete(TypGraphe **graphe, int sommetDebut, 
 	int sommetSuivant, int poids);
 casErreur suppressionSommet(TypGraphe **graphe, int sommet);
-casErreur suppressionArete(TypGraphe **graphe, int sommetDebut, int sommetSuivant);
+casErreur suppressionArete(TypGraphe **graphe, 
+	int sommetDebut, int sommetSuivant);
 void affichageGraphe(TypGraphe *graphe);
 casErreur verifAllocationPG(TypGraphe **graphe);	
 casErreur verifAllocationG(TypGraphe *graphe);	
