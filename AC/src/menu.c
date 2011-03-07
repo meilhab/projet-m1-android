@@ -415,6 +415,16 @@ void insertionAreteGraphe(TypGraphe** grapheCourant){
 	return;
 }
 
+/*
+ * Fonction :    supprimeSommetGraphe
+ *
+ * Parametres :  TypGraphe**, graphe courant
+ *
+ * Retour :      rien
+ *
+ * Description : gere dans le menu la suppression d'un sommet du graphe
+ *
+ */
 void supprimeSommetGraphe(TypGraphe** grapheCourant){
 	casErreur erreur = PAS_ERREUR;
 
@@ -438,6 +448,17 @@ void supprimeSommetGraphe(TypGraphe** grapheCourant){
 	return;
 }
 
+/*
+ * Fonction :    supprimeAreteGraphe
+ *
+ * Parametres :  TypGraphe**, graphe courant
+ *
+ * Retour :      rien
+ *
+ * Description : gere dans le menu la suppression d'une arete entre deux
+ *               sommets
+ *
+ */
 void supprimeAreteGraphe(TypGraphe** grapheCourant){
 	casErreur erreur = PAS_ERREUR;
 
@@ -467,6 +488,17 @@ void supprimeAreteGraphe(TypGraphe** grapheCourant){
 	return;
 }
 
+/*
+ * Fonction :    sauvegardeGraphe
+ *
+ * Parametres :  TypGraphe**, graphe courant
+ *
+ * Retour :      rien
+ *
+ * Description : gere dans le menu la sauvegarde d'un graphe dans un fichier
+ *               texte
+ *
+ */
 void sauvegardeGraphe(TypGraphe** grapheCourant){
 	casErreur erreur = PAS_ERREUR;
 
@@ -486,6 +518,16 @@ void sauvegardeGraphe(TypGraphe** grapheCourant){
 	return;
 }
 
+/*
+ * Fonction :    quitterMenuGraphe
+ *
+ * Parametres :  TypGraphe**, graphe courant
+ *
+ * Retour :      rien
+ *
+ * Description : gere dans le menu la terminaison du programme
+ *
+ */
 void quitterMenuGraphe(TypGraphe** grapheCourant){
 	casErreur erreur = PAS_ERREUR;
 
