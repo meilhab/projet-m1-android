@@ -1,4 +1,4 @@
-#include "libgraphe.h"
+#include "lib/libgraphe.h"
 #include "menu.h"
 
 int main(){
