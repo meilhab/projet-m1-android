@@ -30,9 +30,6 @@ casErreur initialisationListe(TypVoisins **liste){
 	(*liste) = (TypVoisins*) malloc(sizeof(TypVoisins));
 	casErreur erreur = verifAllocationPL(liste);
 	if(erreur != PAS_ERREUR)
-		//printf("Echec dans l'allocation lors de l'initialisation ");
-		//printf("d'une structure de liste\n");
-		//exit(1);
 		return erreur;
 
 	(*liste)->voisin = -1;
@@ -65,8 +62,6 @@ casErreur ajouterDebut(TypVoisins **liste, int voisin, int poidsVoisin){
 	TypVoisins *element = (TypVoisins*) malloc(sizeof(TypVoisins));
 	erreur = verifAllocationL(element);
 	if(erreur != PAS_ERREUR)
-//		printf("Echec d'allocation lors de l'ajout d'élément\n");
-//		exit(1);
 		return erreur;
 	
 	element->voisin = voisin;

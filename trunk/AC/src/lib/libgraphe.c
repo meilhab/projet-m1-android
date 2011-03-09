@@ -233,19 +233,29 @@ void affichageGraphe(TypGraphe *graphe){
 		return;
 
 	int i;
+	int taille = nombreMaxSommetsGraphe(graphe);
+
+	fprintf(stdout, "# nombre maximum de sommets\n");
+	fprintf(stdout, "%d\n", taille);
+	fprintf(stdout, "# sommets : voisins\n");
+
 	TypVoisins *liste;
-	for(i=0; i<graphe->nbMaxSommets; i++){
+	for(i=0; i<taille; i++){
 		liste = graphe->listesAdjencences[i];
-		if(estVide(liste) >= 0){
-			printf("Sommet entré : %d\n", i+1);
+		if(estVide(liste) > 0){
+			fprintf(stdout, "%d : ", i + 1);
 			while(liste->voisin != -1){
-				printf("\t\tVers %d avec le poids %d\n", 
-					(liste->voisin)+1, liste->poidsVoisin);
+				if(liste->voisinSuivant->voisin == -1)
+					fprintf(stdout, "(%d/%d)", 
+						liste->voisin + 1, liste->poidsVoisin);
+				else
+					fprintf(stdout,"(%d/%d), ", 
+						liste->voisin + 1, liste->poidsVoisin);
 				liste = liste->voisinSuivant;
 			}
+			fprintf(stdout, "\n");
 		}
 	}
-
 	return;
 }
 
@@ -309,7 +319,8 @@ casErreur passerCommentaire(FILE* fichier, int* ligne){
 	char c;
 
 	if((c = fgetc(fichier)) != '#'){
-		printf("Structure de fichier incorrecte à la ligne %d\n", *ligne);
+		fprintf(stderr,"Structure de fichier incorrecte à la ligne %d\n"
+		, *ligne);
 		return STRUCT_FICHIER_INCORRECTE;
 	}
 
@@ -422,7 +433,7 @@ casErreur chargementFichier(char *nomFichier, TypGraphe **graphe){
 
 	fscanf(fichier, "%d\n", &nbMaxSommets);
 	ligne++;
-	printf("nombre de sommets : %d\n", nbMaxSommets);
+	//printf("nombre de sommets : %d\n", nbMaxSommets);
 	//
 	erreur = initialisationGraphe(graphe, nbMaxSommets);
 	if(erreur != PAS_ERREUR)
@@ -437,14 +448,14 @@ casErreur chargementFichier(char *nomFichier, TypGraphe **graphe){
 	int a, b;
 
 	while(fscanf(fichier, "%d : ", &tab[i]) != EOF){
-		printf("sommet entré : %d\n", tab[i]);
+		//printf("sommet entré : %d\n", tab[i]);
 		//
 		erreur = insertionSommet(graphe, tab[i]);
 			if(erreur != PAS_ERREUR)
 				return erreur;
 		//
 		while(fscanf(fichier, "(%d/%d), ", &a, &b)){
-			printf("\t\tVers %d avec le poids %d\n", a, b);
+			//printf("\t\tVers %d avec le poids %d\n", a, b);
 
 			erreur = insertionSommet(graphe, a);
 			//if(erreur != PAS_ERREUR)
@@ -460,7 +471,7 @@ casErreur chargementFichier(char *nomFichier, TypGraphe **graphe){
 		ligne++;
 	}
 
-	printf("nombre de lignes du fichier : %d\n\n", ligne);
+	//printf("nombre de lignes du fichier : %d\n\n", ligne);
 	fclose(fichier);
 
 	return PAS_ERREUR;
