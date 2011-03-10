@@ -8,18 +8,16 @@ OBJDIR=./obj
 BINDIR=./bin
 LIBDIR=./$(LIBNAME)
 SRCLIBDIR=$(SRCDIR)/$(LIBNAME)
-OBJLIBDIR=$(OBJDIR)/$(LIBNAME)
 SRC=$(wildcard $(SRCDIR)/*.c)
 OBJ=$(SRC:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
-SRCLIB=$(wildcard $(SRCLIBDIR)/*.c)
-OBJLIB=$(SRCLIB:$(SRCLIBDIR)/%.c=$(OBJLIBDIR)/%.o)
-LIB=$(OBJLIB:$(OBJLIBDIR)/%.o=$(LIBDIR)/%.a)
 BIN=$(BINDIR)/$(BINNAME)
+LIB=$(LIBDIR)/libgraphe.a $(LIBDIR)/libliste.a
+MAKE=/usr/bin/make
 
 all: $(BIN)
 
 	
-$(BIN): $(OBJ) $(BINDIR) $(LIB)
+$(BIN): $(OBJ) $(BINDIR) bibliotheques
 	$(CC) $(LDFLAGS) $(OBJ) -o $@ $(LIB)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c $(SRCDIR)/%.h $(OBJDIR)
@@ -29,38 +27,18 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.c $(OBJDIR)
 	$(CC) $(CFLAGS) $< -o $@
 
 
+bibliotheques:
+	(cd $(SRCLIBDIR) ; $(MAKE) all)
 
-bibliotheques: $(LIB)
-
-$(OBJLIBDIR)/%.o: $(SRCLIBDIR)/%.c $(SRCLIBDIR)/%.h $(OBJLIBDIR)
-	$(CC) $(CFLAGS) $< -o $@
-
-$(LIBDIR)/%.a: $(OBJLIBDIR)/%.o $(LIBDIR)
-	ar r $@ $<;
-	ar t $@;
-	ranlib $@
-
-
-
-$(OBJLIBDIR):
-	mkdir $(OBJDIR);
-	mkdir $(OBJLIBDIR)
-
-$(LIBDIR):
-	mkdir $(LIBDIR)
-
-
-
-
-$(OBJDI):
-	echo test2;
+$(OBJDIR):
 	mkdir $(OBJDIR)
 
 $(BINDIR):
 	mkdir $(BINDIR)
 
 clean:
-	rm -rf $(OBJDIR)
+	rm -rf $(OBJDIR);
+	rm -rf $(LIBDIR)
 
 veryclean: clean
 	rm -rf $(BINDIR)
