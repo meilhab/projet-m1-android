@@ -242,7 +242,7 @@ void affichageGraphe(TypGraphe *graphe){
 	TypVoisins *liste;
 	for(i=0; i<taille; i++){
 		liste = graphe->listesAdjencences[i];
-		if(estVide(liste) > 0){
+		if(estVide(liste) >= 0){
 			fprintf(stdout, "%d : ", i + 1);
 			while(liste->voisin != -1){
 				if(liste->voisinSuivant->voisin == -1)
@@ -448,14 +448,14 @@ casErreur chargementFichier(char *nomFichier, TypGraphe **graphe){
 	int a, b;
 
 	while(fscanf(fichier, "%d : ", &tab[i]) != EOF){
-		//printf("sommet entré : %d\n", tab[i]);
+		fprintf(stdout, "sommet entré : %d\n", tab[i]);
 		//
 		erreur = insertionSommet(graphe, tab[i]);
 			if(erreur != PAS_ERREUR)
 				return erreur;
 		//
 		while(fscanf(fichier, "(%d/%d), ", &a, &b)){
-			//printf("\t\tVers %d avec le poids %d\n", a, b);
+			fprintf(stdout, "\t\tVers %d avec le poids %d\n", a, b);
 
 			erreur = insertionSommet(graphe, a);
 			//if(erreur != PAS_ERREUR)
@@ -508,7 +508,7 @@ casErreur ecritureFichier(char *nomFichier, TypGraphe *graphe){
 	TypVoisins *liste;
 	for(i=0; i<taille; i++){
 		liste = graphe->listesAdjencences[i];
-		if(estVide(liste) > 0){
+		if(estVide(liste) >= 0){
 			fprintf(fichier, "%d : ", i + 1);
 			while(liste->voisin != -1){
 				if(liste->voisinSuivant->voisin == -1)
