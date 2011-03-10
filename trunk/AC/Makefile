@@ -1,18 +1,20 @@
-CC=gcc -g
-CFLAGS=-c -Wall -Wextra
-LDFLAGS=-lm
-BINNAME=gestionGraphe
-LIBNAME=lib
-SRCDIR=./src
-OBJDIR=./obj
-BINDIR=./bin
-LIBDIR=./$(LIBNAME)
-SRCLIBDIR=$(SRCDIR)/$(LIBNAME)
-SRC=$(wildcard $(SRCDIR)/*.c)
-OBJ=$(SRC:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
-BIN=$(BINDIR)/$(BINNAME)
-LIB=$(LIBDIR)/libgraphe.a $(LIBDIR)/libliste.a
-MAKE=/usr/bin/make
+include MakeInclude
+
+#CC=gcc -g
+#CFLAGS=-c -Wall -Wextra
+#LDFLAGS=-lm
+#BINNAME=gestionGraphe
+#LIBNAME=lib
+#SRCDIR=./src
+#OBJDIR=./obj
+#BINDIR=./bin
+#LIBDIR=./$(LIBNAME)
+#SRCLIBDIR=$(SRCDIR)/$(LIBNAME)
+#SRC=$(wildcard $(SRCDIR)/*.c)
+#OBJ=$(SRC:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
+#BIN=$(BINDIR)/$(BINNAME)
+#LIB=$(LIBDIR)/libgraphe.a $(LIBDIR)/libliste.a
+#MAKE=/usr/bin/make
 
 all: $(BIN)
 

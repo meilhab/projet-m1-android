@@ -1,0 +1,28 @@
+
+#concernant les généralités
+CC=gcc -g
+CFLAGS=-c -Wall -Wextra
+LDFLAGS=-lm
+BINNAME=gestionGraphe
+LIBNAME=lib
+OBJNAME=obj
+SRCDIR=./src
+OBJDIR=./$(OBJNAME)
+BINDIR=./bin
+LIBDIR=./$(LIBNAME)
+SRCLIBDIR=$(SRCDIR)/$(LIBNAME)
+SRC=$(wildcard $(SRCDIR)/*.c)
+OBJ=$(SRC:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
+BIN=$(BINDIR)/$(BINNAME)
+LIB=$(LIBDIR)/libgraphe.a $(LIBDIR)/libliste.a
+MAKE=/usr/bin/make
+
+#concernant le makefile pour les bibliotheques
+SRCLIB=libgraphe.c libliste.c
+OBJPLIBDIR=../../$(OBJNAME)
+OBJLIBDIR=$(OBJPLIBDIR)/$(LIBNAME)
+OBJLIB=$(OBJLIBDIR)/libgraphe.o $(OBJLIBDIR)/libliste.o
+LIBLIBDIR=../../$(LIBNAME)
+LIBLIB=$(LIBLIBDIR)/libgraphe.a $(LIBLIBDIR)/libliste.a
+
+
