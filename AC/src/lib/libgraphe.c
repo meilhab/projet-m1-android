@@ -143,13 +143,15 @@ casErreur suppressionSommet(TypGraphe **graphe, int sommet){
 	
 	int i;
 	erreur = PAS_ERREUR;
-	for(i = 0; i<(*graphe)->nbMaxSommets; i++)
-		if((*graphe)->listesAdjencences[i] != NULL)
+	for(i = 0; i<(*graphe)->nbMaxSommets; i++){
+		if((*graphe)->listesAdjencences[i] != NULL){
 			if(existeVoisin((*graphe)->listesAdjencences[i], sommet - 1)
 					== EXISTE){
 				erreur = supprimerVoisin(
 					&((*graphe)->listesAdjencences[i]), sommet-1);
 			}
+		}
+	}
 	
 	return erreur;
 }
@@ -367,11 +369,11 @@ casErreur controleCoherenceFichier(char *nomFichier){
 
 	i = 0;
 	while(fscanf(fichier, "%d : ", &tabS[i]) != EOF){
-		if(tabS[i] > nbMaxSommets)
+		if(tabS[i] > nbMaxSommets || tabS[i]<= 0)
 			return FICHIER_SOMMET_SUP_MAX;
 
 		while(fscanf(fichier, "(%d/%d), ", &sv, &pv)){
-			if(sv > nbMaxSommets)
+			if(sv > nbMaxSommets || sv <= 0)
 				return FICHIER_SOMMET_SUP_MAX;
 		}
 		i++;
@@ -448,20 +450,20 @@ casErreur chargementFichier(char *nomFichier, TypGraphe **graphe){
 	int a, b;
 
 	while(fscanf(fichier, "%d : ", &tab[i]) != EOF){
-		fprintf(stdout, "sommet entré : %d\n", tab[i]);
+//		fprintf(stdout, "sommet entré : %d\n", tab[i]);
 		//
 		erreur = insertionSommet(graphe, tab[i]);
 			if(erreur != PAS_ERREUR)
 				return erreur;
 		//
 		while(fscanf(fichier, "(%d/%d), ", &a, &b)){
-			fprintf(stdout, "\t\tVers %d avec le poids %d\n", a, b);
+//			fprintf(stdout, "\t\tVers %d avec le poids %d\n", a, b);
 
 			erreur = insertionSommet(graphe, a);
+//			fprintf(stdout, "->%d\n", erreur);
 			//if(erreur != PAS_ERREUR)
 			//	return erreur;
 
-			//TODO revoir ici l'insertion d'élément n'existant pas
 			erreur = insertionArete(graphe, tab[i], a, b);
 			if(erreur != PAS_ERREUR)
 				return erreur;
