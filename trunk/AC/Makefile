@@ -19,14 +19,14 @@ include MakeInclude
 all: $(BIN)
 
 	
-$(BIN): $(OBJ) $(BINDIR) bibliotheques
-	$(CC) $(LDFLAGS) $(OBJ) -o $@ $(LIB)
+$(BIN): bibliotheques $(OBJ) $(BINDIR)
+	$(CC) $(LDFLAGS) $(OBJ) -I $(SRCLIBDIR) -L $(LIBDIR) -lgraphe -lliste -o $@ 
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c $(SRCDIR)/%.h $(OBJDIR)
-	$(CC) $(CFLAGS) $< -o $@
+	$(CC) $(CFLAGS) $< -I $(SRCLIBDIR) -L $(LIBDIR) -lgraphe -lliste -o $@ 
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c $(OBJDIR)
-	$(CC) $(CFLAGS) $< -o $@
+	$(CC) $(CFLAGS) $< -I $(SRCLIBDIR) -L $(LIBDIR) -lgraphe -lliste -o $@
 
 
 bibliotheques:

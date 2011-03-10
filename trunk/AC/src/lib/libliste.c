@@ -25,10 +25,13 @@
  *               en plaçant la sentinelle
  *
  */
-/* initialisation de la liste avec la sentinelle */
 casErreur initialisationListe(TypVoisins **liste){
+	casErreur erreur = verifAllocationL(*liste);
+	if(erreur == PAS_ERREUR)
+		return PAS_ERREUR;
+
 	(*liste) = (TypVoisins*) malloc(sizeof(TypVoisins));
-	casErreur erreur = verifAllocationPL(liste);
+	erreur = verifAllocationPL(liste);
 	if(erreur != PAS_ERREUR)
 		return erreur;
 

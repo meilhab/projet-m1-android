@@ -1,7 +1,7 @@
 #ifndef MENU_H
 #define MENU_H
 
-#include "lib/libgraphe.h"
+#include "libgraphe.h"
 #include <string.h>
 
 typedef enum {
