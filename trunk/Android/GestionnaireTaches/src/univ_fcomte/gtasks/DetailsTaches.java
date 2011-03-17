@@ -2,9 +2,11 @@ package univ_fcomte.gtasks;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Application;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -72,5 +74,16 @@ public class DetailsTaches extends Activity {
 				alert.show();
 			}
 		});
+        
+        
+        if(((MonApplication)getApplication()).test) {
+        	Toast.makeText(getApplicationContext(), "true", Toast.LENGTH_SHORT);
+        	Log.i("","true");
+        }
+        else {
+        	Toast.makeText(getApplicationContext(), "false", Toast.LENGTH_SHORT);
+        	Log.i("","false");
+        }
+        //getApplication().
     }
 }
