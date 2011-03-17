@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+    <LinearLayout android:id="@+id/linearLayout1" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+        <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="@string/label_nom" android:id="@+id/label_nom"></TextView>
+        <EditText android:text="@string/label_nom" android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/edit_nom" android:singleLine="true"></EditText>
+        <TextView android:layout_width="wrap_content" android:id="@+id/label_tags" android:text="@string/label_tag" android:layout_height="wrap_content"></TextView>
+        <EditText android:text="@string/label_tag" android:id="@+id/edit_tags" android:layout_width="match_parent" android:layout_height="wrap_content"></EditText>
+        <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/bouton_ajout_tag" android:background="@drawable/icon"></Button>
+        <LinearLayout android:orientation="horizontal" android:id="@+id/linearLayout2" android:layout_width="match_parent" android:layout_height="wrap_content">
+            <TextView android:layout_width="wrap_content" android:id="@+id/label_etat" android:text="@string/label_etat" android:layout_height="wrap_content"></TextView>
+            <Spinner android:id="@+id/edit_etat" android:prompt="@string/label_priorite" android:layout_width="wrap_content" android:layout_height="wrap_content"></Spinner>
+            <TextView android:layout_width="wrap_content" android:id="@+id/label_priorite" android:text="@string/label_priorite" android:layout_height="wrap_content"></TextView>
+            <Spinner android:id="@+id/edit_priorite" android:prompt="@string/label_priorite" android:layout_width="wrap_content" android:layout_height="wrap_content"></Spinner>
+        </LinearLayout>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/label_description" android:id="@+id/label_description"></TextView>
+        <EditText android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/label_description" android:id="@+id/edit_description" android:gravity="top" android:singleLine="false" android:lines="10"></EditText>
+    </LinearLayout>
+</LinearLayout>
