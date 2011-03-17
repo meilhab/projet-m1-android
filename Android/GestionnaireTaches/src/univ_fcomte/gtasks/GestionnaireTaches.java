@@ -20,8 +20,8 @@ public class GestionnaireTaches extends Activity {
         setContentView(R.layout.main);
 		
 		
-        Priorite p = new Priorite(2);
-        Log.i("", p.getStringToID());
+        //Priorite p = new Priorite(2);
+        //Log.i("", p.getStringToID());
     }
     
     @Override
