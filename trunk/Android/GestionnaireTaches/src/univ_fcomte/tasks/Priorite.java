@@ -16,7 +16,7 @@ public class Priorite {
 		else 
 			this.id = id;
 	}
-	
+	/*
 	public String getStringToID(){
 		String[] s = Resources.getSystem().getStringArray(R.array.priorite);
 		return s[id];
@@ -32,5 +32,5 @@ public class Priorite {
 //		}
 //		return null;
 	}
-	
+	*/
 }
