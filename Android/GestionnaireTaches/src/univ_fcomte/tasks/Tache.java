@@ -9,22 +9,22 @@ public class Tache {
 	private Etat etat;
 	private String description;
 	private ArrayList<Tag> listeTags;
-	private ListeTaches listeTachesFille;
+	private ArrayList<Tache> listeTachesFille;
 	
 	public Tache(int identifiant){
 		this.identifiant = identifiant;
 		listeTags = new ArrayList<Tag>();
-		listeTachesFille = new ListeTaches();
+		listeTachesFille = new ArrayList<Tache>();
 		priorite = new Priorite();
 		etat = new Etat();
 	}
 
 	public void ajoutTacheFille(Tache t){
-		listeTachesFille.ajoutTache(t);
+		listeTachesFille.add(t);
 	}
 	
 	public void retirerTacheFille(Tache t){
-		listeTachesFille.retirerTache(t);
+		listeTachesFille.remove(t);
 	}
 	
 	public void ajoutTag(Tag t){

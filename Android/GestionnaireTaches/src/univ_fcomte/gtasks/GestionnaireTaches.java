@@ -1,5 +1,6 @@
 package univ_fcomte.gtasks;
 
+import univ_fcomte.tasks.Modele;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,14 +14,14 @@ import android.util.Log;
 public class GestionnaireTaches extends Activity {
     /** Called when the activity is first created. */
 	
-	public static Boolean om=true;
+	private Modele modele;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-		
-        ((MonApplication)getApplication()).test=false;
+        modele=((MonApplication)getApplication()).getModele();
+        //((MonApplication)getApplication()).test=false;
         //Priorite p = new Priorite(2);
         //Log.i("", p.getStringToID());
     }

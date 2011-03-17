@@ -1,5 +1,6 @@
 package univ_fcomte.gtasks;
 
+import univ_fcomte.tasks.Modele;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Application;
@@ -14,11 +15,15 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 public class DetailsTaches extends Activity {
-    /** Called when the activity is first created. */
+    
+	private Modele modele;
+	
+	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.details_taches);
+        modele=((MonApplication)getApplication()).getModele();
         
         Bundle objetbunble  = this.getIntent().getExtras();
         String titre;
@@ -75,15 +80,5 @@ public class DetailsTaches extends Activity {
 			}
 		});
         
-        
-        if(((MonApplication)getApplication()).test) {
-        	Toast.makeText(getApplicationContext(), "true", Toast.LENGTH_SHORT);
-        	Log.i("","true");
-        }
-        else {
-        	Toast.makeText(getApplicationContext(), "false", Toast.LENGTH_SHORT);
-        	Log.i("","false");
-        }
-        //getApplication().
     }
 }
