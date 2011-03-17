@@ -7,7 +7,11 @@ public class Etat {
 	public static final int TERMINER = 3;
 	private int id;
 	
-	public Etat(int id){
+	public Etat(){
+		id = EN_COURS;
+	}
+	
+	public void setID(int id){
 		if(id < ANNULER && id > TERMINER) 
 			this.id = EN_COURS;
 		else 
