@@ -18,7 +18,7 @@ public class Priorite {
 	}
 	
 	public String getStringToID(){
-		String[] s = Resources.getSystem().getStringArray(R.array.task_priorite);
+		String[] s = Resources.getSystem().getStringArray(R.array.priorite);
 		return s[id];
 //		switch(id){
 //			case SANS:
