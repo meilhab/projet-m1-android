@@ -11,6 +11,10 @@ public class Etat {
 		id = EN_COURS;
 	}
 	
+	public Etat(int id){
+		setID(id);
+	}
+	
 	public void setID(int id){
 		if(id < ANNULER && id > TERMINER) 
 			this.id = EN_COURS;

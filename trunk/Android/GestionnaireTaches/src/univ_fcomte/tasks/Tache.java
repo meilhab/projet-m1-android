@@ -18,6 +18,17 @@ public class Tache {
 		priorite = new Priorite();
 		etat = new Etat();
 	}
+	
+	public Tache(int id, String nom, String description, Etat etat, ArrayList<Tag> listeTags){
+		this.identifiant = id;
+		this.nom = nom;
+		this.description = description;
+		this.etat = etat;
+		this.listeTags = listeTags;
+		listeTachesFille = new ArrayList<Tache>();
+		priorite = new Priorite();
+		etat = new Etat();
+	}
 
 	public void ajoutTacheFille(Tache t){
 		listeTachesFille.add(t);

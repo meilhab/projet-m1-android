@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import univ_fcomte.tasks.Modele;
+import univ_fcomte.tasks.Tache;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -38,45 +39,19 @@ public class GestionnaireTaches extends Activity {
         
         
         
-      //Récupération de la listview créée dans le fichier main.xml
+        //Récupération de la listview créée dans le fichier main.xml
         maListViewPerso = (ListView) findViewById(R.id.listviewperso);
-
         //Création de la ArrayList qui nous permettra de remplire la listView
         ArrayList<HashMap<String, String>> listItem = new ArrayList<HashMap<String, String>>();
- 
         //On déclare la HashMap qui contiendra les informations pour un item
         HashMap<String, String> map;
- 
-        //Création d'une HashMap pour insérer les informations du premier item de notre listView
-        map = new HashMap<String, String>();
-        //on insère un élément titre que l'on récupérera dans le textView titre créé dans le fichier affichageitem.xml
-        map.put("titre", "Word");
-        //on insère un élément description que l'on récupérera dans le textView description créé dans le fichier affichageitem.xml
-        map.put("description", "Editeur de texte");
-        //on insère la référence à l'image (convertit en String car normalement c'est un int) que l'on récupérera dans l'imageView créé dans le fichier affichageitem.xml
-        map.put("img", String.valueOf(R.drawable.icon));
-        //enfin on ajoute cette hashMap dans la arrayList
-        listItem.add(map);
- 
-        //On refait la manip plusieurs fois avec des données différentes pour former les items de notre ListView
- 
-        map = new HashMap<String, String>();
-        map.put("titre", "Tache 1");
-        map.put("description", "Tableur");
-        map.put("img", String.valueOf(R.drawable.icon));
-        listItem.add(map);
- 
-        map = new HashMap<String, String>();
-        map.put("titre", "Power Point");
-        map.put("description", "Logiciel de présentation");
-        map.put("img", String.valueOf(R.drawable.icon));
-        listItem.add(map);
- 
-        map = new HashMap<String, String>();
-        map.put("titre", "Outlook");
-        map.put("description", "Client de courrier électronique");
-        map.put("img", String.valueOf(R.drawable.icon));
-        listItem.add(map);
+        for(Tache t:modele.getListeTaches()) {
+        	map = new HashMap<String, String>();
+            map.put("titre", t.getNom());
+            map.put("description", t.getDescription());
+            map.put("img", String.valueOf(R.drawable.icon));
+            listItem.add(map);
+        }
  
         //Création d'un SimpleAdapter qui se chargera de mettre les items présent dans notre list (listItem) dans la vue affichageitem
         SimpleAdapter mSchedule = new SimpleAdapter (this.getBaseContext(), listItem, R.layout.affichageitem,
@@ -112,8 +87,9 @@ public class GestionnaireTaches extends Activity {
 		        Bundle objetbunble = new Bundle();
 		        Intent intent = new Intent(maListViewPerso.getContext(), DetailsTaches.class);
 		        //objetbunble.putAll(new Bundle(b))
-				objetbunble.putString("titre", "Nouvelle tache");
-				objetbunble.putString("description", "Nouvelle tache");
+				//objetbunble.putString("titre", "Nouvelle tache");
+				//objetbunble.putString("description", "Nouvelle tache");
+		        objetbunble.putInt("id", position);
 		    	intent.putExtras(objetbunble);
 		    	
 				startActivityForResult(intent, CODE_DE_MON_ACTIVITE);

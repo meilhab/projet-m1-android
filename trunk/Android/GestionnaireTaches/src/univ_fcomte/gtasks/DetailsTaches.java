@@ -1,6 +1,8 @@
 package univ_fcomte.gtasks;
 
 import univ_fcomte.tasks.Modele;
+import univ_fcomte.tasks.Tache;
+import univ_fcomte.tasks.Tag;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Application;
@@ -11,12 +13,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 public class DetailsTaches extends Activity {
     
 	private Modele modele;
+	private int identifiant;
 	
 	/** Called when the activity is first created. */
     @Override
@@ -26,10 +30,10 @@ public class DetailsTaches extends Activity {
         modele=((MonApplication)getApplication()).getModele();
         
         Bundle objetbunble  = this.getIntent().getExtras();
-        String titre;
-        String description;
+        //String titre;
+        //String description;
         //On récupère les données du Bundle
-        if (objetbunble != null && objetbunble.containsKey("titre") && objetbunble.containsKey("description")) {
+        /*if (objetbunble != null && objetbunble.containsKey("titre") && objetbunble.containsKey("description")) {
         	titre = this.getIntent().getStringExtra("titre");
             description = this.getIntent().getStringExtra("description");
         }else {
@@ -38,7 +42,13 @@ public class DetailsTaches extends Activity {
         	description = "Error";
         }
         this.setTitle(titre);
+        */
+        if(objetbunble != null && objetbunble.containsKey("id"))
+        	identifiant=this.getIntent().getIntExtra("id",-1);
+        else
+        	identifiant=-1;
         
+        Log.i("","id : "+identifiant);
         
         Spinner s = (Spinner) findViewById(R.id.edit_priorite);
         ArrayAdapter adapter = ArrayAdapter.createFromResource(this, R.array.priorite, android.R.layout.simple_spinner_item);
@@ -51,10 +61,19 @@ public class DetailsTaches extends Activity {
         s.setAdapter(adapter);
         
         final AlertDialog alert;
-        final CharSequence[] items = {"Université", "Perso", "Réunion"};
+        
+        
+        
+        CharSequence[] items=new CharSequence[modele.getListeTags().size()];
+        boolean[] booleen=new boolean[modele.getListeTags().size()];
+        for(int i=0;i<modele.getListeTags().size();i++) {
+        	items[i]=modele.getListeTags().get(i).getNom();
+        	booleen[i]=false;
+        }
+        //items = {"Université", "Perso", "Réunion"};
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getResources().getText(R.string.label_tag));
-        builder.setMultiChoiceItems(items, new boolean[]{false,false,false}, new DialogInterface.OnMultiChoiceClickListener() {
+        builder.setMultiChoiceItems(items, booleen, new DialogInterface.OnMultiChoiceClickListener() {
 			
 			@Override
 			public void onClick(DialogInterface dialog, int which, boolean isChecked) {
@@ -79,6 +98,14 @@ public class DetailsTaches extends Activity {
 				alert.show();
 			}
 		});
+        
+        if(identifiant!=-1) {
+        	Tache t=modele.getListeTaches().get(identifiant);
+        	this.setTitle(t.getNom());
+        	((EditText)findViewById(R.id.edit_nom)).setText(t.getNom());
+        	((EditText)findViewById(R.id.edit_description)).setText(t.getDescription());
+        }
+        	
         
     }
 }
