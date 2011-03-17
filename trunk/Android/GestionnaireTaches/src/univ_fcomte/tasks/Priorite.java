@@ -1,5 +1,8 @@
 package univ_fcomte.tasks;
 
+import android.content.res.Resources;
+import univ_fcomte.gtasks.*;
+
 public class Priorite {
 	public static final int SANS = 0;
 	public static final int FAIBLE = 1;
@@ -15,18 +18,19 @@ public class Priorite {
 	}
 	
 	public String getStringToID(){
-		//priorite[SANS].toString();
-		switch(id){
-			case SANS:
-				return "Sans";
-			case FAIBLE:
-				return "Faible";
-			case URGENT:
-				return "Urgent";
-			case ULTRA_URGENT:
-				return "Ultra urgent";
-		}
-		return null;
+		String[] s = Resources.getSystem().getStringArray(R.array.task_priorite);
+		return s[id];
+//		switch(id){
+//			case SANS:
+//				return "Sans";
+//			case FAIBLE:
+//				return "Faible";
+//			case URGENT:
+//				return "Urgent";
+//			case ULTRA_URGENT:
+//				return "Ultra urgent";
+//		}
+//		return null;
 	}
 	
 }
