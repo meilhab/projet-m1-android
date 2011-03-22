@@ -3,47 +3,48 @@ package univ_fcomte.tasks;
 import java.util.ArrayList;
 
 public class Tache {
-	private int identifiant;
+	private long identifiant;
 	private String nom;
-	private Priorite priorite;
-	private Etat etat;
+	private int priorite;
+	private int etat;
 	private String description;
-	private ArrayList<Tag> listeTags;
-	private ArrayList<Tache> listeTachesFille;
+	private ArrayList<Long> listeTags;
+	private ArrayList<Long> listeTachesFille;
 	
-	public Tache(int identifiant){
+	public Tache(long identifiant){
 		this.identifiant = identifiant;
-		listeTags = new ArrayList<Tag>();
-		listeTachesFille = new ArrayList<Tache>();
-		priorite = new Priorite();
-		etat = new Etat();
+		nom = "";
+		priorite = 1;
+		etat = 1;
+		description = "";
+		listeTags = new ArrayList<Long>();
+		listeTachesFille = new ArrayList<Long>();
 	}
 	
-	public Tache(int id, String nom, String description, Etat etat, ArrayList<Tag> listeTags){
+	public Tache(long id, String nom, String description, int priorite, int etat, ArrayList<Long> listeTags,  ArrayList<Long> listeTachesFille){
 		this.identifiant = id;
 		this.nom = nom;
-		this.description = description;
+		this.priorite=priorite;
 		this.etat = etat;
+		this.description = description;
 		this.listeTags = listeTags;
-		listeTachesFille = new ArrayList<Tache>();
-		priorite = new Priorite();
-		etat = new Etat();
+		this.listeTachesFille = listeTachesFille;
 	}
 
-	public void ajoutTacheFille(Tache t){
-		listeTachesFille.add(t);
+	public void ajoutTacheFille(long id){
+		listeTachesFille.add(id);
 	}
 	
-	public void retirerTacheFille(Tache t){
-		listeTachesFille.remove(t);
+	public void retirerTacheFille(long id){
+		listeTachesFille.remove(id);
 	}
 	
-	public void ajoutTag(Tag t){
-		listeTags.add(t);
+	public void ajoutTag(long id){
+		listeTags.add(id);
 	}
 	
-	public void retirerTag(Tag t){
-		listeTags.remove(t);
+	public void retirerTag(long id){
+		listeTags.remove(id);
 	}
 	
 	public String getNom() {
@@ -54,20 +55,20 @@ public class Tache {
 		this.nom = nom;
 	}
 
-	public Priorite getPriorite() {
+	public int getPriorite() {
 		return priorite;
 	}
 
 	public void setPriorite(int id) {
-		priorite.setID(id);
+		priorite = id;
 	}
 
-	public Etat getEtat() {
+	public int getEtat() {
 		return etat;
 	}
 
 	public void setEtat(int id) {
-		etat.setID(id);
+		etat = id;
 	}
 
 	public String getDescription() {
@@ -78,10 +79,20 @@ public class Tache {
 		this.description = description;
 	}
 	
-	public int getIdentifiant(){
+	public long getIdentifiant(){
 		return identifiant;
 	}
 	
+	public void setIdentifiant(long identifiant){
+		this.identifiant = identifiant;
+	}
 	
+	public ArrayList<Long> getListeTags() {
+		return listeTags;
+	}
+
+	public ArrayList<Long> getListeTachesFille() {
+		return listeTachesFille;
+	}
 	
 }

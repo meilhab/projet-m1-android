@@ -1,14 +1,14 @@
 package univ_fcomte.tasks;
 
 public class Tag {
-	private int identifiant;
+	private long identifiant;
 	private String nom;
 	
-	public Tag(int identifiant){
+	public Tag(long identifiant){
 		this.identifiant = identifiant;
 	}
 	
-	public Tag(int identifiant, String nom){
+	public Tag(long identifiant, String nom){
 		this.identifiant = identifiant;
 		this.nom=nom;
 	}
@@ -21,7 +21,11 @@ public class Tag {
 		this.nom = nom;
 	}
 	
-	public int getIdentifiant(){
+	public long getIdentifiant(){
 		return identifiant;
+	}
+	
+	public void setIdentifiant(long identifiant){
+		this.identifiant = identifiant;
 	}
 }

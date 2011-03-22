@@ -2,14 +2,25 @@ package univ_fcomte.tasks;
 
 import java.util.ArrayList;
 
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+
+import univ_fcomte.bdd.MaBaseSQLite;
+
 public class Modele {
 
 	private ArrayList<Tag> listeTags;
 	private ArrayList<Tache> listeTaches;
+	private Context context;
+	private MaBaseSQLite bdd;
+	private SQLiteDatabase db;
 	
-	public Modele() {
+	public Modele(Context context) {
 		listeTags = new ArrayList<Tag>();
 		listeTaches = new ArrayList<Tache>();
+		this.context = context;
+		this.bdd = new MaBaseSQLite(context, "gestionnaire_taches.db", null, 1);
+		this.db = this.bdd.getDb();
 		
 		listeTags=new ArrayList<Tag>();
 		listeTags.add(new Tag(1, "personnel"));
@@ -17,7 +28,7 @@ public class Modele {
 		listeTags.add(new Tag(3, "Examen"));
 		listeTags.add(new Tag(4, "université"));
 		
-		
+		/*
 		Tache t=new Tache(1, "tache 1", "description tache 1", new Etat(1), listeTags);
 		ajoutTache(t);
 		t=new Tache(2, "tache 2", "description tache 2", new Etat(2), listeTags);
@@ -34,7 +45,7 @@ public class Modele {
 		ajoutTache(t);
 		t=new Tache(8, "tache 8", "description tache 8", new Etat(3), listeTags);
 		ajoutTache(t);
-		
+		*/
 		
 	}
 
@@ -67,6 +78,14 @@ public class Modele {
 	
 	public ArrayList<Tache> getListeTaches(){
 		return listeTaches;
+	}
+	
+	public MaBaseSQLite getBdd() {
+		return bdd;
+	}
+
+	public SQLiteDatabase getDb() {
+		return db;
 	}
 	
 }

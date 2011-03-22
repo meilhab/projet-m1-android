@@ -34,8 +34,10 @@ public class GestionnaireTaches extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        //((MonApplication)getApplication()).setModele(new Modele(this));
         modele=((MonApplication)getApplication()).getModele();
         positionX=0;
+        modele.getBdd().open();
         
         
         
@@ -130,5 +132,10 @@ public class GestionnaireTaches extends Activity {
 
 		
     	return super.onTouchEvent(event);
+    }
+    
+    protected void onDestroy() {
+    	modele.getBdd().close();
+    	super.onDestroy();
     }
 }
