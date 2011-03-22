@@ -3,10 +3,12 @@ package univ_fcomte.gtasks;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import univ_fcomte.synchronisation.Synchronisation;
 import univ_fcomte.tasks.Modele;
 import univ_fcomte.tasks.Tache;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SyncAdapterType;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -37,7 +39,10 @@ public class GestionnaireTaches extends Activity {
         //((MonApplication)getApplication()).setModele(new Modele(this));
         modele=((MonApplication)getApplication()).getModele();
         positionX=0;
-        modele.getBdd().open();
+        modele.getBdd().open(); // a enlever utiliser lorsqu'on modifier la bdd
+        
+        
+        //Toast.makeText(this, new Synchronisation().md5("marseille"), 2000).show();
         
         
         
@@ -95,26 +100,7 @@ public class GestionnaireTaches extends Activity {
 		    	intent.putExtras(objetbunble);
 		    	
 				startActivityForResult(intent, CODE_DE_MON_ACTIVITE);
-			//on récupère la HashMap contenant les infos de notre item (titre, description, img)
-			/*HashMap map = (HashMap) maListViewPerso.getItemAtPosition(position);
- 
-			//On créé un objet Bundle, c'est ce qui va nous permetre d'envoyer des données à l'autre Activity
-			Bundle objetbunble = new Bundle();
- 
-			//Cela fonctionne plus ou moins comme une HashMap, on entre une clef et sa valeur en face
-			objetbunble.putString("titre", (String) map.get("titre"));
-			objetbunble.putString("description", (String) map.get("description"));
- 
-			//On créé l'Intent qui va nous permettre d'afficher l'autre Activity
-			//Attention il va surement falloir que vous modifier le premier paramètre (Tutoriel9_Android.this)
-			//Mettez le nom de l'Activity dans la quelle vous êtes actuellement
-			Intent intent = new Intent(fr_no7.this, QuestionActivity.class);
- 
-			//On affecte à l'Intent le Bundle que l'on a créé
-			intent.putExtras(objetbunble);
- 
-			//On démarre l'autre Activity
-			startActivityForResult(intent, CODE_DE_MON_ACTIVITE);*/
+			
         	}
          });
  
@@ -122,8 +108,6 @@ public class GestionnaireTaches extends Activity {
         
         
         //((MonApplication)getApplication()).test=false;
-        //Priorite p = new Priorite(2);
-        //Log.i("", p.getStringToID());
     }
     
     @Override
