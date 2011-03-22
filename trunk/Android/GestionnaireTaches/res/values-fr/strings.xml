@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello World, GestionnaireTaches!</string>
+    <string name="app_name">Gestionnaire de Taches</string>
+    <string name="label_priorite">Priorité</string>
+    <string name="label_etat">Etat</string>
+    <string name="label_tag">Tags</string>
+    <string name="label_description">Description</string>
+    <string name="label_nom">Nom</string>
+    <string-array name="priorite">
+        <item>Sans</item>
+        <item>Faible</item>
+        <item>Urgent</item>
+        <item>Ultra urgent</item>
+    </string-array>
+    <string-array name="etat">
+        <item>Annulée</item>
+        <item>A prévoir</item>
+        <item>En cours</item>
+        <item>Terminé</item>
+    </string-array>
+    <string name="ajout_tag">Ajouter un Tag</string>
+</resources>
