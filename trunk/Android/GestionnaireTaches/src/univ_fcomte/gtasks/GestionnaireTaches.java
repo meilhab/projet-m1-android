@@ -3,6 +3,13 @@ package univ_fcomte.gtasks;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.json.JSONException;
+
+import univ_fcomte.gtasks.R.string;
+import univ_fcomte.synchronisation.JsonParser;
+import univ_fcomte.synchronisation.SimpleWikiHelper;
+import univ_fcomte.synchronisation.SimpleWikiHelper.ApiException;
+import univ_fcomte.synchronisation.SimpleWikiHelper.ParseException;
 import univ_fcomte.synchronisation.Synchronisation;
 import univ_fcomte.tasks.Modele;
 import univ_fcomte.tasks.Tache;
@@ -43,8 +50,30 @@ public class GestionnaireTaches extends Activity {
         
         
         //Toast.makeText(this, new Synchronisation().md5("marseille"), 2000).show();
-        
-        
+        //Toast.makeText(this, new Synchronisation().GetHTML("http://localhost/om/index.php", null), 2000).show();
+        String om = null;
+        SimpleWikiHelper sw=new SimpleWikiHelper();
+        sw.prepareUserAgent(this);
+		try {
+			om = sw.getPageContent("Olympique de Marseille", true);
+		} catch (ApiException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        //Toast.makeText(this, om, 2000).show();
+		
+		JsonParser json = new JsonParser(modele);
+		try {
+			json.parse(om);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		modele.getBdd().reinitialiserBDD(modele.getListeTags(), modele.getListeTaches(), json.getListeAPourTag(), json.getListeAPourFils());
         
         //Récupération de la listview créée dans le fichier main.xml
         maListViewPerso = (ListView) findViewById(R.id.listviewperso);
