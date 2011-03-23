@@ -73,16 +73,19 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
+		open();
 		db.execSQL(CREATE_TABLE_TAG);
 		db.execSQL(CREATE_TABLE_PRIORITE);
 		db.execSQL(CREATE_TABLE_ETAT);
 		db.execSQL(CREATE_TABLE_TACHE);
 		db.execSQL(CREATE_TABLE_APOURTAG);
 		db.execSQL(CREATE_TABLE_APOURFILS);
+		close();
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		open();
 		db.execSQL("drop table if exists " + TABLE_APOURFILS);
 		db.execSQL("drop table if exists " + TABLE_APOURTAG);
 		db.execSQL("drop table if exists " + TABLE_TACHE);
@@ -90,6 +93,7 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 		db.execSQL("drop table if exists " + TABLE_PRIORITE);
 		db.execSQL("drop table if exists " + TABLE_TAG);
 		onCreate(db);
+		close();
 	}
 	
 	public MaBaseSQLite open(){
@@ -106,6 +110,8 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 	}
 	
 	public Tache getTache(long idTache) {
+		
+		open();
 		
 		Tache tache=null;
 		
@@ -155,11 +161,15 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 			}
 		}
 
+		close();
+		
 		return tache;
 		
 	}
 	
 	public Tag getTag(long idTag) {
+		
+		open();
 		
 		Tag tag=null;
 
@@ -175,11 +185,15 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 			}
 		}
 
+		close();
+		
 		return tag;
 		
 	}
 	
 	public ArrayList<Tache> getListeTache() {
+		
+		open();
 		
 		ArrayList<Tache> listeTache = new ArrayList<Tache>();
 		
@@ -230,11 +244,15 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 			}
 		}
 
+		close();
+		
 		return listeTache;
 		
 	}
 	
 	public ArrayList<Tag> getListeTag() {
+		
+		open();
 		
 		ArrayList<Tag> listeTag = new ArrayList<Tag>();
 
@@ -251,13 +269,18 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 			}
 		}
 
+		close();
+		
 		return listeTag;
 		
 	}
 	
 	
 	
-	public long ajouterTache(Tache tache, long pere) {
+	public long ajouterTache(Tache tache, long pere, boolean plusieurs) {
+		
+		if(!plusieurs)
+			open();
 		
 		ContentValues tacheToInsert = new ContentValues();
 		tacheToInsert.put("nomTache", tache.getNom());
@@ -289,10 +312,16 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 				
 		}
 		
+		if(!plusieurs)
+			close();
+		
 		return nouveauId;
 	}
 	
-	public long ajouterTag(Tag tag) {
+	public long ajouterTag(Tag tag, boolean plusieurs) {
+		
+		if(!plusieurs)
+			open();
 		
 		ContentValues tagToInsert = new ContentValues();
 		tagToInsert.put("libelleTag", tag.getNom());
@@ -300,17 +329,24 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 		long nouveauId = db.insert(TABLE_TAG, null, tagToInsert);
 		tag.setIdentifiant(nouveauId);
 		
+		if(!plusieurs)
+			close();
+		
 		return nouveauId;
 	
 	}	
 	
 	public boolean ajouterListeTag(ArrayList<Tag> listeTag) {
 		
+		open();
+		
 		boolean reussi=true;
 		
 		for(Tag t : listeTag)
-			if(ajouterTag(t)<1)
+			if(ajouterTag(t, true)<1)
 				reussi = false;
+		
+		close();
 		
 		return reussi;
 		
@@ -318,17 +354,23 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 	
 	public boolean ajouterListeTache(ArrayList<Tache> listeTache) {
 		
+		open();
+		
 		boolean reussi=true;
 		
 		for(Tache t : listeTache)
-			if(ajouterTache(t, -1)<1)
+			if(ajouterTache(t, -1, true)<1)
 				reussi = false;
+		
+		close();
 		
 		return reussi;
 		
 	}
 	
 	public boolean ajouterlisteAPourFils(HashMap<Long, Long> listeAPourFils) {
+		
+		open();
 		
 		boolean reussi=true;
 
@@ -340,13 +382,18 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 			apourfilsToInsert.put("idPere", cle);
 			apourfilsToInsert.put("idFils", listeAPourFils.get(cle));
 			db.insert(TABLE_APOURFILS, null, apourfilsToInsert);
+			Log.i("","ajout de "+ cle + ", "+listeAPourFils.get(cle));
 		}
+		
+		close();
 		
 		return reussi;
 		
 	}
 	
 	public boolean ajouterlisteAPourTag(HashMap<Long, Long> listeAPourTag) {
+		
+		open();
 		
 		boolean reussi=true;
 
@@ -360,11 +407,15 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 			db.insert(TABLE_APOURTAG, null, apourtagToInsert);
 		}
 		
+		close();
+		
 		return reussi;
 		
 	}
 	
 	public boolean reinitialiserBDD(ArrayList<Tag> listeTag, ArrayList<Tache> listeTache, HashMap<Long, Long> listeAPourTag, HashMap<Long, Long> listeAPourFils) {
+		
+		open();
 		
 		db.execSQL("drop table if exists " + TABLE_APOURFILS);
 		db.execSQL("drop table if exists " + TABLE_APOURTAG);
@@ -374,12 +425,16 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 		db.execSQL("drop table if exists " + TABLE_TAG);
 		onCreate(db);
 		
-		return ajouterListeTag(listeTag) && ajouterListeTache(listeTache) && ajouterlisteAPourFils(listeAPourTag) && ajouterlisteAPourFils(listeAPourFils);
+		close();
+		
+		return ajouterListeTag(listeTag) && ajouterListeTache(listeTache) && /*ajouterlisteAPourTag(listeAPourTag) && */ajouterlisteAPourFils(listeAPourFils);
 		
 		
 	}
 	
 	public int modifTache(Tache tache) {
+		
+		open();
 		
 		ContentValues tacheToUpdate = new ContentValues();
 		tacheToUpdate.put("nomTache", tache.getNom());
@@ -388,20 +443,33 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 		tacheToUpdate.put("idEtat", tache.getEtat());
 		tacheToUpdate.put("idPriorite", tache.getPriorite());
 		
-		return db.update(TABLE_TACHE, tacheToUpdate, "idTache=" + tache.getIdentifiant(), null);
+		
+		int retour = db.update(TABLE_TACHE, tacheToUpdate, "idTache=" + tache.getIdentifiant(), null);
+		
+		close();
+		
+		return retour;
 		
 	}
 	
 	public long modifTag(Tag tag) {
 		
+		open();
+		
 		ContentValues tagToUpdate = new ContentValues();
 		tagToUpdate.put("libelleTag", tag.getNom());
 		
-		return db.update(TABLE_TAG, tagToUpdate, "idTag=" + tag.getIdentifiant(), null);
+		int retour = db.update(TABLE_TAG, tagToUpdate, "idTag=" + tag.getIdentifiant(), null);
+		
+		close();
+		
+		return retour;
 		
 	}
 	
 	public boolean supprimerTache(Tache tache) {
+		
+		open();
 		
 		boolean reussi=true;
 		
@@ -410,6 +478,8 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 		if(db.delete(TABLE_APOURTAG, "idTache=" + tache.getIdentifiant(), null)<1)
 			reussi = false;
 
+		close();
+		
 		return reussi;
 	}
 	

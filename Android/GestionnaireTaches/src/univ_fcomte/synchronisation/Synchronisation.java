@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
@@ -19,34 +20,81 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 
+import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.util.Log;
+
 public class Synchronisation {
 
-	public Synchronisation() {
-		// TODO Auto-generated constructor stub
+	private static final int HTTP_STATUS_OK = 200;
+
+	private static String sUserAgent = null;
+	
+	public Synchronisation(Context context) {
+		prepareUserAgent(context);
 	}
 	
+	public static class ApiException extends Exception {
+		public ApiException(String detailMessage, Throwable throwable) {
+			super(detailMessage, throwable);
+		}
+		public ApiException(String detailMessage) {
+			super(detailMessage);
+		}
+	}
+
+	public static class ParseException extends Exception {
+		public ParseException(String detailMessage, Throwable throwable) {
+			super(detailMessage, throwable);
+		}
+	}
+	
+	public static void prepareUserAgent(Context context) {
+		try {
+			// Read package name and version number from manifest
+			PackageManager manager = context.getPackageManager();
+			PackageInfo info = manager.getPackageInfo(context.getPackageName(), 0);
+			sUserAgent = String.format("Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)"/*context.getString(R.string.template_user_agent)*/, info.packageName, info.versionName);
+		} catch (NameNotFoundException e) {
+			Log.e("Synchronisation", "Couldn't find package information in PackageManager", e);
+		}
+	}
 	
 	//=======================================================
 	// Recupère une page Web
 	//=======================================================
-	public String GetHTML(String url, List <NameValuePair> nvps) {
+	public String GetHTML(String url, List <NameValuePair> nvps) throws ApiException {
+		
+		if (sUserAgent == null)
+			throw new ApiException("User-Agent string must be prepared");
+		
 		DefaultHttpClient httpClient = new DefaultHttpClient();
 		try {
 			HttpResponse res;
 			URI uri = new URI(url);
-	    	if (nvps!=null){
+			
+			if (nvps!=null){
 	    		HttpPost methodpost = new HttpPost(uri);
 	    		methodpost.addHeader("pragma","no-cache");
+	    		methodpost.setHeader("User-Agent", sUserAgent);
 	    		methodpost.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
 	    		res = httpClient.execute(methodpost);
 		    } else {
 	    		HttpGet methodget = new HttpGet(uri);
 		    	methodget.addHeader("pragma","no-cache");
+		    	methodget.setHeader("User-Agent", sUserAgent);
 		    	res = httpClient.execute(methodget);
 		    }
+			
+			StatusLine status = res.getStatusLine();
+			if (status.getStatusCode() != HTTP_STATUS_OK)
+				throw new ApiException("Invalid response from server: " + status.toString());
+			
 	    	InputStream data = res.getEntity().getContent();
 	    	
-	    	return generateString(data);
+	    	return stream2String(data);
 	    		    	        	
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
@@ -61,7 +109,8 @@ public class Synchronisation {
 	//=======================================================
 	// GenerateString 
 	//=======================================================
-	static public String generateString(InputStream stream) {
+	static public String stream2String(InputStream stream) {
+		
 		InputStreamReader reader = new InputStreamReader(stream);
 		BufferedReader buffer = new BufferedReader(reader);
 		StringBuilder sb = new StringBuilder();
