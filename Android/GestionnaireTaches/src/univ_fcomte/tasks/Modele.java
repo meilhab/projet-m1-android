@@ -49,7 +49,7 @@ public class Modele {
 		
 	}
 
-	public void ajoutTache(Tag t){
+	public void ajoutTag(Tag t){
 		listeTags.add(t);
 	}
 	
