@@ -52,7 +52,7 @@ public class JsonParser {
 			JSONObject tag;
 			JSONObject tache;
 			JSONObject apourtag;
-			JSONObject apourfillle;
+			JSONObject apourfille;
 			
 			for (int i = 0;i < tags.length();i++) {
 				tag = tags.getJSONObject(i);
@@ -84,8 +84,8 @@ public class JsonParser {
 			
 			listeAPourFils=new HashMap<Long, Long>();
 			for (int i = 0;i < apourfils.length();i++) {
-				apourfillle = apourfils.getJSONObject(i);
-				listeAPourFils.put(apourfillle.getLong("idPere"), apourfillle.getLong("idFils"));
+				apourfille = apourfils.getJSONObject(i);
+				listeAPourFils.put(apourfille.getLong("idPere"), apourfille.getLong("idFils"));
 			}			
 		} 
 
@@ -99,7 +99,7 @@ public class JsonParser {
 		try {
 			String cur;
 			while ((cur = buffer.readLine()) != null) {
-				sb.append(cur);
+				sb.append(cur).append("\n"); ;
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -2,32 +2,27 @@ package univ_fcomte.gtasks;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 
-import univ_fcomte.gtasks.R.string;
 import univ_fcomte.synchronisation.JsonParser;
-import univ_fcomte.synchronisation.SimpleWikiHelper;
-import univ_fcomte.synchronisation.SimpleWikiHelper.ApiException;
-import univ_fcomte.synchronisation.SimpleWikiHelper.ParseException;
 import univ_fcomte.synchronisation.Synchronisation;
+import univ_fcomte.synchronisation.Synchronisation.ApiException;
 import univ_fcomte.tasks.Modele;
 import univ_fcomte.tasks.Tache;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SyncAdapterType;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.util.Log;
@@ -45,26 +40,29 @@ public class GestionnaireTaches extends Activity {
         setContentView(R.layout.main);
         //((MonApplication)getApplication()).setModele(new Modele(this));
         modele=((MonApplication)getApplication()).getModele();
-        positionX=0;
-        modele.getBdd().open(); // a enlever utiliser lorsqu'on modifier la bdd
-        
+        positionX=0;        
         
         //Toast.makeText(this, new Synchronisation().md5("marseille"), 2000).show();
-        //Toast.makeText(this, new Synchronisation().GetHTML("http://localhost/om/index.php", null), 2000).show();
         String om = null;
-        SimpleWikiHelper sw=new SimpleWikiHelper();
-        sw.prepareUserAgent(this);
-		try {
-			om = sw.getPageContent("Olympique de Marseille", true);
-		} catch (ApiException e) {
+        Synchronisation sw=new Synchronisation(this);
+        
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);  
+        nameValuePairs.add(new BasicNameValuePair("identifiant", "guillaume"));  
+        nameValuePairs.add(new BasicNameValuePair("mdPasse", sw.md5("android")));
+        
+        try {
+			om = sw.GetHTML("http://marseillaisdu90.javabien.fr/android/index.php"/*"http://10.0.2.2/gestionnaire_taches/index.php"*/, nameValuePairs);
+		} catch (ApiException e1) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e1.printStackTrace();
 		}
         //Toast.makeText(this, om, 2000).show();
 		
+		//à supprimer
+		if(om.indexOf("</div>")>=0 && om.indexOf("</style></noframes>")>=0)
+			om=om.substring(om.indexOf("</div>")+6, om.indexOf("</style></noframes>"));
+
+
 		JsonParser json = new JsonParser(modele);
 		try {
 			json.parse(om);
@@ -102,7 +100,6 @@ public class GestionnaireTaches extends Activity {
 			
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				Log.i("","touch");
 				//Log.i("","position : "+event.getX());
 				positionX=(int) event.getX();
 				return false;
@@ -110,7 +107,6 @@ public class GestionnaireTaches extends Activity {
 		});
         
         maListViewPerso.setOnItemClickListener(new OnItemClickListener() {
-		@SuppressWarnings("unchecked")
 		@Override
 			public void onItemClick(AdapterView a, View v, int position, long id) {
 				Log.i("","item");
@@ -124,7 +120,6 @@ public class GestionnaireTaches extends Activity {
 		        Intent intent = new Intent(maListViewPerso.getContext(), DetailsTaches.class);
 		        //objetbunble.putAll(new Bundle(b))
 				//objetbunble.putString("titre", "Nouvelle tache");
-				//objetbunble.putString("description", "Nouvelle tache");
 		        objetbunble.putInt("id", position);
 		    	intent.putExtras(objetbunble);
 		    	
@@ -132,23 +127,8 @@ public class GestionnaireTaches extends Activity {
 			
         	}
          });
- 
-        
-        
-        
+
         //((MonApplication)getApplication()).test=false;
     }
-    
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-    	// TODO Auto-generated method stub
 
-		
-    	return super.onTouchEvent(event);
-    }
-    
-    protected void onDestroy() {
-    	modele.getBdd().close();
-    	super.onDestroy();
-    }
 }
