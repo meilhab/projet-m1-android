@@ -8,17 +8,24 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.protocol.HTTP;
+import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -65,7 +72,7 @@ public class Synchronisation {
 	//=======================================================
 	// Recupère une page Web
 	//=======================================================
-	public String GetHTML(String url, List <NameValuePair> nvps) throws ApiException {
+	public synchronized String GetHTML(String url, List <NameValuePair> nvps) throws ApiException {
 		
 		if (sUserAgent == null)
 			throw new ApiException("User-Agent string must be prepared");
@@ -104,6 +111,42 @@ public class Synchronisation {
 			e.printStackTrace();
 		}
 		return "";
+	}
+	
+	public boolean envoyerJson(String url, JSONObject json) {
+		
+		boolean reussi = false;
+		
+		HttpClient client = new DefaultHttpClient();
+		HttpConnectionParams.setConnectionTimeout(client.getParams(), 10000); //Timeout Limit
+		HttpResponse response;
+		try{
+			HttpPost post = new HttpPost(url);
+			//StringEntity se = new StringEntity("JSON: " + json.toString());
+			//se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+	        
+			
+			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);  
+	        nameValuePairs.add(new BasicNameValuePair("json", "qfqv"));  
+	        
+			post.setEntity(new UrlEncodedFormEntity(nameValuePairs, HTTP.UTF_8));
+			
+			//post.setEntity(se);
+			
+			response = client.execute(post);
+			/*Checking response */
+			if(response!=null){
+				if (response.getStatusLine().getStatusCode() != HTTP_STATUS_OK)
+					reussi = true;
+				InputStream in = response.getEntity().getContent(); //Get the data in the entity
+				Log.i("Reponse", ""+stream2String(in));
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return reussi;
+		
 	}
 	
 	//=======================================================
