@@ -22,11 +22,11 @@ public class Modele {
 		this.bdd = new MaBaseSQLite(context, "gestionnaire_taches.db", null, 1);
 		this.db = this.bdd.getDb();
 		
-		listeTags=new ArrayList<Tag>();
-		listeTags.add(new Tag(1, "personnel"));
-		listeTags.add(new Tag(2, "professionnel"));
-		listeTags.add(new Tag(3, "Examen"));
-		listeTags.add(new Tag(4, "université"));
+		//listeTags=new ArrayList<Tag>();
+		//listeTags.add(new Tag(1, "personnel", "guillaume"));
+		//listeTags.add(new Tag(2, "professionnel", "guillaume"));
+		//listeTags.add(new Tag(3, "Examen", "guillaume"));
+		//listeTags.add(new Tag(4, "université", "guillaume"));
 		
 		/*
 		Tache t=new Tache(1, "tache 1", "description tache 1", new Etat(1), listeTags);

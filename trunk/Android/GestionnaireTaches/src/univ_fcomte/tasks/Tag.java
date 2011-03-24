@@ -3,14 +3,16 @@ package univ_fcomte.tasks;
 public class Tag {
 	private long identifiant;
 	private String nom;
+	private String idUtilisateur;
 	
 	public Tag(long identifiant){
 		this.identifiant = identifiant;
 	}
 	
-	public Tag(long identifiant, String nom){
+	public Tag(long identifiant, String nom, String idUtilisateur){
 		this.identifiant = identifiant;
 		this.nom=nom;
+		this.idUtilisateur = idUtilisateur;
 	}
 
 	public String getNom() {
@@ -27,5 +29,13 @@ public class Tag {
 	
 	public void setIdentifiant(long identifiant){
 		this.identifiant = identifiant;
+	}
+	
+	public String getIdUtilisateur() {
+		return idUtilisateur;
+	}
+
+	public void setIdUtilisateur(String idUtilisateur) {
+		this.idUtilisateur = idUtilisateur;
 	}
 }

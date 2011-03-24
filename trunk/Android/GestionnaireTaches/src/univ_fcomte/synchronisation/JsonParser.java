@@ -56,7 +56,7 @@ public class JsonParser {
 			
 			for (int i = 0;i < tags.length();i++) {
 				tag = tags.getJSONObject(i);
-				modele.ajoutTag(new Tag(tag.getLong("idTag"),tag.getString("libelleTag")));
+				modele.ajoutTag(new Tag(tag.getLong("idTag"),tag.getString("libelleTag"),tag.getString("identifiant")));
 			}
 			
 			for (int i = 0;i < taches.length();i++) {
@@ -72,7 +72,7 @@ public class JsonParser {
 				for (int j = 0; j< listeFils.length();j++)
 					listeTachesFilles.add(listeFils.getLong(j));
 				
-				modele.ajoutTache(new Tache(tache.getLong("idTache"),tache.getString("nomTache"),tache.getString("descriptionTache"),tache.getInt("idPriorite"), tache.getInt("idEtat"),listeTag,listeTachesFilles));
+				modele.ajoutTache(new Tache(tache.getLong("idTache"),tache.getString("nomTache"),tache.getString("descriptionTache"),tache.getInt("idPriorite"), tache.getInt("idEtat"),listeTag,listeTachesFilles,tache.getString("identifiant")));
 			}
 
 			
