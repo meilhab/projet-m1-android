@@ -8,15 +8,13 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 
+import univ_fcomte.synchronisation.EnvoyerJson;
 import univ_fcomte.synchronisation.JsonParser;
 import univ_fcomte.synchronisation.Synchronisation;
 import univ_fcomte.synchronisation.Synchronisation.ApiException;
 import univ_fcomte.tasks.Modele;
 import univ_fcomte.tasks.Tache;
 import android.app.Activity;
-import android.app.AlertDialog.Builder;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -50,16 +48,17 @@ public class GestionnaireTaches extends Activity {
         String om = null;
         Synchronisation sw=new Synchronisation(this);
         
-        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);  
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);  
         nameValuePairs.add(new BasicNameValuePair("identifiant", "guillaume"));  
         nameValuePairs.add(new BasicNameValuePair("mdPasse", sw.md5("android")));
         
         try {
-			om = sw.GetHTML("http://marseillaisdu90.javabien.fr/android/index.php"/*"http://10.0.2.2/gestionnaire_taches/index.php"*/, nameValuePairs);
+			om = sw.GetHTML(/*"http://marseillaisdu90.javabien.fr/android/index.php"*/"http://10.0.2.2/gestionnaire_taches/index.php", nameValuePairs);
 		} catch (ApiException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		
         //Toast.makeText(this, om, 2000).show();
 		
 		//à supprimer
@@ -76,7 +75,22 @@ public class GestionnaireTaches extends Activity {
 		}
 		
 		modele.getBdd().reinitialiserBDD(modele.getListeTags(), modele.getListeTaches(), json.getListeAPourTag(), json.getListeAPourFils());
+		
+        List<NameValuePair> nvp = new ArrayList<NameValuePair>(2);  
+        nvp.add(new BasicNameValuePair("identifiant", "guillaume"));  
+        nvp.add(new BasicNameValuePair("mdPasse", sw.md5("android")));
+        nvp.add(new BasicNameValuePair("json", new EnvoyerJson(modele).genererJson().toString()));
+		
+        try {
+			String reponse = sw.GetHTML(/*"http://marseillaisdu90.javabien.fr/android/index.php"*/"http://10.0.2.2/gestionnaire_taches/reception.php", nvp);
+			Log.i("",reponse);
+        } catch (ApiException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         
+		//sw.envoyerJson(/*"http://marseillaisdu90.javabien.fr/android/index.php"*/"http://10.0.2.2/gestionnaire_taches/reception.php", new EnvoyerJson(modele).genererJson());
+		
         //Récupération de la listview créée dans le fichier main.xml
         maListViewPerso = (ListView) findViewById(R.id.listviewperso);
         //Création de la ArrayList qui nous permettra de remplire la listView
