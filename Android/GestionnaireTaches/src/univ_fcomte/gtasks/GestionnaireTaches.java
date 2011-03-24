@@ -14,6 +14,9 @@ import univ_fcomte.synchronisation.Synchronisation.ApiException;
 import univ_fcomte.tasks.Modele;
 import univ_fcomte.tasks.Tache;
 import android.app.Activity;
+import android.app.AlertDialog.Builder;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,6 +24,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
@@ -128,6 +132,44 @@ public class GestionnaireTaches extends Activity {
         	}
          });
 
+        maListViewPerso.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+			@Override
+			public boolean onItemLongClick(AdapterView a, View v, int position, long id) {
+				Log.i("","appui long sur "+ position);
+				
+				/*Builder builder = new Builder(v.getContext());
+				builder.setTitle("Options");
+			    String[] myItemClickDialog = new String[4];
+				myItemClickDialog[0] = "Add";
+				myItemClickDialog[1] = "Edit";
+				myItemClickDialog[2] = "Open";
+				myItemClickDialog[3] = "Delete";
+				String[] items = myItemClickDialog;
+				builder.setItems(items, new DialogInterface.OnClickListener() {
+				
+					public void onClick(final DialogInterface dialog, final int which) {
+						switch (which) {
+							case 0:
+							//Do stuff
+							break;
+							case 1:
+							//Do stuff
+							break;
+							case 2:
+							//Do stuff
+							break;
+							case 3:
+							//Do stuff
+							break;
+						}
+					}
+				});*/
+				
+				return true;
+			}
+		});
+        
         //((MonApplication)getApplication()).test=false;
     }
 
