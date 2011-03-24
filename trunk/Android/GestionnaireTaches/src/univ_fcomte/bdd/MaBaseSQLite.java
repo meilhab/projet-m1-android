@@ -25,50 +25,49 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 	public static String TABLE_TACHE = "tache";
 	public static String TABLE_APOURTAG = "apourtag";
 	public static String TABLE_APOURFILS = "apourfils";
-
+	
+	
 	private static String CREATE_TABLE_TAG = "create table " + TABLE_TAG + " ("
-			+ "idTag INTEGER not null,"
-			+ "libelleTag varchar(64) not null,"
-			+ "identifiant varchar(64) not null," + "primary key(idTag, identifiant))";
+		+ "idTag INTEGER PRIMARY KEY AUTOINCREMENT,"
+		+ "libelleTag varchar(64) not null"
+		+ ")";
+	
+	private static String CREATE_TABLE_PRIORITE = "create table " + TABLE_PRIORITE + " ("
+		+ "idPriorite INTEGER PRIMARY KEY AUTOINCREMENT,"
+		+ "libellePriorite varchar(64) not null"
+		+ ")";
+	
+	private static String CREATE_TABLE_ETAT = "create table " + TABLE_ETAT + " ("
+		+ "idEtat INTEGER PRIMARY KEY AUTOINCREMENT,"
+		+ "libelleEtat varchar(64) not null"
+		+ ")";
+	
+	private static String CREATE_TABLE_TACHE = "create table " + TABLE_TACHE + " ("
+		+ "idTache INTEGER PRIMARY KEY AUTOINCREMENT,"
+		+ "nomTache varchar(255) not null,"
+		+ "descriptionTache text,"
+		+ "dateLimite datetime,"
+		+ "idEtat INTEGER not null,"
+		+ "idPriorite INTEGER not null,"
+		+ "foreign key(idEtat) references etat(idEtat),"
+		+ "foreign key(idPriorite) references priorite(idPriorite))";
+	
+	private static String CREATE_TABLE_APOURTAG = "create table " + TABLE_APOURTAG + " ("
+		+ "idTache INTEGER not null,"
+		+ "idTag INTEGER not null,"
+		+ "foreign key(idTache) references tache(idTache),"
+		+ "foreign key(idTag) references tag(idTag),"
+		+ "primary key(idTache, idTag))";
 
-	private static String CREATE_TABLE_PRIORITE = "create table "
-			+ TABLE_PRIORITE + " ("
-			+ "idPriorite INTEGER PRIMARY KEY AUTOINCREMENT,"
-			+ "libellePriorite varchar(64) not null" + ")";
-
-	private static String CREATE_TABLE_ETAT = "create table " + TABLE_ETAT
-			+ " (" + "idEtat INTEGER PRIMARY KEY AUTOINCREMENT,"
-			+ "libelleEtat varchar(64) not null" + ")";
-
-	private static String CREATE_TABLE_TACHE = "create table " + TABLE_TACHE
-			+ " (" + "idTache INTEGER not null,"
-			+ "nomTache varchar(255) not null," + "descriptionTache text,"
-			+ "dateLimite datetime," + "idEtat INTEGER not null,"
-			+ "idPriorite INTEGER not null,"
-			+ "identifiant varchar(64) not null," + "primary key(idTache, identifiant),"
-			+ "foreign key(idEtat) references etat(idEtat),"
-			+ "foreign key(idPriorite) references priorite(idPriorite))";
-
-	private static String CREATE_TABLE_APOURTAG = "create table "
-			+ TABLE_APOURTAG + " (" + "idTache INTEGER not null,"
-			+ "idTag INTEGER not null,"
-			+ "identifiant varchar(64) not null,"
-			+ "foreign key(idTache) references tache(idTache),"
-			+ "foreign key(idTag) references tag(idTag),"
-			+ "foreign key(identifiant) references tache(identifiant),"
-			+ "primary key(idTache, idTag, identifiant))";
-
-	private static String CREATE_TABLE_APOURFILS = "create table "
-			+ TABLE_APOURFILS + " (" + "idPere INTEGER not null,"
-			+ "idFils INTEGER not null,"
-			+ "identifiant varchar(64) not null,"
-			+ "foreign key(idPere) references tache(idPere),"
-			+ "foreign key(idFils) references tache(idFils),"
-			+ "foreign key(identifiant) references tache(identifiant),"
-			+ "primary key(idPere, idFils))";
-
-	public MaBaseSQLite(Context context, String name, CursorFactory factory,
-			int version) {
+	private static String CREATE_TABLE_APOURFILS = "create table " + TABLE_APOURFILS + " ("
+		+ "idPere INTEGER not null,"
+		+ "idFils INTEGER not null,"
+		+ "foreign key(idPere) references tache(idPere),"
+		+ "foreign key(idFils) references tache(idFils),"
+		+ "primary key(idPere, idFils))";
+	
+	
+	public MaBaseSQLite(Context context, String name, CursorFactory factory, int version) {
 		super(context, name, factory, version);
 	}
 
@@ -96,388 +95,328 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 		onCreate(db);
 		close();
 	}
-
-	public MaBaseSQLite open() {
+	
+	public MaBaseSQLite open(){
 		db = getWritableDatabase();
 		return this;
 	}
-
-	public void close() {
+	
+	public void close(){
 		db.close();
 	}
 
 	public SQLiteDatabase getDb() {
 		return db;
 	}
-
+	
 	public Tache getTache(long idTache) {
-
+		
 		open();
-
-		Tache tache = null;
-
+		
+		Tache tache=null;
+		
 		ArrayList<Long> listeTag;
 		ArrayList<Long> listeFils;
 
-		String[] colonnesARecup = new String[] { "nomTache",
-				"descriptionTache", "dateLimite", "idEtat", "idPriorite", "identifiant" };
+		String[] colonnesARecup = new String[] { "nomTache", "descriptionTache", "dateLimite", "idEtat", "idPriorite" };
 
-		Cursor cursorResults = db.query(TABLE_TACHE, colonnesARecup, "idTache="
-				+ idTache, null, null, null, "nomTache asc", null);
+		Cursor cursorResults = db.query(TABLE_TACHE, colonnesARecup, "idTache=" + idTache, null, null, null, "nomTache asc", null);
 		Cursor cursorTag;
 		Cursor cursorFils;
 		if (null != cursorResults) {
 			if (cursorResults.moveToFirst()) {
 				do {
-					int columnNom = cursorResults.getColumnIndex("nomTache");
-					int columnDescription = cursorResults
-							.getColumnIndex("descriptionTache");
-					int columnDate = cursorResults.getColumnIndex("dateLimite");
-					int columnEtat = cursorResults.getColumnIndex("idEtat");
-					int columnPriorite = cursorResults
-							.getColumnIndex("idPriorite");
-					int columnIdUtilisateur = cursorResults
-					.getColumnIndex("identifiant");
-
+					int columnNom= cursorResults.getColumnIndex("nomTache");
+					int columnDescription= cursorResults.getColumnIndex("descriptionTache");
+					int columnDate= cursorResults.getColumnIndex("dateLimite");
+					int columnEtat= cursorResults.getColumnIndex("idEtat");
+					int columnPriorite= cursorResults.getColumnIndex("idPriorite");
+					
 					listeTag = new ArrayList<Long>();
 					listeFils = new ArrayList<Long>();
-
-					cursorTag = db.query(TABLE_APOURTAG,
-							new String[] { "idTag" }, "idTache=" + idTache,
-							null, null, null, "idTag asc", null);
+					
+					cursorTag = db.query(TABLE_APOURTAG, new String[] { "idTag" }, "idTache=" + idTache, null, null, null, "idTag asc", null);
 					if (null != cursorTag) {
 						if (cursorTag.moveToFirst()) {
 							do {
-								int columnTag = cursorResults
-										.getColumnIndex("idTag");
+								int columnTag= cursorResults.getColumnIndex("idTag");
 								listeTag.add(cursorResults.getLong(columnTag));
 							} while (cursorTag.moveToNext());
 						}
 					}
-
-					cursorFils = db.query(TABLE_APOURFILS,
-							new String[] { "idFils" }, "idPere=" + idTache,
-							null, null, null, "idPere asc", null);
+					
+					cursorFils = db.query(TABLE_APOURFILS, new String[] { "idFils" }, "idPere=" + idTache, null, null, null, "idPere asc", null);
 					if (null != cursorFils) {
 						if (cursorFils.moveToFirst()) {
 							do {
-								int columnFils = cursorResults
-										.getColumnIndex("idFils");
-								listeFils
-										.add(cursorResults.getLong(columnFils));
+								int columnFils= cursorResults.getColumnIndex("idFils");
+								listeFils.add(cursorResults.getLong(columnFils));
 							} while (cursorFils.moveToNext());
 						}
 					}
-
-					tache = new Tache(idTache,
-							cursorResults.getString(columnNom),
-							cursorResults.getString(columnDescription),
-							cursorResults.getInt(columnEtat),
-							cursorResults.getInt(columnPriorite), listeTag,
-							listeFils,
-							cursorResults.getString(columnIdUtilisateur));
-
+					
+					tache=new Tache(idTache, cursorResults.getString(columnNom), cursorResults.getString(columnDescription), cursorResults.getInt(columnEtat), cursorResults.getInt(columnPriorite), listeTag, listeFils);
+					
 				} while (cursorResults.moveToNext());
 			}
 		}
 
 		close();
-
+		
 		return tache;
-
+		
 	}
-
+	
 	public Tag getTag(long idTag) {
-
+		
 		open();
+		
+		Tag tag=null;
 
-		Tag tag = null;
+		String[] colonnesARecup = new String[] { "idTag", "libelleTag" };
 
-		String[] colonnesARecup = new String[] { "idTag", "libelleTag", "identifiant" };
-
-		Cursor cursorResults = db.query(TABLE_TAG, colonnesARecup, "idTag="
-				+ idTag, null, null, null, "idTag asc", null);
+		Cursor cursorResults = db.query(TABLE_TAG, colonnesARecup, "idTag="+idTag, null, null, null, "idTag asc", null);
 		if (null != cursorResults) {
 			if (cursorResults.moveToFirst()) {
 				do {
-					int columnLibelle = cursorResults
-							.getColumnIndex("libelleTag");
-					int columnIdUtilisateur = cursorResults
-					.getColumnIndex("identifiant");
-					tag = new Tag(idTag, cursorResults.getString(columnLibelle), cursorResults.getString(columnIdUtilisateur));
+					int columnLibelle= cursorResults.getColumnIndex("libelleTag");
+					tag=new Tag(idTag, cursorResults.getString(columnLibelle));
 				} while (cursorResults.moveToNext());
 			}
 		}
 
 		close();
-
+		
 		return tag;
-
+		
 	}
-
+	
 	public ArrayList<Tache> getListeTache() {
-
+		
 		open();
-
+		
 		ArrayList<Tache> listeTache = new ArrayList<Tache>();
-
+		
 		ArrayList<Long> listeTag;
 		ArrayList<Long> listeFils;
 
-		String[] colonnesARecup = new String[] { "idTache", "nomTache",
-				"descriptionTache", "dateLimite", "idEtat", "idPriorite", "identifiant" };
+		String[] colonnesARecup = new String[] { "idTache", "nomTache", "descriptionTache", "dateLimite", "idEtat", "idPriorite" };
 
-		Cursor cursorResults = db.query(TABLE_TACHE, colonnesARecup, null,
-				null, null, null, "nomTache asc", null);
+		Cursor cursorResults = db.query(TABLE_TACHE, colonnesARecup, null, null, null, null, "nomTache asc", null);
 		Cursor cursorTag;
 		Cursor cursorFils;
 		if (null != cursorResults) {
 			if (cursorResults.moveToFirst()) {
 				do {
-					int columnId = cursorResults.getColumnIndex("IdTache");
-					int columnNom = cursorResults.getColumnIndex("nomTache");
-					int columnDescription = cursorResults
-							.getColumnIndex("descriptionTache");
-					int columnDate = cursorResults.getColumnIndex("dateLimite");
-					int columnEtat = cursorResults.getColumnIndex("idEtat");
-					int columnPriorite = cursorResults
-							.getColumnIndex("idPriorite");
-					int columnIdUtilisateur = cursorResults
-					.getColumnIndex("identifiant");
-
+					int columnId= cursorResults.getColumnIndex("IdTache");
+					int columnNom= cursorResults.getColumnIndex("nomTache");
+					int columnDescription= cursorResults.getColumnIndex("descriptionTache");
+					int columnDate= cursorResults.getColumnIndex("dateLimite");
+					int columnEtat= cursorResults.getColumnIndex("idEtat");
+					int columnPriorite= cursorResults.getColumnIndex("idPriorite");
+					
 					listeTag = new ArrayList<Long>();
 					listeFils = new ArrayList<Long>();
-
-					cursorTag = db.query(TABLE_APOURTAG,
-							new String[] { "idTag" }, "idTache=" + columnId,
-							null, null, null, "idTag asc", null);
+					
+					cursorTag = db.query(TABLE_APOURTAG, new String[] { "idTag" }, "idTache=" + columnId, null, null, null, "idTag asc", null);
 					if (null != cursorTag) {
 						if (cursorTag.moveToFirst()) {
 							do {
-								int columnTag = cursorResults
-										.getColumnIndex("idTag");
+								int columnTag= cursorResults.getColumnIndex("idTag");
 								listeTag.add(cursorResults.getLong(columnTag));
 							} while (cursorTag.moveToNext());
 						}
 					}
-
-					cursorFils = db.query(TABLE_APOURFILS,
-							new String[] { "idFils" }, "idPere=" + columnId,
-							null, null, null, "idPere asc", null);
+					
+					cursorFils = db.query(TABLE_APOURFILS, new String[] { "idFils" }, "idPere=" + columnId, null, null, null, "idPere asc", null);
 					if (null != cursorFils) {
 						if (cursorFils.moveToFirst()) {
 							do {
-								int columnFils = cursorResults
-										.getColumnIndex("idFils");
-								listeFils
-										.add(cursorResults.getLong(columnFils));
+								int columnFils= cursorResults.getColumnIndex("idFils");
+								listeFils.add(cursorResults.getLong(columnFils));
 							} while (cursorFils.moveToNext());
 						}
 					}
-
-					listeTache.add(new Tache(cursorResults.getInt(columnId),
-							cursorResults.getString(columnNom), cursorResults
-									.getString(columnDescription),
-							cursorResults.getInt(columnEtat), cursorResults
-									.getInt(columnPriorite), listeTag,
-							listeFils, cursorResults.getString(columnIdUtilisateur)));
-
+					
+					listeTache.add(new Tache(cursorResults.getInt(columnId), cursorResults.getString(columnNom), cursorResults.getString(columnDescription), cursorResults.getInt(columnEtat), cursorResults.getInt(columnPriorite), listeTag, listeFils));
+					
 				} while (cursorResults.moveToNext());
 			}
 		}
 
 		close();
-
+		
 		return listeTache;
-
+		
 	}
-
+	
 	public ArrayList<Tag> getListeTag() {
-
+		
 		open();
-
+		
 		ArrayList<Tag> listeTag = new ArrayList<Tag>();
 
 		String[] colonnesARecup = new String[] { "idTag", "libelleTag" };
 
-		Cursor cursorResults = db.query(TABLE_TAG, colonnesARecup, null, null,
-				null, null, "idTag asc", null);
+		Cursor cursorResults = db.query(TABLE_TAG, colonnesARecup, null, null, null, null, "idTag asc", null);
 		if (null != cursorResults) {
 			if (cursorResults.moveToFirst()) {
 				do {
 					int columnId = cursorResults.getColumnIndex("idTag");
-					int columnLibelle = cursorResults
-							.getColumnIndex("libelleTag");
-					int columnIdUtilisateur = cursorResults
-							.getColumnIndex("identifiant");
-					listeTag.add(new Tag(cursorResults.getInt(columnId),
-							cursorResults.getString(columnLibelle), cursorResults.getString(columnIdUtilisateur)));
+					int columnLibelle= cursorResults.getColumnIndex("libelleTag");
+					listeTag.add(new Tag(cursorResults.getInt(columnId), cursorResults.getString(columnLibelle)));
 				} while (cursorResults.moveToNext());
 			}
 		}
 
 		close();
-
+		
 		return listeTag;
-
+		
 	}
-
+	
+	
+	
 	public long ajouterTache(Tache tache, long pere, boolean plusieurs) {
-
-		if (!plusieurs)
+		
+		if(!plusieurs)
 			open();
-
+		
 		ContentValues tacheToInsert = new ContentValues();
 		tacheToInsert.put("nomTache", tache.getNom());
 		tacheToInsert.put("descriptionTache", tache.getDescription());
 		tacheToInsert.put("dateLimite", "");
 		tacheToInsert.put("idEtat", tache.getEtat());
 		tacheToInsert.put("idPriorite", tache.getPriorite());
-		tacheToInsert.put("identifiant", tache.getIdUtilisateur());
-
+		
 		long nouveauId = db.insert(TABLE_TACHE, null, tacheToInsert);
 		tache.setIdentifiant(nouveauId);
-
-		if (nouveauId != -1 && pere > 0) {
+		
+		if(nouveauId != -1 && pere > 0) {
 			ContentValues filsToInsert = new ContentValues();
 			tacheToInsert.put("idPere", pere);
 			tacheToInsert.put("idPriorite", nouveauId);
-			if (db.insert(TABLE_APOURFILS, null, filsToInsert) == -1)
+			if(db.insert(TABLE_APOURFILS, null, filsToInsert) == -1)
 				nouveauId = -1;
 		}
-
-		if (nouveauId != -1) {
+		
+		if(nouveauId != -1) {
 			ContentValues TagsToInsert;
-			for (Long l : tache.getListeTags()) {
+			for(Long l : tache.getListeTags()) {
 				TagsToInsert = new ContentValues();
 				TagsToInsert.put("idTache", nouveauId);
 				TagsToInsert.put("idTag", l);
-				if (db.insert(TABLE_APOURTAG, null, TagsToInsert) == -1)
+				if(db.insert(TABLE_APOURTAG, null, TagsToInsert) == -1)
 					nouveauId = -1;
 			}
-
+				
 		}
-
-		if (!plusieurs)
+		
+		if(!plusieurs)
 			close();
-
+		
 		return nouveauId;
 	}
-
+	
 	public long ajouterTag(Tag tag, boolean plusieurs) {
-
-		if (!plusieurs)
+		
+		if(!plusieurs)
 			open();
-
-		Cursor cursor = db.query(TABLE_TAG,new String[] {"MAX('idTag')"},null,null,null,null,null);
-		long nouveauId = -1;
-		if (null != cursor) {
-			if (cursor.moveToFirst()) {
-				
-				ContentValues tagToInsert = new ContentValues();
-				tagToInsert.put("idTag", cursor.getLong(0)+1);
-				tagToInsert.put("libelleTag", tag.getNom());
-				tagToInsert.put("identifiant", tag.getIdUtilisateur());
-				//Log.i("",cursor.getLong(0));
-				
-				nouveauId = db.insert(TABLE_TAG, null, tagToInsert);
-				tag.setIdentifiant(nouveauId);
 		
-				cursor.moveToNext();
-				
-			}
-		}
+		ContentValues tagToInsert = new ContentValues();
+		tagToInsert.put("libelleTag", tag.getNom());
 		
-		if (!plusieurs)
+		long nouveauId = db.insert(TABLE_TAG, null, tagToInsert);
+		tag.setIdentifiant(nouveauId);
+		
+		if(!plusieurs)
 			close();
-
+		
 		return nouveauId;
-
-	}
-
+	
+	}	
+	
 	public boolean ajouterListeTag(ArrayList<Tag> listeTag) {
-
+		
 		open();
-
-		boolean reussi = true;
-
-		for (Tag t : listeTag)
-			if (ajouterTag(t, true) < 1)
+		
+		boolean reussi=true;
+		
+		for(Tag t : listeTag)
+			if(ajouterTag(t, true)<1)
 				reussi = false;
-
+		
 		close();
-
+		
 		return reussi;
-
+		
 	}
-
+	
 	public boolean ajouterListeTache(ArrayList<Tache> listeTache) {
-
+		
 		open();
-
-		boolean reussi = true;
-
-		for (Tache t : listeTache)
-			if (ajouterTache(t, -1, true) < 1)
+		
+		boolean reussi=true;
+		
+		for(Tache t : listeTache)
+			if(ajouterTache(t, -1, true)<1)
 				reussi = false;
-
+		
 		close();
-
+		
 		return reussi;
-
+		
 	}
-
+	
 	public boolean ajouterlisteAPourFils(HashMap<Long, Long> listeAPourFils) {
-
+		
 		open();
-
-		boolean reussi = true;
+		
+		boolean reussi=true;
 
 		Set cles = listeAPourFils.keySet();
 		Iterator it = cles.iterator();
-		while (it.hasNext()) {
+		while (it.hasNext()){
 			Long cle = (Long) it.next();
 			ContentValues apourfilsToInsert = new ContentValues();
 			apourfilsToInsert.put("idPere", cle);
 			apourfilsToInsert.put("idFils", listeAPourFils.get(cle));
 			db.insert(TABLE_APOURFILS, null, apourfilsToInsert);
-			Log.i("", "ajout de " + cle + ", " + listeAPourFils.get(cle));
+			Log.i("","ajout de "+ cle + ", "+listeAPourFils.get(cle));
 		}
-
+		
 		close();
-
+		
 		return reussi;
-
+		
 	}
-
+	
 	public boolean ajouterlisteAPourTag(HashMap<Long, Long> listeAPourTag) {
-
+		
 		open();
-
-		boolean reussi = true;
+		
+		boolean reussi=true;
 
 		Set cles = listeAPourTag.keySet();
 		Iterator it = cles.iterator();
-		while (it.hasNext()) {
+		while (it.hasNext()){
 			Long cle = (Long) it.next();
 			ContentValues apourtagToInsert = new ContentValues();
 			apourtagToInsert.put("idTache", cle);
 			apourtagToInsert.put("idTag", listeAPourTag.get(cle));
 			db.insert(TABLE_APOURTAG, null, apourtagToInsert);
 		}
-
+		
 		close();
-
+		
 		return reussi;
-
+		
 	}
-
-	public boolean reinitialiserBDD(ArrayList<Tag> listeTag,
-			ArrayList<Tache> listeTache, HashMap<Long, Long> listeAPourTag,
-			HashMap<Long, Long> listeAPourFils) {
-
+	
+	public boolean reinitialiserBDD(ArrayList<Tag> listeTag, ArrayList<Tache> listeTache, HashMap<Long, Long> listeAPourTag, HashMap<Long, Long> listeAPourFils) {
+		
 		open();
-
+		
 		db.execSQL("drop table if exists " + TABLE_APOURFILS);
 		db.execSQL("drop table if exists " + TABLE_APOURTAG);
 		db.execSQL("drop table if exists " + TABLE_TACHE);
@@ -485,71 +424,69 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 		db.execSQL("drop table if exists " + TABLE_PRIORITE);
 		db.execSQL("drop table if exists " + TABLE_TAG);
 		onCreate(db);
-
+		
 		close();
-
-		return ajouterListeTag(listeTag)
-				&& ajouterListeTache(listeTache)
-				&& /* ajouterlisteAPourTag(listeAPourTag) && */ajouterlisteAPourFils(listeAPourFils);
-
+		
+		return ajouterListeTag(listeTag) && ajouterListeTache(listeTache) && /*ajouterlisteAPourTag(listeAPourTag) && */ajouterlisteAPourFils(listeAPourFils);
+		
+		
 	}
-
+	
 	public int modifTache(Tache tache) {
-
+		
 		open();
-
+		
 		ContentValues tacheToUpdate = new ContentValues();
 		tacheToUpdate.put("nomTache", tache.getNom());
 		tacheToUpdate.put("descriptionTache", tache.getDescription());
 		tacheToUpdate.put("dateLimite", "");
 		tacheToUpdate.put("idEtat", tache.getEtat());
 		tacheToUpdate.put("idPriorite", tache.getPriorite());
-
-		int retour = db.update(TABLE_TACHE, tacheToUpdate,
-				"idTache=" + tache.getIdentifiant(), null);
-
+		
+		
+		int retour = db.update(TABLE_TACHE, tacheToUpdate, "idTache=" + tache.getIdentifiant(), null);
+		
 		close();
-
+		
 		return retour;
-
+		
 	}
-
+	
 	public long modifTag(Tag tag) {
-
+		
 		open();
-
+		
 		ContentValues tagToUpdate = new ContentValues();
 		tagToUpdate.put("libelleTag", tag.getNom());
-
-		int retour = db.update(TABLE_TAG, tagToUpdate,
-				"idTag=" + tag.getIdentifiant(), null);
-
+		
+		int retour = db.update(TABLE_TAG, tagToUpdate, "idTag=" + tag.getIdentifiant(), null);
+		
 		close();
-
+		
 		return retour;
-
+		
 	}
-
+	
 	public boolean supprimerTache(Tache tache) {
-
+		
 		open();
-
-		boolean reussi = true;
-
-		if (db.delete(TABLE_APOURFILS, "idPere=" + tache.getIdentifiant(), null) < 1)
+		
+		boolean reussi=true;
+		
+		if(db.delete(TABLE_APOURFILS, "idPere=" + tache.getIdentifiant(), null)<1)
 			reussi = false;
-		if (db.delete(TABLE_APOURTAG, "idTache=" + tache.getIdentifiant(), null) < 1)
+		if(db.delete(TABLE_APOURTAG, "idTache=" + tache.getIdentifiant(), null)<1)
 			reussi = false;
 
 		close();
-
+		
 		return reussi;
 	}
-
+	
 	public void viderToutesTables() {
-
+		
 		onUpgrade(db, 1, 1);
-
+		
 	}
-
+	
 }
