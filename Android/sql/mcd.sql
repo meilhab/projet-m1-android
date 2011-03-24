@@ -40,21 +40,21 @@ create table utilisateur (
 	foreign key(idProfil) references profil(idProfil));
 
 create table tag (
-	idTag int not null auto_increment,
+	idTag int not null,
 	libelleTag varchar(64) not null,
 	identifiant varchar(64) not null,
-	primary key(idTag),
+	primary key(idTag, identifiant),
 	foreign key(identifiant) references utilisateur(identifiant));
 	
 create table tache (
-	idTache int not null auto_increment,
+	idTache int not null,
 	nomTache varchar(255) not null,
 	descriptionTache text,
 	dateLimite datetime,
 	idEtat int not null,
 	idPriorite int not null,
 	identifiant varchar(64) not null,
-	primary key(idTache),
+	primary key(idTache, identifiant),
 	foreign key(idEtat) references etat(idEtat),
 	foreign key(idPriorite) references priorite(idPriorite),
 	foreign key(identifiant) references utilisateur(identifiant));
@@ -62,18 +62,20 @@ create table tache (
 create table apourtag (
 	idTache int not null,
 	idTag int not null,
+	identifiant varchar(64) not null,
 	foreign key(idTache) references tache(idTache),
 	foreign key(idTag) references tag(idTag),
-	primary key(idTache, idTag));
+	foreign key(identifiant) references utilisateur(identifiant),
+	primary key(idTache, idTag, identifiant));
 	
 create table apourfils (
 	idPere int not null,
 	idFils int not null,
+	identifiant varchar(64) not null,
 	foreign key(idPere) references tache(idPere),
 	foreign key(idFils) references tache(idFils),
-	primary key(idPere, idFils));
-
-insert into tag(idTag, libelleTag) values (null,'université'), (null,'personnel'), (null,'professionnel'), (null,'examen');
+	foreign key(identifiant) references utilisateur(identifiant),
+	primary key(idPere, idFils, identifiant));
 
 insert into priorite(idPriorite, libellePriorite) values (null,'sans'), (null,'faible'), (null,'urgent'), (null,'ultra urgent');
 
@@ -86,28 +88,42 @@ insert into utilisateur(identifiant, mdPasse, nom, prenom, mail, idProfil) value
 	('benoit','andoid','benoit','meilhac','guillaume.montavon@gmail.com',1),
 	('anonyme','andoid','anonyme','anonyme','guillaume.montavon@gmail.com',2);
 
+insert into tag(idTag, libelleTag, identifiant) values 
+	(1,'université','guillaume'),
+	(2,'personnel','guillaume'),
+	(3,'professionnel','guillaume'),
+	(4,'examen','guillaume'),
+	(1,'université','benoit'),
+	(2,'personnel','benoit'),
+	(3,'professionnel','benoit'),
+	(4,'examen','benoit'),
+	(1,'université','anonyme'),
+	(2,'personnel','anonyme'),
+	(3,'professionnel','anonyme'),
+	(4,'examen','anonyme');	
+	
 insert into tache(idTache, nomTache, descriptionTache, dateLimite, idEtat, idPriorite, identifiant) values 
-	(null,'test tache 1','description test tache 1',null,2,1,'guillaume'),
-	(null,'test tache 2','description test tache 2',null,1,4,'guillaume'),
-	(null,'test tache 3','description test tache 3',null,2,4,'benoit'),
-	(null,'test tache 4','description test tache 4',null,3,3,'benoit'),
-	(null,'test tache 5','description test tache 5',null,4,2,'anonyme'),
-	(null,'test tache 6','description test tache 6',null,3,2,'anonyme');
+	(1,'test tache 1','description test tache 1',null,2,1,'guillaume'),
+	(2,'test tache 2','description test tache 2',null,1,4,'guillaume'),
+	(1,'test tache 1','description test tache 1',null,2,4,'benoit'),
+	(2,'test tache 2','description test tache 2',null,3,3,'benoit'),
+	(1,'test tache 1','description test tache 1',null,4,2,'anonyme'),
+	(2,'test tache 2','description test tache 2',null,3,2,'anonyme');
 
-insert into apourtag(idTache, idTag) values 
-	(1,2),
-	(1,3),
-	(1,4),
-	(2,2),
-	(2,1),
-	(3,3),
-	(4,3),
-	(6,4),
-	(6,1),
-	(4,4),
-	(4,2),
-	(4,1);
+insert into apourtag(idTache, idTag, identifiant) values 
+	(1,2,'guillaume'),
+	(1,3,'guillaume'),
+	(1,4,'guillaume'),
+	(2,2,'guillaume'),
+	(2,1,'guillaume'),
+	(3,3,'guillaume'),
+	(4,3,'guillaume'),
+	(6,4,'guillaume'),
+	(6,1,'guillaume'),
+	(4,4,'guillaume'),
+	(4,2,'guillaume'),
+	(4,1,'guillaume');
 
-insert into apourfils(idPere, idFils) values 
-	(1,2),
-	(5,6);
+insert into apourfils(idPere, idFils, identifiant) values 
+	(1,2,'guillaume'),
+	(5,6,'anonyme');
