@@ -10,8 +10,9 @@ public class Tache {
 	private String description;
 	private ArrayList<Long> listeTags;
 	private ArrayList<Long> listeTachesFille;
-	
-	public Tache(long identifiant){
+	private String idUtilisateur;
+
+	public Tache(long identifiant) {
 		this.identifiant = identifiant;
 		nom = "";
 		priorite = 1;
@@ -20,33 +21,36 @@ public class Tache {
 		listeTags = new ArrayList<Long>();
 		listeTachesFille = new ArrayList<Long>();
 	}
-	
-	public Tache(long id, String nom, String description, int priorite, int etat, ArrayList<Long> listeTags,  ArrayList<Long> listeTachesFille){
+
+	public Tache(long id, String nom, String description, int priorite,
+			int etat, ArrayList<Long> listeTags,
+			ArrayList<Long> listeTachesFille, String idUtilisateur) {
 		this.identifiant = id;
 		this.nom = nom;
-		this.priorite=priorite;
+		this.priorite = priorite;
 		this.etat = etat;
 		this.description = description;
 		this.listeTags = listeTags;
 		this.listeTachesFille = listeTachesFille;
+		this.idUtilisateur = idUtilisateur;
 	}
 
-	public void ajoutTacheFille(long id){
+	public void ajoutTacheFille(long id) {
 		listeTachesFille.add(id);
 	}
-	
-	public void retirerTacheFille(long id){
+
+	public void retirerTacheFille(long id) {
 		listeTachesFille.remove(id);
 	}
-	
-	public void ajoutTag(long id){
+
+	public void ajoutTag(long id) {
 		listeTags.add(id);
 	}
-	
-	public void retirerTag(long id){
+
+	public void retirerTag(long id) {
 		listeTags.remove(id);
 	}
-	
+
 	public String getNom() {
 		return nom;
 	}
@@ -78,15 +82,15 @@ public class Tache {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
-	public long getIdentifiant(){
+
+	public long getIdentifiant() {
 		return identifiant;
 	}
-	
-	public void setIdentifiant(long identifiant){
+
+	public void setIdentifiant(long identifiant) {
 		this.identifiant = identifiant;
 	}
-	
+
 	public ArrayList<Long> getListeTags() {
 		return listeTags;
 	}
@@ -94,5 +98,13 @@ public class Tache {
 	public ArrayList<Long> getListeTachesFille() {
 		return listeTachesFille;
 	}
-	
+
+	public String getIdUtilisateur() {
+		return idUtilisateur;
+	}
+
+	public void setIdUtilisateur(String idUtilisateur) {
+		this.idUtilisateur = idUtilisateur;
+	}
+
 }
