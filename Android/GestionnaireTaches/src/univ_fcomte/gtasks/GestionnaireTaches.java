@@ -51,7 +51,7 @@ public class GestionnaireTaches extends Activity {
         nameValuePairs.add(new BasicNameValuePair("mdPasse", sw.md5("android")));
         
         try {
-			om = sw.GetHTML(/*"http://marseillaisdu90.javabien.fr/android/index.php"*/"http://10.0.2.2/gestionnaire_taches/index.php", nameValuePairs);
+			om = sw.GetHTML("http://marseillaisdu90.javabien.fr/android/index.php"/*"http://10.0.2.2/gestionnaire_taches/index.php"*/, nameValuePairs);
 		} catch (ApiException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
