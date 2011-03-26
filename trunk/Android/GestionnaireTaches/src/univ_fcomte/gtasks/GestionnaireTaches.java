@@ -53,18 +53,13 @@ public class GestionnaireTaches extends Activity {
         nameValuePairs.add(new BasicNameValuePair("mdPasse", sw.md5("android")));
         
         try {
-			om = sw.GetHTML(/*"http://marseillaisdu90.javabien.fr/android/index.php"*/"http://10.0.2.2/gestionnaire_taches/index.php", nameValuePairs);
+			om = sw.GetHTML("http://projetandroid.hosting.olikeopen.com/gestionnaire_taches/index.php"/*"http://10.0.2.2/gestionnaire_taches/index.php"*/, nameValuePairs);
 		} catch (ApiException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		
         //Toast.makeText(this, om, 2000).show();
-		
-		//à supprimer
-		if(om.indexOf("</div>")>=0 && om.indexOf("</style></noframes>")>=0)
-			om=om.substring(om.indexOf("</div>")+6, om.indexOf("</style></noframes>"));
-
 
 		JsonParser json = new JsonParser(modele);
 		try {
@@ -82,7 +77,7 @@ public class GestionnaireTaches extends Activity {
         nvp.add(new BasicNameValuePair("json", new EnvoyerJson(modele).genererJson().toString()));
 		
         try {
-			String reponse = sw.GetHTML(/*"http://marseillaisdu90.javabien.fr/android/index.php"*/"http://10.0.2.2/gestionnaire_taches/reception.php", nvp);
+			String reponse = sw.GetHTML("http://projetandroid.hosting.olikeopen.com/gestionnaire_taches/reception.php"/*"http://10.0.2.2/gestionnaire_taches/reception.php"*/, nvp);
 			Log.i("",reponse);
         } catch (ApiException e) {
 			// TODO Auto-generated catch block
