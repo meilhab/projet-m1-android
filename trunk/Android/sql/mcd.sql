@@ -84,9 +84,9 @@ insert into etat(idEtat, libelleEtat) values (null,'annulé'), (null,'à prévoir')
 insert into profil(idProfil, libelleProfil) values (null,'administrateur'), (null,'connecte');
 
 insert into utilisateur(identifiant, mdPasse, nom, prenom, mail, idProfil) values 
-	('guillaume','android','guillaume','montavon','guillaume.montavon@gmail.com',1),
-	('benoit','andoid','benoit','meilhac','guillaume.montavon@gmail.com',1),
-	('anonyme','andoid','anonyme','anonyme','guillaume.montavon@gmail.com',2);
+	('guillaume','c31b32364ce19ca8fcd150a417ecce58','guillaume','montavon','guillaume.montavon@gmail.com',1),
+	('benoit','c31b32364ce19ca8fcd150a417ecce58','benoit','meilhac','guillaume.montavon@gmail.com',1),
+	('anonyme','c31b32364ce19ca8fcd150a417ecce58','anonyme','anonyme','guillaume.montavon@gmail.com',2);
 
 insert into tag(idTag, libelleTag, identifiant) values 
 	(1,'université','guillaume'),
