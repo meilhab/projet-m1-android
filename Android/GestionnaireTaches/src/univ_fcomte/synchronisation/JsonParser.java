@@ -62,15 +62,24 @@ public class JsonParser {
 			for (int i = 0;i < taches.length();i++) {
 				tache = taches.getJSONObject(i);
 				
-				JSONArray listeTags = tache.getJSONArray("apourtag");
+				
 				ArrayList<Long> listeTag= new ArrayList<Long>();
+				JSONArray listeTags = tache.getJSONArray("apourtag");
+				try {
 				for (int j = 0; j< listeTags.length();j++)
 					listeTag.add(listeTags.getLong(j));
+				}catch (Exception e) {
+					// TODO: handle exception
+				}
 				
-				JSONArray listeFils = tache.getJSONArray("apourfils");
 				ArrayList<Long> listeTachesFilles= new ArrayList<Long>();
-				for (int j = 0; j< listeFils.length();j++)
-					listeTachesFilles.add(listeFils.getLong(j));
+				try {
+					JSONArray listeFils = tache.getJSONArray("apourfils");
+					for (int j = 0; j< listeFils.length();j++)
+						listeTachesFilles.add(listeFils.getLong(j));
+				}catch (Exception e) {
+					// TODO: handle exception
+				}
 				
 				modele.ajoutTache(new Tache(tache.getLong("idTache"),tache.getString("nomTache"),tache.getString("descriptionTache"),tache.getInt("idPriorite"), tache.getInt("idEtat"),listeTag,listeTachesFilles));
 			}
