@@ -36,28 +36,34 @@ public class GestionnaireTaches extends Activity {
 	private Modele modele;
 	private ListView maListViewPerso;
 	
+	private String serveur;
+	Synchronisation sw;
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         //((MonApplication)getApplication()).setModele(new Modele(this));
         modele=((MonApplication)getApplication()).getModele();
-        positionX=0;        
+        positionX=0;
+        //serveur = "http://10.0.2.2/gestionnaire_taches/";
+        serveur = "http://projetandroid.hosting.olikeopen.com/gestionnaire_taches/";
         
         //Toast.makeText(this, new Synchronisation().md5("marseille"), 2000).show();
         String om = null;
-        Synchronisation sw=new Synchronisation(this);
+        sw=new Synchronisation(this);
         
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);  
         nameValuePairs.add(new BasicNameValuePair("identifiant", "guillaume"));  
         nameValuePairs.add(new BasicNameValuePair("mdPasse", sw.md5("android")));
         
         try {
-			om = sw.GetHTML("http://projetandroid.hosting.olikeopen.com/gestionnaire_taches/index.php"/*"http://10.0.2.2/gestionnaire_taches/index.php"*/, nameValuePairs);
+			om = sw.GetHTML(serveur + "index.php", nameValuePairs);
 		} catch (ApiException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		
+		Log.i("",om);
 		
         //Toast.makeText(this, om, 2000).show();
 
@@ -65,27 +71,12 @@ public class GestionnaireTaches extends Activity {
 		try {
 			json.parse(om);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		modele.getBdd().reinitialiserBDD(modele.getListeTags(), modele.getListeTaches(), json.getListeAPourTag(), json.getListeAPourFils());
 		
-        List<NameValuePair> nvp = new ArrayList<NameValuePair>(2);  
-        nvp.add(new BasicNameValuePair("identifiant", "guillaume"));  
-        nvp.add(new BasicNameValuePair("mdPasse", sw.md5("android")));
-        nvp.add(new BasicNameValuePair("json", new EnvoyerJson(modele).genererJson().toString()));
-		
-        try {
-			String reponse = sw.GetHTML("http://projetandroid.hosting.olikeopen.com/gestionnaire_taches/reception.php"/*"http://10.0.2.2/gestionnaire_taches/reception.php"*/, nvp);
-			Log.i("",reponse);
-        } catch (ApiException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
         
-		//sw.envoyerJson(/*"http://marseillaisdu90.javabien.fr/android/index.php"*/"http://10.0.2.2/gestionnaire_taches/reception.php", new EnvoyerJson(modele).genererJson());
-		
         //Récupération de la listview créée dans le fichier main.xml
         maListViewPerso = (ListView) findViewById(R.id.listviewperso);
         //Création de la ArrayList qui nous permettra de remplire la listView
@@ -177,9 +168,28 @@ public class GestionnaireTaches extends Activity {
 				
 				return true;
 			}
-		});
-        
+		}); 
         //((MonApplication)getApplication()).test=false;
     }
 
+    @Override
+    public void onBackPressed() {
+    	
+    	Log.i("","appuie sur back");
+        List<NameValuePair> nvp = new ArrayList<NameValuePair>(2);  
+        nvp.add(new BasicNameValuePair("identifiant", "guillaume"));  
+        nvp.add(new BasicNameValuePair("mdPasse", sw.md5("android")));
+        nvp.add(new BasicNameValuePair("json", new EnvoyerJson(modele).genererJson().toString()));
+		
+        try {
+			String reponse = sw.GetHTML(serveur + "reception.php", nvp);
+			Log.i("reponse",reponse);
+        } catch (ApiException e) {
+			e.printStackTrace();
+		}
+        
+    	super.onBackPressed();
+    }
+    
+    
 }
