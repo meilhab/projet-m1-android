@@ -85,13 +85,13 @@ public class Synchronisation {
 			if (nvps!=null){
 	    		HttpPost methodpost = new HttpPost(uri);
 	    		methodpost.addHeader("pragma","no-cache");
-	    		methodpost.setHeader("User-Agent", sUserAgent);
+	    		//methodpost.setHeader("User-Agent", sUserAgent);
 	    		methodpost.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
 	    		res = httpClient.execute(methodpost);
 		    } else {
 	    		HttpGet methodget = new HttpGet(uri);
 		    	methodget.addHeader("pragma","no-cache");
-		    	methodget.setHeader("User-Agent", sUserAgent);
+		    	//methodget.setHeader("User-Agent", sUserAgent);
 		    	res = httpClient.execute(methodget);
 		    }
 			
@@ -139,7 +139,7 @@ public class Synchronisation {
 				if (response.getStatusLine().getStatusCode() != HTTP_STATUS_OK)
 					reussi = true;
 				InputStream in = response.getEntity().getContent(); //Get the data in the entity
-				Log.i("Reponse", ""+stream2String(in));
+				//Log.i("Reponse", ""+stream2String(in));
 			}
 		}catch(Exception e){
 			e.printStackTrace();

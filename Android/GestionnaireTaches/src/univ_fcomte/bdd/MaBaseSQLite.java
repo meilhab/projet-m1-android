@@ -17,7 +17,7 @@ import android.util.Log;
 
 public class MaBaseSQLite extends SQLiteOpenHelper {
 
-	protected SQLiteDatabase db;
+	protected SQLiteDatabase db = null;
 
 	public static String TABLE_TAG = "tag";
 	public static String TABLE_PRIORITE = "priorite";
@@ -73,19 +73,19 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		open();
+		//open();
 		db.execSQL(CREATE_TABLE_TAG);
 		db.execSQL(CREATE_TABLE_PRIORITE);
 		db.execSQL(CREATE_TABLE_ETAT);
 		db.execSQL(CREATE_TABLE_TACHE);
 		db.execSQL(CREATE_TABLE_APOURTAG);
 		db.execSQL(CREATE_TABLE_APOURFILS);
-		close();
+		//close();
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		open();
+		//open();
 		db.execSQL("drop table if exists " + TABLE_APOURFILS);
 		db.execSQL("drop table if exists " + TABLE_APOURTAG);
 		db.execSQL("drop table if exists " + TABLE_TACHE);
@@ -93,7 +93,7 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 		db.execSQL("drop table if exists " + TABLE_PRIORITE);
 		db.execSQL("drop table if exists " + TABLE_TAG);
 		onCreate(db);
-		close();
+		//close();
 	}
 	
 	public MaBaseSQLite open(){
@@ -382,7 +382,7 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 			apourfilsToInsert.put("idPere", cle);
 			apourfilsToInsert.put("idFils", listeAPourFils.get(cle));
 			db.insert(TABLE_APOURFILS, null, apourfilsToInsert);
-			Log.i("","ajout de "+ cle + ", "+listeAPourFils.get(cle));
+			//Log.i("","ajout de "+ cle + ", "+listeAPourFils.get(cle));
 		}
 		
 		close();
