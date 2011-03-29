@@ -48,7 +48,7 @@ public class DetailsTaches extends Activity {
         else
         	identifiant=-1;
         
-        Log.i("","id : "+identifiant);
+        //Log.i("","id : "+identifiant);
         
         Spinner s = (Spinner) findViewById(R.id.edit_priorite);
         ArrayAdapter adapter = ArrayAdapter.createFromResource(this, R.array.priorite, android.R.layout.simple_spinner_item);

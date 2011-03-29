@@ -50,12 +50,14 @@ public class GestionnaireTaches extends Activity {
         serveur = "http://projetandroid.hosting.olikeopen.com/gestionnaire_taches/";
         
         //Toast.makeText(this, new Synchronisation().md5("marseille"), 2000).show();
-        String om = null;
+        String om = "";
         sw=new Synchronisation(this);
         
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);  
         nameValuePairs.add(new BasicNameValuePair("identifiant", "guillaume"));  
         nameValuePairs.add(new BasicNameValuePair("mdPasse", sw.md5("android")));
+        
+        Toast.makeText(this.getApplicationContext(), "test", 1000).show();
         
         try {
 			om = sw.GetHTML(serveur + "index.php", nameValuePairs);
@@ -63,7 +65,9 @@ public class GestionnaireTaches extends Activity {
 			e1.printStackTrace();
 		}
 		
-		Log.i("",om);
+        //Toast.makeText(this, om, 1000).show();
+		
+		Log.i("reception",om);
 		
         //Toast.makeText(this, om, 2000).show();
 
@@ -115,7 +119,7 @@ public class GestionnaireTaches extends Activity {
 			public void onItemClick(AdapterView a, View v, int position, long id) {
 				Log.i("","item");
 				
-				if(positionX<=getResources().getDrawable(R.drawable.icon).getMinimumWidth())
+				//if(positionX<=getResources().getDrawable(R.drawable.icon).getMinimumWidth())
 					Log.i("","on clic sur l'image");
 				
 				int CODE_DE_MON_ACTIVITE = 1;
