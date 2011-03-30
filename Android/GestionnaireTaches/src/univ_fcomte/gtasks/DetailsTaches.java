@@ -1,5 +1,13 @@
 package univ_fcomte.gtasks;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
+import univ_fcomte.synchronisation.EnvoyerJson;
+import univ_fcomte.synchronisation.Synchronisation.ApiException;
 import univ_fcomte.tasks.Modele;
 import univ_fcomte.tasks.Tache;
 import univ_fcomte.tasks.Tag;
@@ -21,6 +29,8 @@ public class DetailsTaches extends Activity {
     
 	private Modele modele;
 	private int identifiant;
+	private EditText description;
+	private EditText nom;
 	
 	/** Called when the activity is first created. */
     @Override
@@ -49,6 +59,8 @@ public class DetailsTaches extends Activity {
         	identifiant=-1;
         
         //Log.i("","id : "+identifiant);
+        nom = ((EditText)findViewById(R.id.edit_nom));
+        description = ((EditText)findViewById(R.id.edit_description));
         
         Spinner s = (Spinner) findViewById(R.id.edit_priorite);
         ArrayAdapter adapter = ArrayAdapter.createFromResource(this, R.array.priorite, android.R.layout.simple_spinner_item);
@@ -100,12 +112,25 @@ public class DetailsTaches extends Activity {
 		});
         
         if(identifiant!=-1) {
-        	Tache t=modele.getListeTaches().get(identifiant);
+        	Tache t=modele.getTacheById(identifiant);
         	this.setTitle(t.getNom());
-        	((EditText)findViewById(R.id.edit_nom)).setText(t.getNom());
-        	((EditText)findViewById(R.id.edit_description)).setText(t.getDescription());
+        	nom.setText(t.getNom());
+        	description.setText(t.getDescription());
         }
         	
         
     }
+    
+    
+    
+    public void onBackPressed() {
+    	
+    	Tache tache = new Tache(modele.getIdMax(), nom.getText().toString(), description.getText().toString(), 3, 1, new ArrayList<Long>(), new ArrayList<Long>());
+    	
+    	modele.ajoutTache(tache);
+    	modele.getBdd().ajouterTache(tache, -1, false);
+    	
+    	super.onBackPressed();
+    }
+    
 }

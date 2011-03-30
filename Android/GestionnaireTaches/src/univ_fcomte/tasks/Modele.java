@@ -88,4 +88,24 @@ public class Modele {
 		return db;
 	}
 	
+	public Tache getTacheById(int id) {
+		
+		Tache tache = null;
+		for(int i=0;i<listeTaches.size();i++)
+			if(listeTaches.get(i).getIdentifiant() == id)
+				tache = listeTaches.get(i);
+		
+		return tache;
+	}
+	
+	public long getIdMax() {
+		
+		long max = 0;
+		for(Tache t : listeTaches)
+			if(t.getIdentifiant()>max)
+				max = t.getIdentifiant();
+		
+		return max;
+		
+	}
 }

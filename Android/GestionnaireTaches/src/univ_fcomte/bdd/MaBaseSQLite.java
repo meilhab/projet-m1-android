@@ -370,22 +370,24 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 	
 	public boolean ajouterlisteAPourFils(HashMap<Long, Long> listeAPourFils) {
 		
-		open();
-		
 		boolean reussi=true;
-
-		Set cles = listeAPourFils.keySet();
-		Iterator it = cles.iterator();
-		while (it.hasNext()){
-			Long cle = (Long) it.next();
-			ContentValues apourfilsToInsert = new ContentValues();
-			apourfilsToInsert.put("idPere", cle);
-			apourfilsToInsert.put("idFils", listeAPourFils.get(cle));
-			db.insert(TABLE_APOURFILS, null, apourfilsToInsert);
-			//Log.i("","ajout de "+ cle + ", "+listeAPourFils.get(cle));
-		}
 		
-		close();
+		if(listeAPourFils != null) {
+			open();
+	
+			Set cles = listeAPourFils.keySet();
+			Iterator it = cles.iterator();
+			while (it.hasNext()){
+				Long cle = (Long) it.next();
+				ContentValues apourfilsToInsert = new ContentValues();
+				apourfilsToInsert.put("idPere", cle);
+				apourfilsToInsert.put("idFils", listeAPourFils.get(cle));
+				db.insert(TABLE_APOURFILS, null, apourfilsToInsert);
+				//Log.i("","ajout de "+ cle + ", "+listeAPourFils.get(cle));
+			}
+			
+			close();
+		}
 		
 		return reussi;
 		
@@ -393,22 +395,23 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 	
 	public boolean ajouterlisteAPourTag(HashMap<Long, Long> listeAPourTag) {
 		
-		open();
-		
 		boolean reussi=true;
-
-		Set cles = listeAPourTag.keySet();
-		Iterator it = cles.iterator();
-		while (it.hasNext()){
-			Long cle = (Long) it.next();
-			ContentValues apourtagToInsert = new ContentValues();
-			apourtagToInsert.put("idTache", cle);
-			apourtagToInsert.put("idTag", listeAPourTag.get(cle));
-			db.insert(TABLE_APOURTAG, null, apourtagToInsert);
+		
+		if(listeAPourTag != null) {
+			open();
+			
+			Set cles = listeAPourTag.keySet();
+			Iterator it = cles.iterator();
+			while (it.hasNext()){
+				Long cle = (Long) it.next();
+				ContentValues apourtagToInsert = new ContentValues();
+				apourtagToInsert.put("idTache", cle);
+				apourtagToInsert.put("idTag", listeAPourTag.get(cle));
+				db.insert(TABLE_APOURTAG, null, apourtagToInsert);
+			}
+			
+			close();
 		}
-		
-		close();
-		
 		return reussi;
 		
 	}
@@ -427,7 +430,7 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 		
 		close();
 		
-		return ajouterListeTag(listeTag) && ajouterListeTache(listeTache) && /*ajouterlisteAPourTag(listeAPourTag) && */ajouterlisteAPourFils(listeAPourFils);
+		return ajouterListeTag(listeTag) && ajouterListeTache(listeTache) && ajouterlisteAPourTag(listeAPourTag) && ajouterlisteAPourFils(listeAPourFils);
 		
 		
 	}
