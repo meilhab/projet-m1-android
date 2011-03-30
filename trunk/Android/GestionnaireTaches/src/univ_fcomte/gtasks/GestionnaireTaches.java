@@ -15,6 +15,7 @@ import univ_fcomte.synchronisation.Synchronisation.ApiException;
 import univ_fcomte.tasks.Modele;
 import univ_fcomte.tasks.Tache;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -37,43 +38,44 @@ public class GestionnaireTaches extends Activity {
 	private ListView maListViewPerso;
 	
 	private String serveur;
-	Synchronisation sw;
+	private Synchronisation sw;
+	private final int CODE_DE_MON_ACTIVITE = 1;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        //((MonApplication)getApplication()).setModele(new Modele(this));
+
         modele=((MonApplication)getApplication()).getModele();
         positionX=0;
         //serveur = "http://10.0.2.2/gestionnaire_taches/";
         serveur = "http://projetandroid.hosting.olikeopen.com/gestionnaire_taches/";
         
         //Toast.makeText(this, new Synchronisation().md5("marseille"), 2000).show();
-        String om = "";
+        String codeJson = "";
         sw=new Synchronisation(this);
         
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);  
         nameValuePairs.add(new BasicNameValuePair("identifiant", "guillaume"));  
         nameValuePairs.add(new BasicNameValuePair("mdPasse", sw.md5("android")));
         
-        Toast.makeText(this.getApplicationContext(), "test", 1000).show();
+        //Toast.makeText(this.getApplicationContext(), "test", 1000).show();
         
         try {
-			om = sw.GetHTML(serveur + "index.php", nameValuePairs);
+        	codeJson = sw.GetHTML(serveur + "index.php", nameValuePairs);
 		} catch (ApiException e1) {
 			e1.printStackTrace();
 		}
 		
         //Toast.makeText(this, om, 1000).show();
 		
-		Log.i("reception",om);
+		//Log.i("reception",codeJson);
 		
         //Toast.makeText(this, om, 2000).show();
 
 		JsonParser json = new JsonParser(modele);
 		try {
-			json.parse(om);
+			json.parse(codeJson);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -83,24 +85,8 @@ public class GestionnaireTaches extends Activity {
         
         //Récupération de la listview créée dans le fichier main.xml
         maListViewPerso = (ListView) findViewById(R.id.listviewperso);
-        //Création de la ArrayList qui nous permettra de remplire la listView
-        ArrayList<HashMap<String, String>> listItem = new ArrayList<HashMap<String, String>>();
-        //On déclare la HashMap qui contiendra les informations pour un item
-        HashMap<String, String> map;
-        for(Tache t:modele.getListeTaches()) {
-        	map = new HashMap<String, String>();
-            map.put("titre", t.getNom());
-            map.put("description", t.getDescription());
-            map.put("img", String.valueOf(R.drawable.icon));
-            listItem.add(map);
-        }
- 
-        //Création d'un SimpleAdapter qui se chargera de mettre les items présent dans notre list (listItem) dans la vue affichageitem
-        SimpleAdapter mSchedule = new SimpleAdapter (this.getBaseContext(), listItem, R.layout.affichageitem,
-               new String[] {"img", "titre", "description"}, new int[] {R.id.img, R.id.titre, R.id.description});
- 
-        //On attribut à notre listView l'adapter que l'on vient de créer
-        maListViewPerso.setAdapter(mSchedule);
+
+        updateList();
         
         //Enfin on met un écouteur d'évènement sur notre listView
       //On met un écouteur d'évènement sur notre listView
@@ -122,13 +108,15 @@ public class GestionnaireTaches extends Activity {
 				//if(positionX<=getResources().getDrawable(R.drawable.icon).getMinimumWidth())
 					Log.i("","on clic sur l'image");
 				
-				int CODE_DE_MON_ACTIVITE = 1;
 		    	Toast.makeText(maListViewPerso.getContext(), "Nouvelle tache", Toast.LENGTH_SHORT).show();
 		        Bundle objetbunble = new Bundle();
 		        Intent intent = new Intent(maListViewPerso.getContext(), DetailsTaches.class);
 		        //objetbunble.putAll(new Bundle(b))
 				//objetbunble.putString("titre", "Nouvelle tache");
-		        objetbunble.putInt("id", position);
+		        
+				HashMap map = (HashMap) maListViewPerso.getItemAtPosition(position);
+
+		        objetbunble.putInt("id", Integer.valueOf((String)map.get("id")));
 		    	intent.putExtras(objetbunble);
 		    	
 				startActivityForResult(intent, CODE_DE_MON_ACTIVITE);
@@ -194,6 +182,52 @@ public class GestionnaireTaches extends Activity {
         
     	super.onBackPressed();
     }
+    
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+    	
+    	
+    	//on regarde quelle Activity a répondu
+    	switch(requestCode){
+	    	case CODE_DE_MON_ACTIVITE:
+	    		Log.i("update", "test mise a jour");
+	    		updateList();
+	    		/*
+		   		//On regarde qu'elle est la réponse envoyée et en fonction de la réponse on affiche un message différent.
+	    		switch(resultCode){
+			    	case 1:
+			    		adb.setMessage("Vous utilisez Word.");
+			    		adb.show();
+			    		return;
+	    		}*/
+	    		break;
+	    	default : break;
+    	}
+    	
+    }
+    
+    
+	public void updateList() {
+        //Création de la ArrayList qui nous permettra de remplire la listView
+        ArrayList<HashMap<String, String>> listItem = new ArrayList<HashMap<String, String>>();
+        //On déclare la HashMap qui contiendra les informations pour un item
+        HashMap<String, String> map;
+        for(Tache t:modele.getListeTaches()) {
+        	map = new HashMap<String, String>();
+            map.put("titre", t.getNom());
+            map.put("description", t.getDescription());
+            map.put("img", String.valueOf(R.drawable.icon));
+            map.put("id", String.valueOf(t.getIdentifiant()));
+            listItem.add(map);
+        }
+ 
+        //Création d'un SimpleAdapter qui se chargera de mettre les items présent dans notre list (listItem) dans la vue affichageitem
+        SimpleAdapter mSchedule = new SimpleAdapter (this.getBaseContext(), listItem, R.layout.affichageitem,
+               new String[] {"img", "titre", "description", "id"}, new int[] {R.id.img, R.id.titre, R.id.description, R.id.id});
+ 
+        //On attribut à notre listView l'adapter que l'on vient de créer
+        maListViewPerso.setAdapter(mSchedule);
+	}
     
     
 }
