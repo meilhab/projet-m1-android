@@ -23,10 +23,10 @@ public class Modele {
 		this.db = this.bdd.getDb();
 		
 		listeTags=new ArrayList<Tag>();
-		listeTags.add(new Tag(1, "personnel"));
-		listeTags.add(new Tag(2, "professionnel"));
-		listeTags.add(new Tag(3, "Examen"));
-		listeTags.add(new Tag(4, "université"));
+		listeTags.add(new Tag(10, "personnel"));
+		listeTags.add(new Tag(20, "professionnel"));
+		listeTags.add(new Tag(30, "Examen"));
+		listeTags.add(new Tag(40, "universitï¿½"));
 		
 		/*
 		Tache t=new Tache(1, "tache 1", "description tache 1", new Etat(1), listeTags);
@@ -107,5 +107,16 @@ public class Modele {
 		
 		return max;
 		
+	}
+	
+	public void reinitialiserModele() {
+		listeTags = new ArrayList<Tag>();
+		listeTaches = new ArrayList<Tache>();
+		
+		listeTags=new ArrayList<Tag>();
+		listeTags.add(new Tag(10, "personnel"));
+		listeTags.add(new Tag(20, "professionnel"));
+		listeTags.add(new Tag(30, "Examen"));
+		listeTags.add(new Tag(40, "universitï¿½"));
 	}
 }

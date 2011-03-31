@@ -64,10 +64,10 @@ public class JsonParser {
 				
 				
 				ArrayList<Long> listeTag= new ArrayList<Long>();
-				JSONArray listeTags = tache.getJSONArray("apourtag");
 				try {
-				for (int j = 0; j< listeTags.length();j++)
-					listeTag.add(listeTags.getLong(j));
+					JSONArray listeTags = tache.getJSONArray("apourtag");
+					for (int j = 0; j< listeTags.length();j++)
+						listeTag.add(listeTags.getLong(j));
 				}catch (Exception e) {
 					// TODO: handle exception
 				}

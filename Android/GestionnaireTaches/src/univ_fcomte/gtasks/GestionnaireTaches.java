@@ -48,41 +48,39 @@ public class GestionnaireTaches extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-
-        modele=((MonApplication)getApplication()).getModele();
+        
+        modele = ((MonApplication)getApplication()).getModele();
         positionX=0;
-        //serveur = "http://10.0.2.2/gestionnaire_taches/";
-        serveur = "http://projetandroid.hosting.olikeopen.com/gestionnaire_taches/";
+        //serveur = "http://10.0.2.2/gestionnaire_taches/requeteAndroid.php";
+        serveur = "http://projetandroid.hosting.olikeopen.com/gestionnaire_taches/requeteAndroid.php";
         
         
         
-        /*
         String codeJson = "";
         sw=new Synchronisation(this);
-        
+
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);  
         nameValuePairs.add(new BasicNameValuePair("identifiant", "guillaume"));  
         nameValuePairs.add(new BasicNameValuePair("mdPasse", sw.md5("android")));
-        
+        nameValuePairs.add(new BasicNameValuePair("objet", "importer"));
        
-        
         try {
-        	codeJson = sw.GetHTML(serveur + "index.php", nameValuePairs);
+        	codeJson = sw.GetHTML(serveur, nameValuePairs);
 		} catch (ApiException e1) {
 			e1.printStackTrace();
 		}
-		
-        
 
+		
+		
+		modele.reinitialiserModele();
 		JsonParser json = new JsonParser(modele);
 		try {
 			json.parse(codeJson);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		
 		modele.getBdd().reinitialiserBDD(modele.getListeTags(), modele.getListeTaches(), json.getListeAPourTag(), json.getListeAPourFils());
-		*/
+		
         
         //Récupération de la listview crée dans le fichier main.xml
         maListViewPerso = (ListView) findViewById(R.id.listviewperso);
@@ -172,15 +170,16 @@ public class GestionnaireTaches extends Activity {
         List<NameValuePair> nvp = new ArrayList<NameValuePair>(2);  
         nvp.add(new BasicNameValuePair("identifiant", "guillaume"));  
         nvp.add(new BasicNameValuePair("mdPasse", sw.md5("android")));
+        nvp.add(new BasicNameValuePair("objet", "exporter"));
         nvp.add(new BasicNameValuePair("json", new EnvoyerJson(modele).genererJson().toString()));
 		
         try {
-			String reponse = sw.GetHTML(serveur + "reception.php", nvp);
+			String reponse = sw.GetHTML(serveur, nvp);
 			Log.i("reponse",reponse);
         } catch (ApiException e) {
 			e.printStackTrace();
 		}
-        
+        Log.i("om",new EnvoyerJson(modele).genererJson().toString());
     	super.onBackPressed();
     }
     
