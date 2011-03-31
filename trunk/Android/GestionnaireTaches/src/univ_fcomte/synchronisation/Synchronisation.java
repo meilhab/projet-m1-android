@@ -70,7 +70,7 @@ public class Synchronisation {
 	}
 	
 	//=======================================================
-	// Recupère une page Web
+	// RecupÃ¨re une page Web
 	//=======================================================
 	public synchronized String GetHTML(String url, List <NameValuePair> nvps) throws ApiException {
 		
@@ -173,7 +173,6 @@ public class Synchronisation {
 		return sb.toString(); 
 	}
 	
-	
 	public String md5(String s) {
 		
 		try {
@@ -195,5 +194,7 @@ public class Synchronisation {
 		return "";
 		
 	}
+	
+	
 	
 }
