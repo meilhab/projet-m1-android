@@ -430,7 +430,7 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 		
 		close();
 		
-		return ajouterListeTag(listeTag) && ajouterListeTache(listeTache) && ajouterlisteAPourTag(listeAPourTag) && ajouterlisteAPourFils(listeAPourFils);
+		return ajouterListeTag(listeTag) && ajouterListeTache(listeTache) && /*ajouterlisteAPourTag(listeAPourTag) && */ajouterlisteAPourFils(listeAPourFils);
 		
 		
 	}
