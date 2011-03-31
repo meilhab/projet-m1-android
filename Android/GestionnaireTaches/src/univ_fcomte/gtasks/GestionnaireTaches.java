@@ -248,7 +248,7 @@ public class GestionnaireTaches extends Activity {
 			case R.id.menu_ajout_tag:
 
 				return true;
-			case R.id.menu_option:
+			case R.id.menu_reglage:
 				
 				return true;
 			case R.id.menu_plus:
