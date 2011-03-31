@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 	<item android:id="@+id/menu_ajout_tache"
-          android:icon="@drawable/icon"
-          android:title="@string/menu_ajout_tache" />
+          android:title="@string/menu_ajout_tache" 
+          android:icon="@android:drawable/ic_menu_add" />
     <item android:id="@+id/menu_ajout_tag"
-          android:icon="@drawable/icon"
-          android:title="@string/menu_ajout_tag" />
+          android:title="@string/menu_ajout_tag" 
+          android:icon="@android:drawable/ic_menu_add" />
     <item android:id="@+id/menu_synchronisation"
-          android:icon="@drawable/icon"
-          android:title="@string/menu_synchronisation" />
-    <item android:id="@+id/menu_option"
-          android:icon="@drawable/icon"
-          android:title="@string/menu_option" />
-    <item android:id="@+id/menu_plus"
-          android:icon="@drawable/icon"
-          android:title="@string/menu_plus" />
+          android:title="@string/menu_synchronisation" 
+          android:icon="@android:drawable/ic_menu_rotate" />
+    <item android:id="@+id/menu_reglage"
+          android:title="@string/menu_reglage" 
+          android:icon="@android:drawable/ic_menu_preferences" />
+    <item android:id="@+id/menu_plus"         
+          android:title="@string/menu_plus" 
+          android:icon="@android:drawable/ic_menu_more" />
 </menu>
