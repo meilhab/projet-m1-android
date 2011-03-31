@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+	<item android:id="@+id/menu_ajout_tache"
+          android:icon="@drawable/icon"
+          android:title="@string/menu_ajout_tache" />
+    <item android:id="@+id/menu_ajout_tag"
+          android:icon="@drawable/icon"
+          android:title="@string/menu_ajout_tag" />
+    <item android:id="@+id/menu_synchronisation"
+          android:icon="@drawable/icon"
+          android:title="@string/menu_synchronisation" />
+    <item android:id="@+id/menu_option"
+          android:icon="@drawable/icon"
+          android:title="@string/menu_option" />
+    <item android:id="@+id/menu_plus"
+          android:icon="@drawable/icon"
+          android:title="@string/menu_plus" />
+</menu>

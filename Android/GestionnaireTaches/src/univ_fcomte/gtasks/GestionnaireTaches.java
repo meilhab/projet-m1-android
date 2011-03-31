@@ -19,6 +19,9 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -51,7 +54,9 @@ public class GestionnaireTaches extends Activity {
         //serveur = "http://10.0.2.2/gestionnaire_taches/";
         serveur = "http://projetandroid.hosting.olikeopen.com/gestionnaire_taches/";
         
-        //Toast.makeText(this, new Synchronisation().md5("marseille"), 2000).show();
+        
+        
+        /*
         String codeJson = "";
         sw=new Synchronisation(this);
         
@@ -59,7 +64,7 @@ public class GestionnaireTaches extends Activity {
         nameValuePairs.add(new BasicNameValuePair("identifiant", "guillaume"));  
         nameValuePairs.add(new BasicNameValuePair("mdPasse", sw.md5("android")));
         
-        //Toast.makeText(this.getApplicationContext(), "test", 1000).show();
+       
         
         try {
         	codeJson = sw.GetHTML(serveur + "index.php", nameValuePairs);
@@ -67,11 +72,7 @@ public class GestionnaireTaches extends Activity {
 			e1.printStackTrace();
 		}
 		
-        //Toast.makeText(this, om, 1000).show();
-		
-		//Log.i("reception",codeJson);
-		
-        //Toast.makeText(this, om, 2000).show();
+        
 
 		JsonParser json = new JsonParser(modele);
 		try {
@@ -81,15 +82,15 @@ public class GestionnaireTaches extends Activity {
 		}
 		
 		modele.getBdd().reinitialiserBDD(modele.getListeTags(), modele.getListeTaches(), json.getListeAPourTag(), json.getListeAPourFils());
-		
+		*/
         
-        //Récupération de la listview créée dans le fichier main.xml
+        //RÃ©cupÃ©ration de la listview crÃ©e dans le fichier main.xml
         maListViewPerso = (ListView) findViewById(R.id.listviewperso);
 
         updateList();
         
-        //Enfin on met un écouteur d'évènement sur notre listView
-      //On met un écouteur d'évènement sur notre listView
+        //Enfin on met un Ã©couteur d'Ã©vÃ©nement sur notre listView
+      //On met un Ã©couteur d'Ã©vÃ©nement sur notre listView
         maListViewPerso.setOnTouchListener(new OnTouchListener() {
 			
 			@Override
@@ -187,13 +188,13 @@ public class GestionnaireTaches extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
     	
     	
-    	//on regarde quelle Activity a répondu
+    	//on regarde quelle Activity a rÃ©pondu
     	switch(requestCode){
 	    	case CODE_DE_MON_ACTIVITE:
 	    		Log.i("update", "test mise a jour");
 	    		updateList();
 	    		/*
-		   		//On regarde qu'elle est la réponse envoyée et en fonction de la réponse on affiche un message différent.
+		   		//On regarde qu'elle est la rÃ©ponse envoyÃ©e et en fonction de la rÃ©ponse on affiche un message diffÃ©rent.
 	    		switch(resultCode){
 			    	case 1:
 			    		adb.setMessage("Vous utilisez Word.");
@@ -208,9 +209,9 @@ public class GestionnaireTaches extends Activity {
     
     
 	public void updateList() {
-        //Création de la ArrayList qui nous permettra de remplire la listView
+        //CrÃ©ation de la ArrayList qui nous permettra de remplire la listView
         ArrayList<HashMap<String, String>> listItem = new ArrayList<HashMap<String, String>>();
-        //On déclare la HashMap qui contiendra les informations pour un item
+        //On dÃ©clare la HashMap qui contiendra les informations pour un item
         HashMap<String, String> map;
         for(Tache t:modele.getListeTaches()) {
         	map = new HashMap<String, String>();
@@ -220,14 +221,45 @@ public class GestionnaireTaches extends Activity {
             map.put("id", String.valueOf(t.getIdentifiant()));
             listItem.add(map);
         }
- 
-        //Création d'un SimpleAdapter qui se chargera de mettre les items présent dans notre list (listItem) dans la vue affichageitem
+
+        //CrÃ©ation d'un SimpleAdapter qui se chargera de mettre les items prÃ©sent dans notre list (listItem) dans la vue affichageitem
         SimpleAdapter mSchedule = new SimpleAdapter (this.getBaseContext(), listItem, R.layout.affichageitem,
                new String[] {"img", "titre", "description", "id"}, new int[] {R.id.img, R.id.titre, R.id.description, R.id.id});
  
-        //On attribut à notre listView l'adapter que l'on vient de créer
+        //On attribut Ã  notre listView l'adapter que l'on vient de crÃ©er
         maListViewPerso.setAdapter(mSchedule);
 	}
     
+	public boolean onCreateOptionsMenu(Menu menu){
+		MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.layout.menu, menu);
+    	//menu.getItem(0).getSubMenu().setHeaderIcon(R.drawable.);
+ 
+        return true;
+	}
+	
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+		    case R.id.menu_ajout_tache:
+		    	Toast.makeText(this.getApplicationContext(), "Nouvelle tache", Toast.LENGTH_SHORT).show();
+		        Intent intent = new Intent(this.getApplicationContext(), DetailsTaches.class);
+				startActivityForResult(intent, CODE_DE_MON_ACTIVITE);
+				return true;
+			case R.id.menu_ajout_tag:
+
+				return true;
+			case R.id.menu_option:
+				
+				return true;
+			case R.id.menu_plus:
+				
+				return true;
+			case R.id.menu_synchronisation:
+				
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
+		}
+	}
     
 }
