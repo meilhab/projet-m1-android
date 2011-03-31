@@ -2,6 +2,7 @@
 #define MENU_H
 
 #include "libgraphe.h"
+#include "kruskal.h"
 #include <string.h>
 
 typedef enum {
@@ -11,9 +12,11 @@ typedef enum {
 	INSERT_ARETE = 4,
 	SUPPRIME_SOMMET = 5,
 	SUPPRIME_ARETE = 6,
-	AFFICHAGE = 7,
-	SAUVEGARDE = 8,
-	QUITTER = 9
+	KRUSKAL = 7,
+	PRIM = 8,
+	AFFICHAGE = 9,
+	SAUVEGARDE = 10,
+	QUITTER = 11
 } Menu;
 
 void clearScanf(void);
