@@ -1,6 +1,6 @@
 #include "libgraphe.h"
 
-void creerEnsemble(int **pere, int sommet){
+void creerEnsemble(int *pere[], int sommet){
 	pere[sommet] = sommet;
 
 	return;
@@ -28,7 +28,7 @@ void unionEnsemble(int **pere, int sommet1, int sommet2){
 
 	return;
 }
-
+/*
 typedef struct{
 	int depart;
 	int arrivee;
@@ -93,24 +93,79 @@ void prendrePile(Pile** p, int* depart, int* arrivee){
 
 	return;
 }
+*/
+
+void tri_a_bulle(TypVoisins *arete[], int nbArete, int *indiceSommetArete[]){
+	fprintf(stdout, "icibulle\n");
+	int fini = 0;
+	int i;
+	TypVoisins *tmp;
+	int indiceTmp;
+
+	while(fini == 0){
+		fini = 1;
+		for(i=0; i<nbArete - 1; i++){
+			if(arete[i]->poidsVoisin > arete[i+1]->poidsVoisin){
+				indiceTmp = indiceSommetArete[i];
+				indiceSommetArete[i] = indiceSommetArete[i+1];
+				indiceSommetArete[i+1] = indiceTmp;
+
+				tmp = arete[i];
+				arete[i] = arete[i+1];
+				arete[i+1] = tmp;
+				fini = 0;
+			}
+		}
+	}
+
+	return;
+}
 
 void Kruskal(TypGraphe *graphe){
+	fprintf(stdout, "icikruskal\n");
 	int nbMaxSommets = graphe->nbMaxSommets;
 //	int tabEnsemble[nbMaxSommets];
 	int pere[nbMaxSommets];
 	int i;
+	int nbArete = 0;
+	int tailleS;
 
-/*	for(i=0; i<nbMaxSommets; i++){
-		tabEnsemble[i] = -1;
-		if(estVide(graphe->listesAdjencences[i]) >= 0)
-			tabEnsemble[i] = i;
-	}
-*/
+	//nombre d'arêtes du graphe
 	for(i=0; i<nbMaxSommets; i++){
-		pere[i] = -1;
-		if(estVide(graphe->listesAdjencences[i]) >= 0)
-			creerEnsemble(pere, i);
+		tailleS = taille(graphe->listesAdjencences[i]);
+		if(tailleS > 0)
+			nbArete += tailleS;
 	}
+
+	int indiceSommetArete[nbArete];
+	TypVoisins *arete[nbArete];
+	TypVoisins *liste;
+	int j = 0;
+
+	//creation ensemble et récupération des arêtes
+	for(i=0; i<nbMaxSommets; i++){
+		indiceSommetArete[i] = -1;
+		creerEnsemble(pere, -1);
+		liste = graphe->listesAdjencences[i];
+		if(estVide(liste) >= 0){
+			creerEnsemble(pere, i);
+			while(liste->voisin != -1){
+				indiceSommetArete[j] = i;//TODO : erreur ici
+				arete[j] = liste;
+				liste = liste->voisinSuivant;
+				j++;
+			}
+		}
+	}
+
+	tri_a_bulle(arete, nbArete, indiceSommetArete);
+
+	fprintf(stdout, "iciaffichage\n");
+	for(i=0; i<nbArete; i++){
+		fprintf(stdout, "-> %d vers %d avec %d\n", 
+			indiceSommetArete[i], arete[i]->voisin, arete[i]->poidsVoisin);
+	}
+
 
 	
 

@@ -73,9 +73,11 @@ void afficherMenu(TypGraphe** grapheCourant) {
 		fprintf(stdout, "  5.Suppression d'un sommet du graphe\n");
 		fprintf(stdout, "  6.Suppression d'une arete entre deux sommets");
 		fprintf(stdout, " du graphe\n");
-		fprintf(stdout, "  7.Affichage du graphe\n");
-		fprintf(stdout, "  8.Sauvegarde du graphe dans un fichier\n");
-		fprintf(stdout, "  9.Quitter\n");
+		fprintf(stdout, "  7.ACM Kruskal\n");
+		fprintf(stdout, "  8.ACM Prim\n");
+		fprintf(stdout, "  9.Affichage du graphe\n");
+		fprintf(stdout, "  10.Sauvegarde du graphe dans un fichier\n");
+		fprintf(stdout, "  11.Quitter\n");
 	}
 	else
 		fprintf(stdout, "  3.Quitter\n");
@@ -131,6 +133,14 @@ void actionsMenu(TypGraphe** grapheCourant) {
 			//Suppression d'une arete entre deux sommets du graphe
 		case SUPPRIME_ARETE :
 			supprimeAreteGraphe(grapheCourant);
+			break;
+			//ACM Kruskal
+		case KRUSKAL:
+			Kruskal(*grapheCourant);
+			break;
+			//ACM Prim
+		case PRIM:
+			
 			break;
 			//Affichage du graphe
 		case AFFICHAGE :
