@@ -1,4 +1,4 @@
-#include "libgraphe.h"
+#include "kruskal.h"
 
 void creerEnsemble(int *pere[], int sommet){
 	pere[sommet] = sommet;
@@ -6,7 +6,7 @@ void creerEnsemble(int *pere[], int sommet){
 	return;
 }
 
-int trouverEnsemble(int *pere, int sommet){
+int trouverEnsemble(int *pere[], int sommet){
 	int tmp, tmp2;	
 	tmp = sommet;
 
@@ -22,7 +22,7 @@ int trouverEnsemble(int *pere, int sommet){
 	return sommet;
 }
 
-void unionEnsemble(int **pere, int sommet1, int sommet2){
+void unionEnsemble(int *pere[], int sommet1, int sommet2){
 	if(trouverEnsemble(pere, sommet1) != trouverEnsemble(pere, sommet2))
 		pere[trouverEnsemble(pere, sommet1)] = trouverEnsemble(pere, sommet2);
 
@@ -60,7 +60,7 @@ void ajoutPile(Pile** p, int depart, int arrivee, int poids){
 	}
 
 	if(depart < 0 || arrivee < 0 || poids < 0){
-		fprintf(stderr, "Erreur paramètre ajout\n");
+		fprintf(stderr, "Erreur paramï¿½tre ajout\n");
 		exit(2);
 	}
 
@@ -96,7 +96,7 @@ void prendrePile(Pile** p, int* depart, int* arrivee){
 */
 
 void tri_a_bulle(TypVoisins *arete[], int nbArete, int *indiceSommetArete[]){
-	fprintf(stdout, "icibulle\n");
+	//fprintf(stdout, "icibulle\n");
 	int fini = 0;
 	int i;
 	TypVoisins *tmp;
@@ -122,7 +122,7 @@ void tri_a_bulle(TypVoisins *arete[], int nbArete, int *indiceSommetArete[]){
 }
 
 void Kruskal(TypGraphe *graphe){
-	fprintf(stdout, "icikruskal\n");
+	//fprintf(stdout, "icikruskal\n");
 	int nbMaxSommets = graphe->nbMaxSommets;
 //	int tabEnsemble[nbMaxSommets];
 	int pere[nbMaxSommets];
@@ -130,7 +130,7 @@ void Kruskal(TypGraphe *graphe){
 	int nbArete = 0;
 	int tailleS;
 
-	//nombre d'arêtes du graphe
+	//nombre d'arï¿½tes du graphe
 	for(i=0; i<nbMaxSommets; i++){
 		tailleS = taille(graphe->listesAdjencences[i]);
 		if(tailleS > 0)
@@ -142,13 +142,14 @@ void Kruskal(TypGraphe *graphe){
 	TypVoisins *liste;
 	int j = 0;
 
-	//creation ensemble et récupération des arêtes
+
+	//creation ensemble et rï¿½cupï¿½ration des arï¿½tes
 	for(i=0; i<nbMaxSommets; i++){
-		indiceSommetArete[i] = -1;
-		creerEnsemble(pere, -1);
+		indiceSommetArete[j] = -1;
+		creerEnsemble(&pere, -1);
 		liste = graphe->listesAdjencences[i];
 		if(estVide(liste) >= 0){
-			creerEnsemble(pere, i);
+			creerEnsemble(&pere, i);
 			while(liste->voisin != -1){
 				indiceSommetArete[j] = i;//TODO : erreur ici
 				arete[j] = liste;
@@ -159,12 +160,40 @@ void Kruskal(TypGraphe *graphe){
 	}
 
 	tri_a_bulle(arete, nbArete, indiceSommetArete);
-
+	
+	/*
+	//affichage des aretes tri
 	fprintf(stdout, "iciaffichage\n");
 	for(i=0; i<nbArete; i++){
 		fprintf(stdout, "-> %d vers %d avec %d\n", 
-			indiceSommetArete[i], arete[i]->voisin, arete[i]->poidsVoisin);
+			indiceSommetArete[i]+1, arete[i]->voisin+1, arete[i]->poidsVoisin);
 	}
+	*/
+	
+	int ensembleSolution[nbArete];
+	for(i=0; i<nbArete; i++)
+		ensembleSolution[i] = -1;
+	
+	int indiceCourant = 0;
+	
+	for(i=0; i<nbArete; i++){
+		if(trouverEnsemble(&pere, indiceSommetArete[i]) != 
+		   trouverEnsemble(&pere, arete[i]->voisin)) {
+			ensembleSolution[indiceCourant] = i;
+			indiceCourant++;
+			unionEnsemble(&pere, indiceSommetArete[i], arete[i]->voisin);
+		}
+	}
+	
+	//affichage du chemin
+	fprintf(stdout, "##################### ACM : ##################\n");
+	i = 0;
+	while(ensembleSolution[i] != -1) {
+		fprintf(stdout, "-> %d vers %d avec %d\n", indiceSommetArete[ensembleSolution[i]]+1, 
+			arete[ensembleSolution[i]]->voisin+1, arete[ensembleSolution[i]]->poidsVoisin);
+		i++;
+	}
+
 
 
 	

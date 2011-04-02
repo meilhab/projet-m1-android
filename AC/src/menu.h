@@ -3,6 +3,7 @@
 
 #include "libgraphe.h"
 #include "kruskal.h"
+#include "prim.h"
 #include <string.h>
 
 typedef enum {
