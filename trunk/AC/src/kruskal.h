@@ -5,9 +5,9 @@
 
 
 void creerEnsemble(int *pere[], int sommet);
-int trouverEnsemble(int *pere, int sommet);
-void unionEnsemble(int **pere, int sommet1, int sommet2);
-void tri_a_bulle(TypVoisins *arete[], int nbArete);
+int trouverEnsemble(int *pere[], int sommet);
+void unionEnsemble(int *pere[], int sommet1, int sommet2);
+void tri_a_bulle(TypVoisins *arete[], int nbArete, int *indiceSommetArete[]);
 void Kruskal(TypGraphe *graphe);
 
 #endif // KRUSKAL_H
