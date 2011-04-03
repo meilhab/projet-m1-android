@@ -5,7 +5,10 @@ include_once("fonctions.inc.php");
 if(connexionAutorisee()) {
 
 	if(isset($_POST['objet'])) {
-	
+		
+		if(isset($_POST['json']) and !empty($_POST['json']))
+			$_POST['json'] = str_replace("\\\"","\"",$_POST['json']);
+		
 		switch($_POST['objet']) {
 			
 			case 'exporter' : 

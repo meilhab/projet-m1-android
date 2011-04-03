@@ -30,7 +30,7 @@ function connexionAutorisee() {
 function importerJson($json, $id) {
 
 	$reussi=false;
-	$json = str_replace("\\\"","\"",$json);
+
 	$tab = json_decode($json, true);
 	//echo $json;
 	if(intval($tab['nbTags'])>0 or intval($tab['nbTaches'])>0) {
