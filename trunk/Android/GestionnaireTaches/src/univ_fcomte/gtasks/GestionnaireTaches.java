@@ -43,6 +43,7 @@ public class GestionnaireTaches extends Activity {
 	private String serveur;
 	private Synchronisation sw;
 	private final int CODE_DE_MON_ACTIVITE = 1;
+	private final int CODE_ACTIVITE_PREFERENCES = 2;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -248,7 +249,8 @@ public class GestionnaireTaches extends Activity {
 
 				return true;
 			case R.id.menu_reglage:
-				
+				Intent intentPrefs = new Intent(this.getApplicationContext(), Preferences.class);
+				startActivityForResult(intentPrefs, CODE_ACTIVITE_PREFERENCES);
 				return true;
 			case R.id.menu_plus:
 				
