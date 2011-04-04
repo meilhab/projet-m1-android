@@ -193,9 +193,6 @@ void Kruskal(TypGraphe *graphe){
 			arete[ensembleSolution[i]]->voisin+1, arete[ensembleSolution[i]]->poidsVoisin);
 		i++;
 	}
-
-
-
 	
 
 }

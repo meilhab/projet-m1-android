@@ -140,7 +140,7 @@ void actionsMenu(TypGraphe** grapheCourant) {
 			break;
 			//ACM Prim
 		case PRIM:
-			
+			Prim(*grapheCourant);
 			break;
 			//Affichage du graphe
 		case AFFICHAGE :
