@@ -25,4 +25,13 @@
     <string name="menu_synchronisation">Synchronisation</string>
     <string name="menu_reglage">Réglages</string>
     <string name="menu_plus">Plus</string>
+    
+    <string-array name="prefentries">
+    	<item>Item 1</item>
+		<item>Item 2</item>
+	</string-array>
+	<string-array name="prefvalues">
+		<item>Item 1</item>
+		<item>Item 2</item>
+	</string-array>
 </resources>

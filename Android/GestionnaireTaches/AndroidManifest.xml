@@ -15,6 +15,7 @@
             </intent-filter>
         </activity>
         <activity android:label="@string/app_name" android:name="DetailsTaches"></activity>
+        <activity android:name="Preferences" android:label="@string/menu_reglage"></activity>
 
     </application>
 </manifest>

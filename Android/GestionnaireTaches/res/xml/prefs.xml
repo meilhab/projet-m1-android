@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+	<PreferenceScreen android:title="Ecran 1">
+		<PreferenceCategory android:title="Categorie 1">	
+			
+			<EditTextPreference 
+			android:title="EditText"
+			android:summary="EditText" 
+			android:key="edit"
+			/>
+			
+			<CheckBoxPreference 
+			android:title="CheckBox" 
+			android:key="check"
+			android:summaryOn="On"
+			android:summaryOff="Off"
+			/>
+			
+			<ListPreference 
+			android:title="List" 
+			android:key="list" 
+			android:summary="List summary"
+			android:entries="@array/prefentries"
+			android:entryValues="@array/prefvalues"
+			/>
+			
+			<RingtonePreference 
+			android:title="Ringtone" 
+			android:key="ring" 
+			android:summary="Ringtone summary"
+			/>
+		
+		</PreferenceCategory>		
+		<PreferenceCategory  android:title="Categorie 2">
+			<Preference 
+				android:key="write"
+				android:title="Write"
+				android:summary="Ecrire une preference"
+			/>
+			<Preference 
+				android:key="read"
+				android:title="Read"
+				android:summary="Lire une preference"
+			/>	
+		</PreferenceCategory>	
+	</PreferenceScreen>	
+	<PreferenceScreen android:title="Ecran 2">
+		<PreferenceCategory  android:title="Categorie 3">
+			<Preference 
+				android:key="key"
+				android:title="title"
+			/>
+		</PreferenceCategory>
+	</PreferenceScreen>
+</PreferenceScreen>
