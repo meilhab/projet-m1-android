@@ -90,6 +90,10 @@ public class Tache {
 	public ArrayList<Long> getListeTags() {
 		return listeTags;
 	}
+	
+	public void setListeTags(ArrayList<Long> listeTags) {
+		this.listeTags = listeTags;
+	}
 
 	public ArrayList<Long> getListeTachesFille() {
 		return listeTachesFille;
