@@ -58,17 +58,17 @@ public class GestionnaireTaches extends Activity {
 		positionX=0;
 		//serveur = "http://10.0.2.2/gestionnaire_taches/requeteAndroid.php";
 		serveur = "http://projetandroid.hosting.olikeopen.com/gestionnaire_taches/requeteAndroid.php";
-
+		boolean useProxy = true;
 
 
 		String codeJson = "";
-		sw=new Synchronisation(this);
+		sw=new Synchronisation(this, useProxy);
 
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);  
 		nameValuePairs.add(new BasicNameValuePair("identifiant", "guillaume"));  
 		nameValuePairs.add(new BasicNameValuePair("mdPasse", sw.md5("android")));
 		nameValuePairs.add(new BasicNameValuePair("objet", "importer"));
-		/*
+		
         try {
         	codeJson = sw.GetHTML(serveur, nameValuePairs);
 		} catch (ApiException e1) {
@@ -85,7 +85,7 @@ public class GestionnaireTaches extends Activity {
 			e.printStackTrace();
 		}
 		modele.getBdd().reinitialiserBDD(modele.getListeTags(), modele.getListeTaches(), json.getListeAPourTag(), json.getListeAPourFils());
-		 */
+		
 
 		//Récupération de la listview crée dans le fichier main.xml
 		maListViewPerso = (ListView) findViewById(R.id.listviewperso);
