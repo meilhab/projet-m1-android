@@ -15,7 +15,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 public class DetailsTaches extends Activity {
     
@@ -117,6 +116,15 @@ public class DetailsTaches extends Activity {
         	this.setTitle(t.getNom());
         	nom.setText(t.getNom());
         	description.setText(t.getDescription());
+        	for(int i=0; i<tagsAffiches.length; i++)
+        		if(t.getListeTags().contains(modele.getListeTags().get(i).getIdentifiant())) {
+        			Log.i("tag par defaut", modele.getListeTags().get(i).getIdentifiant()+"");
+        			tagsChoisis[i] = true;
+        			tagsAffiches[i] = true;
+        		}
+        	
+        	spinnerPriorite.setSelection(t.getPriorite());
+        	spinnerEtat.setSelection(t.getEtat());
         }
         	
         
@@ -129,7 +137,7 @@ public class DetailsTaches extends Activity {
     		if(tagsChoisis[i] == true)
     			listeTag.add(modele.getListeTags().get(i).getIdentifiant());
     	
-    	Tache tache = new Tache(modele.getIdMaxTache(), nom.getText().toString(), description.getText().toString(), 3, 1, listeTag, new ArrayList<Long>());
+    	Tache tache = new Tache(modele.getIdMaxTache(), nom.getText().toString(), description.getText().toString(), spinnerPriorite.getSelectedItemPosition(), spinnerEtat.getSelectedItemPosition(), listeTag, new ArrayList<Long>());
     	
     	modele.ajoutTache(tache);
     	modele.getBdd().ajouterTache(tache, -1, false);
