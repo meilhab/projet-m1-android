@@ -129,7 +129,7 @@ public class DetailsTaches extends Activity {
     		if(tagsChoisis[i] == true)
     			listeTag.add(modele.getListeTags().get(i).getIdentifiant());
     	
-    	Tache tache = new Tache(modele.getIdMax(), nom.getText().toString(), description.getText().toString(), 3, 1, listeTag, new ArrayList<Long>());
+    	Tache tache = new Tache(modele.getIdMaxTache(), nom.getText().toString(), description.getText().toString(), 3, 1, listeTag, new ArrayList<Long>());
     	
     	modele.ajoutTache(tache);
     	modele.getBdd().ajouterTache(tache, -1, false);
