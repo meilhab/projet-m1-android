@@ -19,6 +19,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
@@ -26,6 +27,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.protocol.HTTP;
 import org.json.JSONObject;
+import org.apache.http.*;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -36,11 +38,12 @@ import android.util.Log;
 public class Synchronisation {
 
 	private static final int HTTP_STATUS_OK = 200;
-
+	private boolean useProxy;
 	private static String sUserAgent = null;
 	
-	public Synchronisation(Context context) {
+	public Synchronisation(Context context, boolean useProxy) {
 		prepareUserAgent(context);
+		this.useProxy = useProxy;
 	}
 	
 	public static class ApiException extends Exception {
@@ -78,6 +81,11 @@ public class Synchronisation {
 			throw new ApiException("User-Agent string must be prepared");
 		
 		DefaultHttpClient httpClient = new DefaultHttpClient();
+		HttpHost proxy = new HttpHost("proxy-web.univ-fcomte.fr", 3128);
+		if(useProxy)
+			httpClient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
+		
+		
 		try {
 			HttpResponse res;
 			URI uri = new URI(url);
