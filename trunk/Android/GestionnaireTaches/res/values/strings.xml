@@ -34,4 +34,7 @@
 		<item>Item 1</item>
 		<item>Item 2</item>
 	</string-array>
+	<string name="label_nom_tag">Nom du tag</string>
+	<string name="label_ajout_tag">Ajout d\'un tag</string>
+	<string name="label_menu_supprimer_tag">Suppression de tags</string>
 </resources>

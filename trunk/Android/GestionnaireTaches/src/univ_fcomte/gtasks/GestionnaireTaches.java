@@ -14,9 +14,12 @@ import univ_fcomte.synchronisation.Synchronisation;
 import univ_fcomte.synchronisation.Synchronisation.ApiException;
 import univ_fcomte.tasks.Modele;
 import univ_fcomte.tasks.Tache;
+import univ_fcomte.tasks.Tag;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -27,6 +30,7 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
@@ -64,7 +68,7 @@ public class GestionnaireTaches extends Activity {
         nameValuePairs.add(new BasicNameValuePair("identifiant", "guillaume"));  
         nameValuePairs.add(new BasicNameValuePair("mdPasse", sw.md5("android")));
         nameValuePairs.add(new BasicNameValuePair("objet", "importer"));
-       
+       /*
         try {
         	codeJson = sw.GetHTML(serveur, nameValuePairs);
 		} catch (ApiException e1) {
@@ -81,7 +85,7 @@ public class GestionnaireTaches extends Activity {
 			e.printStackTrace();
 		}
 		modele.getBdd().reinitialiserBDD(modele.getListeTags(), modele.getListeTaches(), json.getListeAPourTag(), json.getListeAPourFils());
-		
+		*/
         
         //Récupération de la listview crée dans le fichier main.xml
         maListViewPerso = (ListView) findViewById(R.id.listviewperso);
@@ -246,7 +250,49 @@ public class GestionnaireTaches extends Activity {
 				startActivityForResult(intent, CODE_DE_MON_ACTIVITE);
 				return true;
 			case R.id.menu_ajout_tag:
-
+				AlertDialog.Builder builderAjoutTag = new AlertDialog.Builder(this);
+				builderAjoutTag.setTitle(getResources().getText(R.string.label_ajout_tag));
+				builderAjoutTag.setMessage(getResources().getText(R.string.label_nom_tag));
+		        final EditText etNomTag = new EditText(this);
+		        builderAjoutTag.setView(etNomTag);
+		        builderAjoutTag.setNegativeButton("Annuler", new OnClickListener(){
+					@Override
+					public void onClick(DialogInterface arg0, int arg1) {
+						
+					}
+		        	
+		        });
+		        builderAjoutTag.setPositiveButton("OK", new OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						if(!etNomTag.getText().toString().equals("")){
+							Tag t = new Tag(modele.getIdMaxTag()+1, etNomTag.getText().toString());
+							modele.ajoutTag(t);
+							Toast.makeText(GestionnaireTaches.this, "Nouveau tag ajouté", Toast.LENGTH_SHORT).show();
+						}
+						else{
+							Toast.makeText(GestionnaireTaches.this, "Champ vide", Toast.LENGTH_SHORT).show();
+						}
+					}
+				});
+		        builderAjoutTag.show();
+				return true;
+			case R.id.menu_supprimer_tag:
+				AlertDialog.Builder builderSuppressionTag = new AlertDialog.Builder(this);
+				builderSuppressionTag.setTitle(getResources().getText(R.string.label_ajout_tag));
+		        builderSuppressionTag.setNegativeButton("Annuler", new OnClickListener(){
+					@Override
+					public void onClick(DialogInterface arg0, int arg1) {
+						
+					}
+		        	
+		        });
+		        builderSuppressionTag.setPositiveButton("OK", new OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+							Toast.makeText(GestionnaireTaches.this, "Nouveau tag ajouté", Toast.LENGTH_SHORT).show();
+					}
+				});
 				return true;
 			case R.id.menu_reglage:
 				Intent intentPrefs = new Intent(this.getApplicationContext(), Preferences.class);
