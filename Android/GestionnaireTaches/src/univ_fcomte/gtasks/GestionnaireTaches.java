@@ -278,11 +278,11 @@ public class GestionnaireTaches extends Activity {
 			builderAjoutTag.show();
 			return true;
 		case R.id.menu_supprimer_tag:
-			CharSequence[] items = new CharSequence[modele.getListeTags().size()];
+			CharSequence[] itemsTags = new CharSequence[modele.getListeTags().size()];
 			final boolean[] tagsAffiches = new boolean[modele.getListeTags().size()];
 			final boolean[] tagsChoisis = new boolean[tagsAffiches.length];
 			for(int i=0;i<modele.getListeTags().size();i++) {
-				items[i]=modele.getListeTags().get(i).getNom();
+				itemsTags[i]=modele.getListeTags().get(i).getNom();
 				tagsAffiches[i]=false;
 				tagsChoisis[i]=false;
 			}
@@ -316,15 +316,15 @@ public class GestionnaireTaches extends Activity {
 					
 				}
 			});
-			builderSuppressionTag.setMultiChoiceItems(items, tagsAffiches, new DialogInterface.OnMultiChoiceClickListener() {
+			builderSuppressionTag.setMultiChoiceItems(itemsTags, tagsAffiches, new DialogInterface.OnMultiChoiceClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which, boolean isChecked) {
 					
 				}
 			}); 
-			AlertDialog alert;
-			alert = builderSuppressionTag.create();
-			alert.show();
+			AlertDialog alertTags;
+			alertTags = builderSuppressionTag.create();
+			alertTags.show();
 			return true;
 		case R.id.menu_reglage:
 			Intent intentPrefs = new Intent(this.getApplicationContext(), Preferences.class);
@@ -334,7 +334,19 @@ public class GestionnaireTaches extends Activity {
 
 			return true;
 		case R.id.menu_synchronisation:
+			
+			final CharSequence[] itemsSynchro = getResources().getStringArray(R.array.methode_synchronisation);
 
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle(R.string.label_methode_synchronisation);
+			builder.setItems(itemsSynchro, new DialogInterface.OnClickListener() {
+			    public void onClick(DialogInterface dialog, int item) {
+			        Toast.makeText(getApplicationContext(), itemsSynchro[item], Toast.LENGTH_SHORT).show();
+			    }
+			});
+			AlertDialog alertSynchro;
+			alertSynchro = builder.create();
+			alertSynchro.show();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
