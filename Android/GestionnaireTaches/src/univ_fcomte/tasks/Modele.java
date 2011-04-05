@@ -97,8 +97,8 @@ public class Modele {
 		
 		return tache;
 	}
-	
-	public long getIdMax() {
+
+	public long getIdMaxTache() {
 		
 		long max = 0;
 		for(Tache t : listeTaches)
@@ -109,6 +109,15 @@ public class Modele {
 		
 	}
 	
+	public long getIdMaxTag(){
+		long max = 0;
+		for(Tag t : listeTags)
+			if(t.getIdentifiant()>max)
+				max = t.getIdentifiant();
+		
+		return max;
+	}
+	
 	public void reinitialiserModele() {
 		listeTags = new ArrayList<Tag>();
 		listeTaches = new ArrayList<Tache>();
@@ -117,6 +126,6 @@ public class Modele {
 		listeTags.add(new Tag(10, "personnel"));
 		listeTags.add(new Tag(20, "professionnel"));
 		listeTags.add(new Tag(30, "Examen"));
-		listeTags.add(new Tag(40, "universit�"));
+		listeTags.add(new Tag(40, "université"));
 	}
 }

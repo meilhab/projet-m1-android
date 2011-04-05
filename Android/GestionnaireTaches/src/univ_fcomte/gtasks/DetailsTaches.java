@@ -141,7 +141,7 @@ public class DetailsTaches extends Activity {
     	}
     	Log.i("Spinner etat", spinnerEtat.getSelectedItemPosition() + "");
     	Log.i("Spinner priorite", spinnerPriorite.getSelectedItemPosition() + "");
-    	Tache tache = new Tache(modele.getIdMax(), nom.getText().toString(), description.getText().toString(), 3, 1, new ArrayList<Long>(), new ArrayList<Long>());
+    	Tache tache = new Tache(modele.getIdMaxTache(), nom.getText().toString(), description.getText().toString(), 3, 1, new ArrayList<Long>(), new ArrayList<Long>());
     	
     	modele.ajoutTache(tache);
     	modele.getBdd().ajouterTache(tache, -1, false);

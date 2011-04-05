@@ -6,6 +6,9 @@
     <item android:id="@+id/menu_ajout_tag"
           android:title="@string/menu_ajout_tag" 
           android:icon="@android:drawable/ic_menu_add" />
+    <item android:id="@+id/menu_supprimer_tag"
+    	  android:title="@string/label_menu_supprimer_tag"
+    	  android:icon="@*android:drawable/ic_menu_clear_playlist" />
     <item android:id="@+id/menu_synchronisation"
           android:title="@string/menu_synchronisation" 
           android:icon="@android:drawable/ic_menu_rotate" />
