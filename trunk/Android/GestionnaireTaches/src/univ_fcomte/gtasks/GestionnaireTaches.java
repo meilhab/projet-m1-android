@@ -38,45 +38,45 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.util.Log;
 
 public class GestionnaireTaches extends Activity {
-    /** Called when the activity is first created. */
-	
+	/** Called when the activity is first created. */
+
 	private int positionX;
 	private Modele modele;
 	private ListView maListViewPerso;
-	
+
 	private String serveur;
 	private Synchronisation sw;
 	private final int CODE_DE_MON_ACTIVITE = 1;
 	private final int CODE_ACTIVITE_PREFERENCES = 2;
-	
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
-        
-        modele = ((MonApplication)getApplication()).getModele();
-        positionX=0;
-        //serveur = "http://10.0.2.2/gestionnaire_taches/requeteAndroid.php";
-        serveur = "http://projetandroid.hosting.olikeopen.com/gestionnaire_taches/requeteAndroid.php";
-        
-        
-        
-        String codeJson = "";
-        sw=new Synchronisation(this);
 
-        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);  
-        nameValuePairs.add(new BasicNameValuePair("identifiant", "guillaume"));  
-        nameValuePairs.add(new BasicNameValuePair("mdPasse", sw.md5("android")));
-        nameValuePairs.add(new BasicNameValuePair("objet", "importer"));
-       /*
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.main);
+
+		modele = ((MonApplication)getApplication()).getModele();
+		positionX=0;
+		//serveur = "http://10.0.2.2/gestionnaire_taches/requeteAndroid.php";
+		serveur = "http://projetandroid.hosting.olikeopen.com/gestionnaire_taches/requeteAndroid.php";
+
+
+
+		String codeJson = "";
+		sw=new Synchronisation(this);
+
+		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);  
+		nameValuePairs.add(new BasicNameValuePair("identifiant", "guillaume"));  
+		nameValuePairs.add(new BasicNameValuePair("mdPasse", sw.md5("android")));
+		nameValuePairs.add(new BasicNameValuePair("objet", "importer"));
+		/*
         try {
         	codeJson = sw.GetHTML(serveur, nameValuePairs);
 		} catch (ApiException e1) {
 			e1.printStackTrace();
 		}
 
-		
-		
+
+
 		modele.reinitialiserModele();
 		JsonParser json = new JsonParser(modele);
 		try {
@@ -85,17 +85,17 @@ public class GestionnaireTaches extends Activity {
 			e.printStackTrace();
 		}
 		modele.getBdd().reinitialiserBDD(modele.getListeTags(), modele.getListeTaches(), json.getListeAPourTag(), json.getListeAPourFils());
-		*/
-        
-        //Récupération de la listview crée dans le fichier main.xml
-        maListViewPerso = (ListView) findViewById(R.id.listviewperso);
+		 */
 
-        updateList();
-        
-        //Enfin on met un écouteur d'événement sur notre listView
-      //On met un écouteur d'événement sur notre listView
-        maListViewPerso.setOnTouchListener(new OnTouchListener() {
-			
+		//Récupération de la listview crée dans le fichier main.xml
+		maListViewPerso = (ListView) findViewById(R.id.listviewperso);
+
+		updateList();
+
+		//Enfin on met un écouteur d'événement sur notre listView
+		//On met un écouteur d'événement sur notre listView
+		maListViewPerso.setOnTouchListener(new OnTouchListener() {
+
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				//Log.i("","position : "+event.getX());
@@ -103,37 +103,37 @@ public class GestionnaireTaches extends Activity {
 				return false;
 			}
 		});
-        
-        maListViewPerso.setOnItemClickListener(new OnItemClickListener() {
-		@Override
+
+		maListViewPerso.setOnItemClickListener(new OnItemClickListener() {
+			@Override
 			public void onItemClick(AdapterView a, View v, int position, long id) {
 				Log.i("","item");
-				
+
 				//if(positionX<=getResources().getDrawable(R.drawable.icon).getMinimumWidth())
-					Log.i("","on clic sur l'image");
-				
-		    	Toast.makeText(maListViewPerso.getContext(), "Nouvelle tache", Toast.LENGTH_SHORT).show();
-		        Bundle objetbunble = new Bundle();
-		        Intent intent = new Intent(maListViewPerso.getContext(), DetailsTaches.class);
-		        //objetbunble.putAll(new Bundle(b))
+				Log.i("","on clic sur l'image");
+
+				Toast.makeText(maListViewPerso.getContext(), "Nouvelle tache", Toast.LENGTH_SHORT).show();
+				Bundle objetbunble = new Bundle();
+				Intent intent = new Intent(maListViewPerso.getContext(), DetailsTaches.class);
+				//objetbunble.putAll(new Bundle(b))
 				//objetbunble.putString("titre", "Nouvelle tache");
-		        
+
 				HashMap map = (HashMap) maListViewPerso.getItemAtPosition(position);
 
-		        objetbunble.putInt("id", Integer.valueOf((String)map.get("id")));
-		    	intent.putExtras(objetbunble);
-		    	
-				startActivityForResult(intent, CODE_DE_MON_ACTIVITE);
-			
-        	}
-         });
+				objetbunble.putInt("id", Integer.valueOf((String)map.get("id")));
+				intent.putExtras(objetbunble);
 
-        maListViewPerso.setOnItemLongClickListener(new OnItemLongClickListener() {
+				startActivityForResult(intent, CODE_DE_MON_ACTIVITE);
+
+			}
+		});
+
+		maListViewPerso.setOnItemLongClickListener(new OnItemLongClickListener() {
 
 			@Override
 			public boolean onItemLongClick(AdapterView a, View v, int position, long id) {
 				Log.i("","appui long sur "+ position);
-				
+
 				/*Builder builder = new Builder(v.getContext());
 				builder.setTitle("Options");
 			    String[] myItemClickDialog = new String[4];
@@ -143,7 +143,7 @@ public class GestionnaireTaches extends Activity {
 				myItemClickDialog[3] = "Delete";
 				String[] items = myItemClickDialog;
 				builder.setItems(items, new DialogInterface.OnClickListener() {
-				
+
 					public void onClick(final DialogInterface dialog, final int which) {
 						switch (which) {
 							case 0:
@@ -161,43 +161,43 @@ public class GestionnaireTaches extends Activity {
 						}
 					}
 				});*/
-				
+
 				return true;
 			}
 		}); 
-        //((MonApplication)getApplication()).test=false;
-    }
+		//((MonApplication)getApplication()).test=false;
+	}
 
-    @Override
-    public void onBackPressed() {
-    	
-    	Log.i("","appuie sur back");
-        List<NameValuePair> nvp = new ArrayList<NameValuePair>(2);  
-        nvp.add(new BasicNameValuePair("identifiant", "guillaume"));  
-        nvp.add(new BasicNameValuePair("mdPasse", sw.md5("android")));
-        nvp.add(new BasicNameValuePair("objet", "exporter"));
-        nvp.add(new BasicNameValuePair("json", new EnvoyerJson(modele).genererJson().toString()));
-		
-        try {
+	@Override
+	public void onBackPressed() {
+
+		Log.i("","appuie sur back");
+		List<NameValuePair> nvp = new ArrayList<NameValuePair>(2);  
+		nvp.add(new BasicNameValuePair("identifiant", "guillaume"));  
+		nvp.add(new BasicNameValuePair("mdPasse", sw.md5("android")));
+		nvp.add(new BasicNameValuePair("objet", "exporter"));
+		nvp.add(new BasicNameValuePair("json", new EnvoyerJson(modele).genererJson().toString()));
+
+		try {
 			String reponse = sw.GetHTML(serveur, nvp);
 			Log.i("reponse",reponse);
-        } catch (ApiException e) {
+		} catch (ApiException e) {
 			e.printStackTrace();
 		}
-        Log.i("om",new EnvoyerJson(modele).genererJson().toString());
-    	super.onBackPressed();
-    }
-    
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
-    	
-    	
-    	//on regarde quelle Activity a répondu
-    	switch(requestCode){
-	    	case CODE_DE_MON_ACTIVITE:
-	    		Log.i("update", "test mise a jour");
-	    		updateList();
-	    		/*
+		Log.i("om",new EnvoyerJson(modele).genererJson().toString());
+		super.onBackPressed();
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data){
+
+
+		//on regarde quelle Activity a répondu
+		switch(requestCode){
+		case CODE_DE_MON_ACTIVITE:
+			Log.i("update", "test mise a jour");
+			updateList();
+			/*
 		   		//On regarde qu'elle est la réponse envoyée et en fonction de la réponse on affiche un message différent.
 	    		switch(resultCode){
 			    	case 1:
@@ -205,108 +205,140 @@ public class GestionnaireTaches extends Activity {
 			    		adb.show();
 			    		return;
 	    		}*/
-	    		break;
-	    	default : break;
-    	}
-    	
-    }
-    
-    
-	public void updateList() {
-        //Création de la ArrayList qui nous permettra de remplire la listView
-        ArrayList<HashMap<String, String>> listItem = new ArrayList<HashMap<String, String>>();
-        //On déclare la HashMap qui contiendra les informations pour un item
-        HashMap<String, String> map;
-        for(Tache t:modele.getListeTaches()) {
-        	map = new HashMap<String, String>();
-            map.put("titre", t.getNom());
-            map.put("description", t.getDescription());
-            map.put("img", String.valueOf(R.drawable.icon));
-            map.put("id", String.valueOf(t.getIdentifiant()));
-            listItem.add(map);
-        }
+			break;
+		default : break;
+		}
 
-        //Création d'un SimpleAdapter qui se chargera de mettre les items présent dans notre list (listItem) dans la vue affichageitem
-        SimpleAdapter mSchedule = new SimpleAdapter (this.getBaseContext(), listItem, R.layout.affichageitem,
-               new String[] {"img", "titre", "description", "id"}, new int[] {R.id.img, R.id.titre, R.id.description, R.id.id});
- 
-        //On attribut à notre listView l'adapter que l'on vient de créer
-        maListViewPerso.setAdapter(mSchedule);
 	}
-    
+
+
+	public void updateList() {
+		//Création de la ArrayList qui nous permettra de remplire la listView
+		ArrayList<HashMap<String, String>> listItem = new ArrayList<HashMap<String, String>>();
+		//On déclare la HashMap qui contiendra les informations pour un item
+		HashMap<String, String> map;
+		for(Tache t:modele.getListeTaches()) {
+			map = new HashMap<String, String>();
+			map.put("titre", t.getNom());
+			map.put("description", t.getDescription());
+			map.put("img", String.valueOf(R.drawable.icon));
+			map.put("id", String.valueOf(t.getIdentifiant()));
+			listItem.add(map);
+		}
+
+		//Création d'un SimpleAdapter qui se chargera de mettre les items présent dans notre list (listItem) dans la vue affichageitem
+		SimpleAdapter mSchedule = new SimpleAdapter (this.getBaseContext(), listItem, R.layout.affichageitem,
+				new String[] {"img", "titre", "description", "id"}, new int[] {R.id.img, R.id.titre, R.id.description, R.id.id});
+
+		//On attribut à notre listView l'adapter que l'on vient de créer
+		maListViewPerso.setAdapter(mSchedule);
+	}
+
 	public boolean onCreateOptionsMenu(Menu menu){
 		MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.layout.menu, menu);
-    	//menu.getItem(0).getSubMenu().setHeaderIcon(R.drawable.);
- 
-        return true;
+		inflater.inflate(R.layout.menu, menu);
+		//menu.getItem(0).getSubMenu().setHeaderIcon(R.drawable.);
+
+		return true;
 	}
-	
+
 	public boolean onOptionsItemSelected(MenuItem item) {
-	    switch (item.getItemId()) {
-		    case R.id.menu_ajout_tache:
-		    	Toast.makeText(this.getApplicationContext(), "Nouvelle tache", Toast.LENGTH_SHORT).show();
-		        Intent intent = new Intent(this.getApplicationContext(), DetailsTaches.class);
-				startActivityForResult(intent, CODE_DE_MON_ACTIVITE);
-				return true;
-			case R.id.menu_ajout_tag:
-				AlertDialog.Builder builderAjoutTag = new AlertDialog.Builder(this);
-				builderAjoutTag.setTitle(getResources().getText(R.string.label_ajout_tag));
-				builderAjoutTag.setMessage(getResources().getText(R.string.label_nom_tag));
-		        final EditText etNomTag = new EditText(this);
-		        builderAjoutTag.setView(etNomTag);
-		        builderAjoutTag.setNegativeButton("Annuler", new OnClickListener(){
-					@Override
-					public void onClick(DialogInterface arg0, int arg1) {
-						
+		switch (item.getItemId()) {
+		case R.id.menu_ajout_tache:
+			Toast.makeText(this.getApplicationContext(), "Nouvelle tache", Toast.LENGTH_SHORT).show();
+			Intent intent = new Intent(this.getApplicationContext(), DetailsTaches.class);
+			startActivityForResult(intent, CODE_DE_MON_ACTIVITE);
+			return true;
+		case R.id.menu_ajout_tag:
+			AlertDialog.Builder builderAjoutTag = new AlertDialog.Builder(this);
+			builderAjoutTag.setTitle(getResources().getText(R.string.label_ajout_tag));
+			builderAjoutTag.setMessage(getResources().getText(R.string.label_nom_tag));
+			final EditText etNomTag = new EditText(this);
+			builderAjoutTag.setView(etNomTag);
+			builderAjoutTag.setNegativeButton("Annuler", new OnClickListener(){
+				@Override
+				public void onClick(DialogInterface arg0, int arg1) {
+
+				}
+
+			});
+			builderAjoutTag.setPositiveButton("OK", new OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					if(!etNomTag.getText().toString().equals("")){
+						Tag t = new Tag(modele.getIdMaxTag()+1, etNomTag.getText().toString());
+						modele.ajoutTag(t);
+						Toast.makeText(GestionnaireTaches.this, "Nouveau tag ajouté", Toast.LENGTH_SHORT).show();
 					}
-		        	
-		        });
-		        builderAjoutTag.setPositiveButton("OK", new OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						if(!etNomTag.getText().toString().equals("")){
-							Tag t = new Tag(modele.getIdMaxTag()+1, etNomTag.getText().toString());
-							modele.ajoutTag(t);
-							Toast.makeText(GestionnaireTaches.this, "Nouveau tag ajouté", Toast.LENGTH_SHORT).show();
-						}
-						else{
-							Toast.makeText(GestionnaireTaches.this, "Champ vide", Toast.LENGTH_SHORT).show();
-						}
+					else{
+						Toast.makeText(GestionnaireTaches.this, "Champ vide", Toast.LENGTH_SHORT).show();
 					}
-				});
-		        builderAjoutTag.show();
-				return true;
-			case R.id.menu_supprimer_tag:
-				AlertDialog.Builder builderSuppressionTag = new AlertDialog.Builder(this);
-				builderSuppressionTag.setTitle(getResources().getText(R.string.label_ajout_tag));
-		        builderSuppressionTag.setNegativeButton("Annuler", new OnClickListener(){
-					@Override
-					public void onClick(DialogInterface arg0, int arg1) {
-						
+				}
+			});
+			builderAjoutTag.show();
+			return true;
+		case R.id.menu_supprimer_tag:
+			CharSequence[] items = new CharSequence[modele.getListeTags().size()];
+			final boolean[] tagsAffiches = new boolean[modele.getListeTags().size()];
+			final boolean[] tagsChoisis = new boolean[tagsAffiches.length];
+			for(int i=0;i<modele.getListeTags().size();i++) {
+				items[i]=modele.getListeTags().get(i).getNom();
+				tagsAffiches[i]=false;
+				tagsChoisis[i]=false;
+			}
+
+			AlertDialog.Builder builderSuppressionTag = new AlertDialog.Builder(this);
+			builderSuppressionTag.setTitle(getResources().getText(R.string.label_menu_supprimer_tag));
+			builderSuppressionTag.setNegativeButton("Annuler", new OnClickListener(){
+				@Override
+				public void onClick(DialogInterface arg0, int arg1) {
+					for(int i=0; i<tagsAffiches.length; i++)
+						tagsAffiches[i] = tagsChoisis[i];
+				}
+
+			});
+			builderSuppressionTag.setPositiveButton("OK", new OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					for(int i=0; i<tagsChoisis.length; i++){
+						tagsChoisis[i] = tagsAffiches[i];
+			    		if(tagsChoisis[i]){
+			    			Long indice = modele.getListeTags().get(i).getIdentifiant();
+			    			modele.getListeTags().remove(i);
+			    			for(int j=0; j<modele.getListeTaches().size(); j++){
+			    				if(modele.getListeTaches().get(j).getListeTags().contains(indice)){
+			    					modele.getListeTaches().get(j).getListeTags().remove(indice);
+			    				}
+			    					
+			    			}
+			    		}
 					}
-		        	
-		        });
-		        builderSuppressionTag.setPositiveButton("OK", new OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-							Toast.makeText(GestionnaireTaches.this, "Nouveau tag ajouté", Toast.LENGTH_SHORT).show();
-					}
-				});
-				return true;
-			case R.id.menu_reglage:
-				Intent intentPrefs = new Intent(this.getApplicationContext(), Preferences.class);
-				startActivityForResult(intentPrefs, CODE_ACTIVITE_PREFERENCES);
-				return true;
-			case R.id.menu_plus:
-				
-				return true;
-			case R.id.menu_synchronisation:
-				
-				return true;
-			default:
-				return super.onOptionsItemSelected(item);
+					
+				}
+			});
+			builderSuppressionTag.setMultiChoiceItems(items, tagsAffiches, new DialogInterface.OnMultiChoiceClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+					
+				}
+			}); 
+			AlertDialog alert;
+			alert = builderSuppressionTag.create();
+			alert.show();
+			return true;
+		case R.id.menu_reglage:
+			Intent intentPrefs = new Intent(this.getApplicationContext(), Preferences.class);
+			startActivityForResult(intentPrefs, CODE_ACTIVITE_PREFERENCES);
+			return true;
+		case R.id.menu_plus:
+
+			return true;
+		case R.id.menu_synchronisation:
+
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
 		}
 	}
-    
+
 }
