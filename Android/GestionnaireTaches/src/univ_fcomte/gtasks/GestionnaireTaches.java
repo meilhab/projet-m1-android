@@ -60,31 +60,8 @@ public class GestionnaireTaches extends Activity {
 		serveur = "http://projetandroid.hosting.olikeopen.com/gestionnaire_taches/requeteAndroid.php";
 		boolean useProxy = true;
 
-
-		String codeJson = "";
 		sw=new Synchronisation(this, useProxy);
 
-		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);  
-		nameValuePairs.add(new BasicNameValuePair("identifiant", "guillaume"));  
-		nameValuePairs.add(new BasicNameValuePair("mdPasse", sw.md5("android")));
-		nameValuePairs.add(new BasicNameValuePair("objet", "importer"));
-		
-        try {
-        	codeJson = sw.GetHTML(serveur, nameValuePairs);
-		} catch (ApiException e1) {
-			e1.printStackTrace();
-		}
-
-
-
-		modele.reinitialiserModele();
-		JsonParser json = new JsonParser(modele);
-		try {
-			json.parse(codeJson);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		modele.getBdd().reinitialiserBDD(modele.getListeTags(), modele.getListeTaches(), json.getListeAPourTag(), json.getListeAPourFils());
 		
 
 		//Récupération de la listview crée dans le fichier main.xml
@@ -170,21 +147,6 @@ public class GestionnaireTaches extends Activity {
 
 	@Override
 	public void onBackPressed() {
-
-		Log.i("","appuie sur back");
-		List<NameValuePair> nvp = new ArrayList<NameValuePair>(2);  
-		nvp.add(new BasicNameValuePair("identifiant", "guillaume"));  
-		nvp.add(new BasicNameValuePair("mdPasse", sw.md5("android")));
-		nvp.add(new BasicNameValuePair("objet", "exporter"));
-		nvp.add(new BasicNameValuePair("json", new EnvoyerJson(modele).genererJson().toString()));
-
-		try {
-			String reponse = sw.GetHTML(serveur, nvp);
-			Log.i("reponse",reponse);
-		} catch (ApiException e) {
-			e.printStackTrace();
-		}
-		Log.i("om",new EnvoyerJson(modele).genererJson().toString());
 		super.onBackPressed();
 	}
 
@@ -341,7 +303,18 @@ public class GestionnaireTaches extends Activity {
 			builder.setTitle(R.string.label_methode_synchronisation);
 			builder.setItems(itemsSynchro, new DialogInterface.OnClickListener() {
 			    public void onClick(DialogInterface dialog, int item) {
-			        Toast.makeText(getApplicationContext(), itemsSynchro[item], Toast.LENGTH_SHORT).show();
+			    	Toast.makeText(getApplicationContext(), itemsSynchro[item], Toast.LENGTH_SHORT).show();
+			    	switch(item){
+			    		case 0:
+			    			ecraserServeur();
+			    			break;
+			    		case 1:
+			    			ecraserMobile();
+			    			break;
+			    		case 2:
+			    			combinerServeurMobile();
+			    			break;
+			    	}    
 			    }
 			});
 			AlertDialog alertSynchro;
@@ -351,6 +324,52 @@ public class GestionnaireTaches extends Activity {
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+	
+	public void ecraserMobile(){
+		String codeJson = "";
+		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);  
+		nameValuePairs.add(new BasicNameValuePair("identifiant", "guillaume"));  
+		nameValuePairs.add(new BasicNameValuePair("mdPasse", sw.md5("android")));
+		nameValuePairs.add(new BasicNameValuePair("objet", "importer"));
+		
+        try {
+        	codeJson = sw.GetHTML(serveur, nameValuePairs);
+		} catch (ApiException e1) {
+			e1.printStackTrace();
+		}
+
+
+
+		modele.reinitialiserModele();
+		JsonParser json = new JsonParser(modele);
+		try {
+			json.parse(codeJson);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		modele.getBdd().reinitialiserBDD(modele.getListeTags(), modele.getListeTaches(), json.getListeAPourTag(), json.getListeAPourFils());
+		
+		updateList();
+	}
+	
+	public void ecraserServeur(){
+		List<NameValuePair> nvp = new ArrayList<NameValuePair>(2);  
+		nvp.add(new BasicNameValuePair("identifiant", "guillaume"));  
+		nvp.add(new BasicNameValuePair("mdPasse", sw.md5("android")));
+		nvp.add(new BasicNameValuePair("objet", "exporter"));
+		nvp.add(new BasicNameValuePair("json", new EnvoyerJson(modele).genererJson().toString()));
+
+		try {
+			String reponse = sw.GetHTML(serveur, nvp);
+			Log.i("reponse",reponse);
+		} catch (ApiException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void combinerServeurMobile(){
+		
 	}
 
 }
