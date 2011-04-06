@@ -205,6 +205,7 @@ public class GestionnaireTaches extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu){
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.layout.menu, menu);
+		//menu.getItem(3).getSubMenu().setHeaderIcon(R.drawable.icon);
 		//menu.getItem(0).getSubMenu().setHeaderIcon(R.drawable.);
 
 		return true;
@@ -299,41 +300,27 @@ public class GestionnaireTaches extends Activity {
 			startActivityForResult(intentPrefs, CODE_ACTIVITE_PREFERENCES);
 			return true;
 		case R.id.menu_plus:
-
 			return true;
 		case R.id.menu_synchronisation:
 			
-			final CharSequence[] itemsSynchro = getResources().getStringArray(R.array.methode_synchronisation);
-
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setTitle(R.string.label_methode_synchronisation);
-			builder.setItems(itemsSynchro, new DialogInterface.OnClickListener() {
-			    public void onClick(DialogInterface dialog, int item) {
-			    	Toast.makeText(getApplicationContext(), itemsSynchro[item], Toast.LENGTH_SHORT).show();
-			    	setProgressBarIndeterminateVisibility(true);
-			    	ThreadSynchronisation ts = new ThreadSynchronisation(modele, GestionnaireTaches.this);
-			    	switch(item){
-			    		case 0:
-			    			ts.selectionModeSynchronisation(ThreadSynchronisation.ECRASEMENT_SERVEUR);
-			    			ts.start();
-			    			//ecraserServeur();
-			    			break;
-			    		case 1:
-			    			ts.selectionModeSynchronisation(ThreadSynchronisation.ECRASEMENT_MOBILE);
-			    			ts.start();
-			    			//ecraserMobile();
-			    			break;
-			    		case 2:
-			    			ts.selectionModeSynchronisation(ThreadSynchronisation.COMBINER_SERVEUR_MOBILE);
-			    			ts.start();
-			    			//combinerServeurMobile();
-			    			break;
-			    	}
-			    }
-			});
-			AlertDialog alertSynchro;
-			alertSynchro = builder.create();
-			alertSynchro.show();
+			return true;
+		case R.id.sous_menu_synchronisation_ecrasement_serveur:
+			setProgressBarIndeterminateVisibility(true);
+	    	ThreadSynchronisation ts_ecrasement_serveur = new ThreadSynchronisation(modele, GestionnaireTaches.this);
+	    	ts_ecrasement_serveur.selectionModeSynchronisation(ThreadSynchronisation.ECRASEMENT_SERVEUR);
+	    	ts_ecrasement_serveur.start();	    	
+			return true;
+		case R.id.sous_menu_synchronisation_ecrasement_mobile:
+			setProgressBarIndeterminateVisibility(true);
+	    	ThreadSynchronisation ts_ecrasement_mobile = new ThreadSynchronisation(modele, GestionnaireTaches.this);
+	    	ts_ecrasement_mobile.selectionModeSynchronisation(ThreadSynchronisation.ECRASEMENT_MOBILE);
+	    	ts_ecrasement_mobile.start();	    	
+			return true;
+		case R.id.sous_menu_synchronisation_combiner_serveur_mobile:
+			setProgressBarIndeterminateVisibility(true);
+	    	ThreadSynchronisation ts_combiner_serveur_mobile = new ThreadSynchronisation(modele, GestionnaireTaches.this);
+	    	ts_combiner_serveur_mobile.selectionModeSynchronisation(ThreadSynchronisation.COMBINER_SERVEUR_MOBILE);
+	    	ts_combiner_serveur_mobile.start();	    	
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
