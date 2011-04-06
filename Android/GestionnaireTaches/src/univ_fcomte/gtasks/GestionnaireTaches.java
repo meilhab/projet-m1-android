@@ -11,6 +11,7 @@ import org.json.JSONException;
 import univ_fcomte.synchronisation.EnvoyerJson;
 import univ_fcomte.synchronisation.JsonParser;
 import univ_fcomte.synchronisation.Synchronisation;
+import univ_fcomte.synchronisation.ThreadSynchronisation;
 import univ_fcomte.synchronisation.Synchronisation.ApiException;
 import univ_fcomte.tasks.Modele;
 import univ_fcomte.tasks.Tache;
@@ -48,10 +49,15 @@ public class GestionnaireTaches extends Activity {
 	private Synchronisation sw;
 	private final int CODE_DE_MON_ACTIVITE = 1;
 	private final int CODE_ACTIVITE_PREFERENCES = 2;
+	
+	private ThreadSynchronisation ts;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		ts = new ThreadSynchronisation(modele, this);
+		
 		setContentView(R.layout.main);
 
 		modele = ((MonApplication)getApplication()).getModele();
@@ -306,13 +312,19 @@ public class GestionnaireTaches extends Activity {
 			    	Toast.makeText(getApplicationContext(), itemsSynchro[item], Toast.LENGTH_SHORT).show();
 			    	switch(item){
 			    		case 0:
-			    			ecraserServeur();
+			    			ts.selectionModeSynchronisation(ThreadSynchronisation.ECRASEMENT_SERVEUR);
+			    			ts.start();
+			    			//ecraserServeur();
 			    			break;
 			    		case 1:
-			    			ecraserMobile();
+			    			ts.selectionModeSynchronisation(ThreadSynchronisation.ECRASEMENT_MOBILE);
+			    			ts.start();
+			    			//ecraserMobile();
 			    			break;
 			    		case 2:
-			    			combinerServeurMobile();
+			    			ts.selectionModeSynchronisation(ThreadSynchronisation.COMBINER_SERVEUR_MOBILE);
+			    			ts.start();
+			    			//combinerServeurMobile();
 			    			break;
 			    	}    
 			    }
