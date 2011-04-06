@@ -11,7 +11,17 @@
     	  android:icon="@*android:drawable/ic_menu_clear_playlist" />
     <item android:id="@+id/menu_synchronisation"
           android:title="@string/menu_synchronisation" 
-          android:icon="@android:drawable/ic_menu_rotate" />
+          android:icon="@android:drawable/ic_menu_rotate" >
+          	<menu android:id="@+id/sous_menu_synchronisation" 
+          		android:icon="@android:drawable/ic_menu_rotate">
+          		<item android:id="@+id/sous_menu_synchronisation_ecrasement_serveur"
+          			android:title="@string/methode_synchronisation_ecrasement_serveur" />
+          		<item android:id="@+id/sous_menu_synchronisation_ecrasement_mobile"
+          			android:title="@string/methode_synchronisation_ecrasement_mobile" />
+          		<item android:id="@+id/sous_menu_synchronisation_combiner_serveur_mobile"
+          			android:title="@string/methode_synchronisation_combiner_serveur_mobile" />
+          </menu>
+    </item>
     <item android:id="@+id/menu_reglage"
           android:title="@string/menu_reglage" 
           android:icon="@android:drawable/ic_menu_preferences" />
