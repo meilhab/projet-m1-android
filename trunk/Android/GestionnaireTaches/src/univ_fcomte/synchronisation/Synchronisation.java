@@ -40,10 +40,12 @@ public class Synchronisation {
 	private static final int HTTP_STATUS_OK = 200;
 	private boolean useProxy;
 	private static String sUserAgent = null;
+	private String serveur;
 	
-	public Synchronisation(Context context, boolean useProxy) {
+	public Synchronisation(Context context, String serveur, boolean useProxy) {
 		prepareUserAgent(context);
 		this.useProxy = useProxy;
+		this.serveur = serveur;
 	}
 	
 	public static class ApiException extends Exception {
@@ -75,7 +77,7 @@ public class Synchronisation {
 	//=======================================================
 	// Recupère une page Web
 	//=======================================================
-	public synchronized String GetHTML(String url, List <NameValuePair> nvps) throws ApiException {
+	public synchronized String GetHTML(List <NameValuePair> nvps) throws ApiException {
 		
 		if (sUserAgent == null)
 			throw new ApiException("User-Agent string must be prepared");
@@ -88,7 +90,7 @@ public class Synchronisation {
 		
 		try {
 			HttpResponse res;
-			URI uri = new URI(url);
+			URI uri = new URI(serveur);
 			
 			if (nvps!=null){
 	    		HttpPost methodpost = new HttpPost(uri);
@@ -121,7 +123,7 @@ public class Synchronisation {
 		return "";
 	}
 	
-	public boolean envoyerJson(String url, JSONObject json) {
+	public boolean envoyerJson(JSONObject json) {
 		
 		boolean reussi = false;
 		
@@ -129,7 +131,7 @@ public class Synchronisation {
 		HttpConnectionParams.setConnectionTimeout(client.getParams(), 10000); //Timeout Limit
 		HttpResponse response;
 		try{
-			HttpPost post = new HttpPost(url);
+			HttpPost post = new HttpPost(serveur);
 			//StringEntity se = new StringEntity("JSON: " + json.toString());
 			//se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
 	        
