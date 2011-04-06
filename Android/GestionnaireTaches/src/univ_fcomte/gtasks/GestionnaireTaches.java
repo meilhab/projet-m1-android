@@ -64,7 +64,7 @@ public class GestionnaireTaches extends Activity {
 		positionX=0;
 		//serveur = "http://10.0.2.2/gestionnaire_taches/requeteAndroid.php";
 		serveur = "http://projetandroid.hosting.olikeopen.com/gestionnaire_taches/requeteAndroid.php";
-		boolean useProxy = false;
+		boolean useProxy = true;
 
 		sw=new Synchronisation(this, serveur, useProxy);
 
