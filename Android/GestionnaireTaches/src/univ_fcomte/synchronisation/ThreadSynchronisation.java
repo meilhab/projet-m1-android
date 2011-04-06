@@ -26,6 +26,7 @@ public class ThreadSynchronisation extends Thread {
 	public ThreadSynchronisation(Modele modele, GestionnaireTaches gt){
 		this.gt = gt;
 		this.modele = modele;
+		this.modeSynchronisation = -1;
 		
 		serveur = "http://projetandroid.hosting.olikeopen.com/gestionnaire_taches/requeteAndroid.php";
 		boolean useProxy = true;
@@ -34,6 +35,7 @@ public class ThreadSynchronisation extends Thread {
 	}
 	
 	public void run(){
+		Log.i("Commence", "");
 		switch (modeSynchronisation) {
 			case ECRASEMENT_SERVEUR:
 				ecraserServeur();
@@ -44,7 +46,16 @@ public class ThreadSynchronisation extends Thread {
 			case COMBINER_SERVEUR_MOBILE:
 				combinerServeurMobile();
 				break;
+			default:
+				return;	
 		}
+		Log.i("Termine", "");
+		gt.runOnUiThread(new Runnable() {	
+			@Override
+			public void run() {
+				gt.setProgressBarIndeterminateVisibility(false);
+			}
+		});
 	}
 
 	public void selectionModeSynchronisation(int mode){
@@ -74,8 +85,13 @@ public class ThreadSynchronisation extends Thread {
 			e.printStackTrace();
 		}
 		modele.getBdd().reinitialiserBDD(modele.getListeTags(), modele.getListeTaches(), json.getListeAPourTag(), json.getListeAPourFils());
-		
-		gt.updateList();
+		gt.runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				gt.updateList();
+			}
+		});
 	}
 	
 	public void ecraserServeur(){
