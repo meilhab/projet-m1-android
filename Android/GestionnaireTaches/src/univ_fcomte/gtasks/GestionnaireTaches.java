@@ -29,6 +29,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.EditText;
@@ -49,18 +50,17 @@ public class GestionnaireTaches extends Activity {
 	private Synchronisation sw;
 	private final int CODE_DE_MON_ACTIVITE = 1;
 	private final int CODE_ACTIVITE_PREFERENCES = 2;
-	
-	private ThreadSynchronisation ts;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		ts = new ThreadSynchronisation(modele, this);
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		
 		setContentView(R.layout.main);
 
 		modele = ((MonApplication)getApplication()).getModele();
+		
 		positionX=0;
 		//serveur = "http://10.0.2.2/gestionnaire_taches/requeteAndroid.php";
 		serveur = "http://projetandroid.hosting.olikeopen.com/gestionnaire_taches/requeteAndroid.php";
@@ -310,6 +310,8 @@ public class GestionnaireTaches extends Activity {
 			builder.setItems(itemsSynchro, new DialogInterface.OnClickListener() {
 			    public void onClick(DialogInterface dialog, int item) {
 			    	Toast.makeText(getApplicationContext(), itemsSynchro[item], Toast.LENGTH_SHORT).show();
+			    	setProgressBarIndeterminateVisibility(true);
+			    	ThreadSynchronisation ts = new ThreadSynchronisation(modele, GestionnaireTaches.this);
 			    	switch(item){
 			    		case 0:
 			    			ts.selectionModeSynchronisation(ThreadSynchronisation.ECRASEMENT_SERVEUR);
@@ -326,7 +328,7 @@ public class GestionnaireTaches extends Activity {
 			    			ts.start();
 			    			//combinerServeurMobile();
 			    			break;
-			    	}    
+			    	}
 			    }
 			});
 			AlertDialog alertSynchro;
