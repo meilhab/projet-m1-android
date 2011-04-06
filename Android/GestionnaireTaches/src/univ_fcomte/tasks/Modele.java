@@ -22,12 +22,12 @@ public class Modele {
 		this.bdd = new MaBaseSQLite(context, "gestionnaire_taches.db", null, 1);
 		this.db = this.bdd.getDb();
 		
-		listeTags=new ArrayList<Tag>();
+		/*
 		listeTags.add(new Tag(10, "personnel"));
 		listeTags.add(new Tag(20, "professionnel"));
 		listeTags.add(new Tag(30, "Examen"));
-		listeTags.add(new Tag(40, "universit�"));
-		
+		listeTags.add(new Tag(40, "université"));
+		*/
 		/*
 		Tache t=new Tache(1, "tache 1", "description tache 1", new Etat(1), listeTags);
 		ajoutTache(t);
@@ -122,10 +122,23 @@ public class Modele {
 		listeTags = new ArrayList<Tag>();
 		listeTaches = new ArrayList<Tache>();
 		
-		listeTags=new ArrayList<Tag>();
+		/*
 		listeTags.add(new Tag(10, "personnel"));
 		listeTags.add(new Tag(20, "professionnel"));
 		listeTags.add(new Tag(30, "Examen"));
 		listeTags.add(new Tag(40, "université"));
+		*/
+	}
+	
+	public void initialiserModele() {
+		listeTags = bdd.getListeTag();
+		listeTaches = bdd.getListeTache();
+		
+		/*
+		listeTags.add(new Tag(10, "personnel"));
+		listeTags.add(new Tag(20, "professionnel"));
+		listeTags.add(new Tag(30, "Examen"));
+		listeTags.add(new Tag(40, "université"));
+		*/
 	}
 }

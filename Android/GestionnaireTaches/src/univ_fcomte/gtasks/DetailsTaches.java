@@ -33,7 +33,6 @@ public class DetailsTaches extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.details_taches);
         modele=((MonApplication)getApplication()).getModele();
-        
         Bundle objetbunble  = this.getIntent().getExtras();
         
         if(objetbunble != null && objetbunble.containsKey("id"))
@@ -64,7 +63,7 @@ public class DetailsTaches extends Activity {
         
         CharSequence[] items = new CharSequence[modele.getListeTags().size()];
         tagsAffiches = new boolean[modele.getListeTags().size()];
-        tagsChoisis = new boolean[tagsAffiches.length];
+        tagsChoisis = new boolean[modele.getListeTags().size()];
         for(int i=0;i<modele.getListeTags().size();i++) {
         	items[i]=modele.getListeTags().get(i).getNom();
         	tagsAffiches[i]=false;
@@ -97,10 +96,6 @@ public class DetailsTaches extends Activity {
         
         
         
-        
-        
-        
-        
         Button b = (Button) findViewById(R.id.bouton_ajout_tag);
         b.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -116,15 +111,14 @@ public class DetailsTaches extends Activity {
         	this.setTitle(t.getNom());
         	nom.setText(t.getNom());
         	description.setText(t.getDescription());
-        	for(int i=0; i<tagsAffiches.length; i++)
+        	for(int i=0; i<modele.getListeTags().size(); i++) {
         		if(t.getListeTags().contains(modele.getListeTags().get(i).getIdentifiant())) {
-        			Log.i("tag par defaut", modele.getListeTags().get(i).getIdentifiant()+"");
         			tagsChoisis[i] = true;
         			tagsAffiches[i] = true;
         		}
-        	
-        	spinnerPriorite.setSelection(t.getPriorite());
-        	spinnerEtat.setSelection(t.getEtat());
+        	}
+        	spinnerPriorite.setSelection(t.getPriorite()-1);
+        	spinnerEtat.setSelection(t.getEtat()-1);
         }
         	
         
@@ -139,7 +133,7 @@ public class DetailsTaches extends Activity {
     	
     	Tache tache = null;
     	if(identifiant == -1) {
-    		tache = new Tache(modele.getIdMaxTache() + 1, nom.getText().toString(), description.getText().toString(), spinnerPriorite.getSelectedItemPosition(), spinnerEtat.getSelectedItemPosition(), listeTag, new ArrayList<Long>());
+    		tache = new Tache(modele.getIdMaxTache() + 1, nom.getText().toString(), description.getText().toString(), spinnerPriorite.getSelectedItemPosition()+1, spinnerEtat.getSelectedItemPosition()+1, listeTag, new ArrayList<Long>());
     		modele.ajoutTache(tache);
     		
     		modele.getBdd().ajouterTache(tache, -1, false);
@@ -148,11 +142,11 @@ public class DetailsTaches extends Activity {
     		tache = modele.getTacheById(identifiant);
     		tache.setNom(nom.getText().toString());
     		tache.setDescription(description.getText().toString());
-    		tache.setEtat(spinnerEtat.getSelectedItemPosition());
-    		tache.setPriorite(spinnerPriorite.getSelectedItemPosition());
+    		tache.setEtat(spinnerEtat.getSelectedItemPosition()+1);
+    		tache.setPriorite(spinnerPriorite.getSelectedItemPosition()+1);
     		tache.setListeTags(listeTag);
     		
-    		//modele.getBdd().modifierTache(....);
+    		modele.getBdd().modifTache(tache);
     	}
     		
     	super.onBackPressed();

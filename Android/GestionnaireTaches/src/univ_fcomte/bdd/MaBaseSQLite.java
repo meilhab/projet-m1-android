@@ -121,17 +121,17 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 		String[] colonnesARecup = new String[] { "nomTache", "descriptionTache", "dateLimite", "idEtat", "idPriorite" };
 
 		Cursor cursorResults = db.query(TABLE_TACHE, colonnesARecup, "idTache=" + idTache, null, null, null, "nomTache asc", null);
+		int columnNom= cursorResults.getColumnIndex("nomTache");
+		int columnDescription= cursorResults.getColumnIndex("descriptionTache");
+		int columnDate= cursorResults.getColumnIndex("dateLimite");
+		int columnEtat= cursorResults.getColumnIndex("idEtat");
+		int columnPriorite= cursorResults.getColumnIndex("idPriorite");
 		Cursor cursorTag;
 		Cursor cursorFils;
 		if (null != cursorResults) {
 			if (cursorResults.moveToFirst()) {
 				do {
-					int columnNom= cursorResults.getColumnIndex("nomTache");
-					int columnDescription= cursorResults.getColumnIndex("descriptionTache");
-					int columnDate= cursorResults.getColumnIndex("dateLimite");
-					int columnEtat= cursorResults.getColumnIndex("idEtat");
-					int columnPriorite= cursorResults.getColumnIndex("idPriorite");
-					
+				
 					listeTag = new ArrayList<Long>();
 					listeFils = new ArrayList<Long>();
 					
@@ -203,17 +203,18 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 		String[] colonnesARecup = new String[] { "idTache", "nomTache", "descriptionTache", "dateLimite", "idEtat", "idPriorite" };
 
 		Cursor cursorResults = db.query(TABLE_TACHE, colonnesARecup, null, null, null, null, "nomTache asc", null);
+		int columnId = cursorResults.getColumnIndex("idTache");
+		int columnNom = cursorResults.getColumnIndex("nomTache");
+		int columnDescription = cursorResults.getColumnIndex("descriptionTache");
+		int columnDate = cursorResults.getColumnIndex("dateLimite");
+		int columnEtat = cursorResults.getColumnIndex("idEtat");
+		int columnPriorite = cursorResults.getColumnIndex("idPriorite");
+		
 		Cursor cursorTag;
 		Cursor cursorFils;
 		if (null != cursorResults) {
 			if (cursorResults.moveToFirst()) {
 				do {
-					int columnId= cursorResults.getColumnIndex("IdTache");
-					int columnNom= cursorResults.getColumnIndex("nomTache");
-					int columnDescription= cursorResults.getColumnIndex("descriptionTache");
-					int columnDate= cursorResults.getColumnIndex("dateLimite");
-					int columnEtat= cursorResults.getColumnIndex("idEtat");
-					int columnPriorite= cursorResults.getColumnIndex("idPriorite");
 					
 					listeTag = new ArrayList<Long>();
 					listeFils = new ArrayList<Long>();
@@ -237,6 +238,11 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 							} while (cursorFils.moveToNext());
 						}
 					}
+					Log.i("curseur", "om" + columnId);
+					Log.i("curseur", cursorResults.getString(columnNom));
+					Log.i("curseur", cursorResults.getString(columnDescription));
+					Log.i("curseur", cursorResults.getInt(columnEtat) + "");
+					Log.i("curseur", cursorResults.getInt(columnPriorite) + "");
 					
 					listeTache.add(new Tache(cursorResults.getInt(columnId), cursorResults.getString(columnNom), cursorResults.getString(columnDescription), cursorResults.getInt(columnEtat), cursorResults.getInt(columnPriorite), listeTag, listeFils));
 					

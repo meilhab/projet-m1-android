@@ -60,13 +60,13 @@ public class GestionnaireTaches extends Activity {
 		setContentView(R.layout.main);
 
 		modele = ((MonApplication)getApplication()).getModele();
-		
+		modele.initialiserModele();
 		positionX=0;
 		//serveur = "http://10.0.2.2/gestionnaire_taches/requeteAndroid.php";
 		serveur = "http://projetandroid.hosting.olikeopen.com/gestionnaire_taches/requeteAndroid.php";
-		boolean useProxy = true;
+		boolean useProxy = false;
 
-		sw=new Synchronisation(this, useProxy);
+		sw=new Synchronisation(this, serveur, useProxy);
 
 		
 
@@ -302,75 +302,25 @@ public class GestionnaireTaches extends Activity {
 		case R.id.menu_plus:
 			return true;
 		case R.id.menu_synchronisation:
-			
 			return true;
 		case R.id.sous_menu_synchronisation_ecrasement_serveur:
-			setProgressBarIndeterminateVisibility(true);
-	    	ThreadSynchronisation ts_ecrasement_serveur = new ThreadSynchronisation(modele, GestionnaireTaches.this);
+	    	ThreadSynchronisation ts_ecrasement_serveur = new ThreadSynchronisation(modele, GestionnaireTaches.this, sw);
 	    	ts_ecrasement_serveur.selectionModeSynchronisation(ThreadSynchronisation.ECRASEMENT_SERVEUR);
 	    	ts_ecrasement_serveur.start();	    	
 			return true;
 		case R.id.sous_menu_synchronisation_ecrasement_mobile:
-			setProgressBarIndeterminateVisibility(true);
-	    	ThreadSynchronisation ts_ecrasement_mobile = new ThreadSynchronisation(modele, GestionnaireTaches.this);
+	    	ThreadSynchronisation ts_ecrasement_mobile = new ThreadSynchronisation(modele, GestionnaireTaches.this, sw);
 	    	ts_ecrasement_mobile.selectionModeSynchronisation(ThreadSynchronisation.ECRASEMENT_MOBILE);
-	    	ts_ecrasement_mobile.start();	    	
+	    	ts_ecrasement_mobile.start();	 
 			return true;
 		case R.id.sous_menu_synchronisation_combiner_serveur_mobile:
-			setProgressBarIndeterminateVisibility(true);
-	    	ThreadSynchronisation ts_combiner_serveur_mobile = new ThreadSynchronisation(modele, GestionnaireTaches.this);
+	    	ThreadSynchronisation ts_combiner_serveur_mobile = new ThreadSynchronisation(modele, GestionnaireTaches.this, sw);
 	    	ts_combiner_serveur_mobile.selectionModeSynchronisation(ThreadSynchronisation.COMBINER_SERVEUR_MOBILE);
 	    	ts_combiner_serveur_mobile.start();	    	
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
-	}
-	
-	public void ecraserMobile(){
-		String codeJson = "";
-		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);  
-		nameValuePairs.add(new BasicNameValuePair("identifiant", "guillaume"));  
-		nameValuePairs.add(new BasicNameValuePair("mdPasse", sw.md5("android")));
-		nameValuePairs.add(new BasicNameValuePair("objet", "importer"));
-		
-        try {
-        	codeJson = sw.GetHTML(serveur, nameValuePairs);
-		} catch (ApiException e1) {
-			e1.printStackTrace();
-		}
-
-
-
-		modele.reinitialiserModele();
-		JsonParser json = new JsonParser(modele);
-		try {
-			json.parse(codeJson);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		modele.getBdd().reinitialiserBDD(modele.getListeTags(), modele.getListeTaches(), json.getListeAPourTag(), json.getListeAPourFils());
-		
-		updateList();
-	}
-	
-	public void ecraserServeur(){
-		List<NameValuePair> nvp = new ArrayList<NameValuePair>(2);  
-		nvp.add(new BasicNameValuePair("identifiant", "guillaume"));  
-		nvp.add(new BasicNameValuePair("mdPasse", sw.md5("android")));
-		nvp.add(new BasicNameValuePair("objet", "exporter"));
-		nvp.add(new BasicNameValuePair("json", new EnvoyerJson(modele).genererJson().toString()));
-
-		try {
-			String reponse = sw.GetHTML(serveur, nvp);
-			Log.i("reponse",reponse);
-		} catch (ApiException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public void combinerServeurMobile(){
-		
 	}
 
 }
