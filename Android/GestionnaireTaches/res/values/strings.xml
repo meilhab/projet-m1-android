@@ -37,10 +37,13 @@
 	<string name="label_nom_tag">Nom du tag</string>
 	<string name="label_ajout_tag">Ajout d\'un tag</string>
 	<string name="label_menu_supprimer_tag">Suppression de tags</string>
+	<string name="methode_synchronisation_ecrasement_serveur">Ecrasement serveur</string>
+	<string name="methode_synchronisation_ecrasement_mobile">Ecrasement mobile</string>
+	<string name="methode_synchronisation_combiner_serveur_mobile">Combiner serveur-mobile</string>
 	<string-array name="methode_synchronisation">
-		<item>Ecrasement serveur</item>
-		<item>Ecrasement mobile</item>
-		<item>Combiner serveur-mobile</item>
+		<item>@string/methode_synchronisation_ecrasement_serveur</item>
+		<item>@string/methode_synchronisation_ecrasement_mobile</item>
+		<item>@string/methode_synchronisation_combiner_serveur_mobile</item>
 	</string-array>
 	<string name="label_methode_synchronisation">Méthode de synchronisation</string>
 </resources>
