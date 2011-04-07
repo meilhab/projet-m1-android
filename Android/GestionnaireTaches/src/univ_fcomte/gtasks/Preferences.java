@@ -30,7 +30,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-		Toast.makeText(this,key + ":" + sharedPreferences.getString(key, ""), Toast.LENGTH_SHORT).show();		
+		//Toast.makeText(this,key + ":" + sharedPreferences.getString(key, ""), Toast.LENGTH_SHORT).show();		
 	}
 
 	@Override
