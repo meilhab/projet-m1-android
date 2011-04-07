@@ -30,7 +30,58 @@
 			android:summary="Ringtone summary"
 			/>
 		
-		</PreferenceCategory>		
+		</PreferenceCategory>
+		
+		
+		<PreferenceCategory android:title="Synchronisation">
+			
+			<CheckBoxPreference
+	                android:key="utilise_compte"
+	                android:title="Utiliser un compte utilisateur"
+	                android:summary="Selectionner si vous souhaitez utiliser un compte" />
+	                
+	        <EditTextPreference
+	                android:layout="?android:attr/preferenceLayoutChild"
+	                android:key="login"
+	                android:title="Nom d'utilisateur"
+					android:summary="Entrez votre nom d'utilisateur"
+	                android:dependency="utilise_compte" />
+	        
+	        <EditTextPreference
+	                android:layout="?android:attr/preferenceLayoutChild"
+	                android:key="password"
+	                android:title="Mot de passe"
+					android:summary="Entrez votre mot de passe"
+					android:password="true"
+	                android:dependency="utilise_compte" />
+			
+		</PreferenceCategory>
+		
+		
+		<PreferenceCategory android:title="Proxy">
+			
+			<CheckBoxPreference
+	                android:key="utilise_proxy"
+	                android:title="Utiliser un Proxy"
+	                android:summary="Selectionner si vous souhaitez utiliser un proxy" />
+	            
+	        <EditTextPreference
+	                android:layout="?android:attr/preferenceLayoutChild"
+	                android:key="adresse_proxy"
+	                android:title="Adresse du proxy"
+					android:summary="Entrez l'adresse du proxy"
+	                android:dependency="utilise_proxy" />
+	        
+	        <EditTextPreference
+	                android:layout="?android:attr/preferenceLayoutChild"
+	                android:key="port"
+	                android:title="Port"
+	                android:numeric="integer"
+					android:summary="Entrez le port du proxy"
+	                android:dependency="utilise_proxy" />
+			
+		</PreferenceCategory>
+		
 		<PreferenceCategory  android:title="Categorie 2">
 			<Preference 
 				android:key="write"

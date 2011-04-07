@@ -18,10 +18,13 @@ import univ_fcomte.tasks.Tache;
 import univ_fcomte.tasks.Tag;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -67,6 +70,12 @@ public class GestionnaireTaches extends Activity {
 		boolean useProxy = true;
 
 		sw=new Synchronisation(this, serveur, useProxy);
+
+
+
+
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+		Log.i("login", preferences.getString("login", "gui"));
 
 		
 
@@ -116,9 +125,11 @@ public class GestionnaireTaches extends Activity {
 			@Override
 			public boolean onItemLongClick(AdapterView a, View v, int position, long id) {
 				Log.i("","appui long sur "+ position);
-
-				/*Builder builder = new Builder(v.getContext());
-				builder.setTitle("Options");
+				//registerForContextMenu(v);
+				Builder builder = new Builder(v.getContext());
+				HashMap map = (HashMap) maListViewPerso.getItemAtPosition(position);
+				//map.get("id");
+				builder.setTitle(map.get("titre")+"");
 			    String[] myItemClickDialog = new String[4];
 				myItemClickDialog[0] = "Add";
 				myItemClickDialog[1] = "Edit";
@@ -143,8 +154,9 @@ public class GestionnaireTaches extends Activity {
 							break;
 						}
 					}
-				});*/
+				});
 
+				builder.show();
 				return true;
 			}
 		}); 
