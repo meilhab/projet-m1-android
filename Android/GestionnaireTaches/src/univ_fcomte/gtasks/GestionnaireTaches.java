@@ -27,6 +27,7 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
@@ -90,22 +91,34 @@ public class GestionnaireTaches extends Activity {
 			public void onItemClick(AdapterView a, View v, int position, long id) {
 				Log.i("","item");
 
-				//if(positionX<=getResources().getDrawable(R.drawable.icon).getMinimumWidth())
-				Log.i("","on clic sur l'image");
-
-				Toast.makeText(maListViewPerso.getContext(), "Nouvelle tache", Toast.LENGTH_SHORT).show();
-				Bundle objetbunble = new Bundle();
-				Intent intent = new Intent(maListViewPerso.getContext(), DetailsTaches.class);
-				//objetbunble.putAll(new Bundle(b))
-				//objetbunble.putString("titre", "Nouvelle tache");
-
-				HashMap map = (HashMap) maListViewPerso.getItemAtPosition(position);
-
-				objetbunble.putInt("id", Integer.valueOf((String)map.get("id")));
-				intent.putExtras(objetbunble);
-
-				startActivityForResult(intent, CODE_DE_MON_ACTIVITE);
-
+				if(positionX<=getResources().getDrawable(R.drawable.btn_check_buttonless_on).getMinimumWidth()) {
+					Log.i("","on clic sur l'image");
+					Tache t = modele.getTacheById(Integer.valueOf((String)((HashMap)maListViewPerso.getItemAtPosition(position)).get("id")));
+					if(t.getEtat() != 4)
+						t.setEtat(4);
+					else
+						t.setEtat(3);
+					modele.getBdd().modifTache(t);
+					updateList();
+						
+					//((ImageView)v.findViewById(R.id.img).);
+					//maListViewPerso.getItemAtPosition(position).;
+					//((HashMap) maListViewPerso.getItemAtPosition(position)). put("img", String.valueOf(R.drawable.btn_check_buttonless_off));
+				}
+				else {
+					Toast.makeText(maListViewPerso.getContext(), "Nouvelle tache", Toast.LENGTH_SHORT).show();
+					Bundle objetbunble = new Bundle();
+					Intent intent = new Intent(maListViewPerso.getContext(), DetailsTaches.class);
+					//objetbunble.putAll(new Bundle(b))
+					//objetbunble.putString("titre", "Nouvelle tache");
+	
+					HashMap map = (HashMap) maListViewPerso.getItemAtPosition(position);
+	
+					objetbunble.putInt("id", Integer.valueOf((String)map.get("id")));
+					intent.putExtras(objetbunble);
+	
+					startActivityForResult(intent, CODE_DE_MON_ACTIVITE);
+				}
 			}
 		});
 
@@ -190,7 +203,10 @@ public class GestionnaireTaches extends Activity {
 			map = new HashMap<String, String>();
 			map.put("titre", t.getNom());
 			map.put("description", t.getDescription());
-			map.put("img", String.valueOf(R.drawable.btn_check_buttonless_on));
+			if(t.getEtat() == 4)
+				map.put("img", String.valueOf(R.drawable.btn_check_buttonless_on));
+			else
+				map.put("img", String.valueOf(R.drawable.btn_check_buttonless_off));
 			map.put("id", String.valueOf(t.getIdentifiant()));
 			listItem.add(map);
 		}
