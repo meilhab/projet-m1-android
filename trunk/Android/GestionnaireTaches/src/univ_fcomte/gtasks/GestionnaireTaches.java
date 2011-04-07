@@ -91,7 +91,7 @@ public class GestionnaireTaches extends Activity {
 			public void onItemClick(AdapterView a, View v, int position, long id) {
 				Log.i("","item");
 
-				if(positionX<=getResources().getDrawable(R.drawable.btn_check_buttonless_on).getMinimumWidth()) {
+				if(positionX<=getResources().getDrawable(R.drawable.btn_check_buttonless_on).getMinimumWidth()+20) {
 					Log.i("","on clic sur l'image");
 					Tache t = modele.getTacheById(Integer.valueOf((String)((HashMap)maListViewPerso.getItemAtPosition(position)).get("id")));
 					if(t.getEtat() != 4)
