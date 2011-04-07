@@ -2,17 +2,8 @@ package univ_fcomte.gtasks;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONException;
-
-import univ_fcomte.synchronisation.EnvoyerJson;
-import univ_fcomte.synchronisation.JsonParser;
 import univ_fcomte.synchronisation.Synchronisation;
 import univ_fcomte.synchronisation.ThreadSynchronisation;
-import univ_fcomte.synchronisation.Synchronisation.ApiException;
 import univ_fcomte.tasks.Modele;
 import univ_fcomte.tasks.Tache;
 import univ_fcomte.tasks.Tag;
@@ -40,7 +31,6 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
-import android.util.Log;
 
 public class GestionnaireTaches extends Activity {
 	/** Called when the activity is first created. */
@@ -67,9 +57,8 @@ public class GestionnaireTaches extends Activity {
 		positionX=0;
 		//serveur = "http://10.0.2.2/gestionnaire_taches/requeteAndroid.php";
 		serveur = "http://projetandroid.hosting.olikeopen.com/gestionnaire_taches/requeteAndroid.php";
-		boolean useProxy = true;
 
-		sw=new Synchronisation(this, serveur, useProxy);
+		sw=new Synchronisation(this, serveur);
 
 
 
@@ -201,7 +190,7 @@ public class GestionnaireTaches extends Activity {
 			map = new HashMap<String, String>();
 			map.put("titre", t.getNom());
 			map.put("description", t.getDescription());
-			map.put("img", String.valueOf(R.drawable.icon));
+			map.put("img", String.valueOf(R.drawable.btn_check_buttonless_on));
 			map.put("id", String.valueOf(t.getIdentifiant()));
 			listItem.add(map);
 		}

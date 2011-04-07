@@ -33,19 +33,20 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 public class Synchronisation {
 
 	private static final int HTTP_STATUS_OK = 200;
-	private boolean useProxy;
 	private static String sUserAgent = null;
 	private String serveur;
+	private Context context;
 	
-	public Synchronisation(Context context, String serveur, boolean useProxy) {
-		prepareUserAgent(context);
-		this.useProxy = useProxy;
+	public Synchronisation(Context context, String serveur) {
 		this.serveur = serveur;
+		this.context = context;
+		prepareUserAgent();
 	}
 	
 	public static class ApiException extends Exception {
@@ -63,7 +64,7 @@ public class Synchronisation {
 		}
 	}
 	
-	public static void prepareUserAgent(Context context) {
+	public void prepareUserAgent() {
 		try {
 			// Read package name and version number from manifest
 			PackageManager manager = context.getPackageManager();
@@ -84,7 +85,7 @@ public class Synchronisation {
 		
 		DefaultHttpClient httpClient = new DefaultHttpClient();
 		HttpHost proxy = new HttpHost("proxy-web.univ-fcomte.fr", 3128);
-		if(useProxy)
+		if(PreferenceManager.getDefaultSharedPreferences(context).getBoolean("utilise_proxy", false))
 			httpClient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
 		
 		
