@@ -88,7 +88,7 @@ public class Modele {
 		return db;
 	}
 	
-	public Tache getTacheById(int id) {
+	public Tache getTacheById(long id) {
 		
 		Tache tache = null;
 		for(int i=0;i<listeTaches.size();i++)
@@ -96,6 +96,16 @@ public class Modele {
 				tache = listeTaches.get(i);
 		
 		return tache;
+	}
+	
+	public Tag getTagById(long id) {
+		
+		Tag tag = null;
+		for(int i=0;i<listeTags.size();i++)
+			if(listeTags.get(i).getIdentifiant() == id)
+				tag = listeTags.get(i);
+		
+		return tag;
 	}
 
 	public long getIdMaxTache() {

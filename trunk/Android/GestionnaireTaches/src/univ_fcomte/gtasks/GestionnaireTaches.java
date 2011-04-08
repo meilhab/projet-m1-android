@@ -1,6 +1,9 @@
 package univ_fcomte.gtasks;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import univ_fcomte.synchronisation.Synchronisation;
 import univ_fcomte.synchronisation.ThreadSynchronisation;
@@ -18,6 +21,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -66,8 +70,6 @@ public class GestionnaireTaches extends Activity {
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
 		Log.i("login", preferences.getString("login", "gui"));
 
-		
-
 		//Récupération de la listview crée dans le fichier main.xml
 		maListViewPerso = (ListView) findViewById(R.id.listviewperso);
 
@@ -97,6 +99,7 @@ public class GestionnaireTaches extends Activity {
 						t.setEtat(4);
 					else
 						t.setEtat(3);
+					t.setVersion(t.getVersion() + 1);
 					modele.getBdd().modifTache(t);
 					updateList();
 						
@@ -260,7 +263,7 @@ public class GestionnaireTaches extends Activity {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					if(!etNomTag.getText().toString().equals("")){
-						Tag t = new Tag(modele.getIdMaxTag()+1, etNomTag.getText().toString());
+						Tag t = new Tag(modele.getIdMaxTag()+1, etNomTag.getText().toString(), 1);
 						modele.ajoutTag(t);
 						Toast.makeText(GestionnaireTaches.this, "Nouveau tag ajouté", Toast.LENGTH_SHORT).show();
 					}
