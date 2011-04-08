@@ -7,6 +7,7 @@ import univ_fcomte.synchronisation.ThreadSynchronisation;
 import univ_fcomte.tasks.Modele;
 import univ_fcomte.tasks.Tache;
 import univ_fcomte.tasks.Tag;
+import android.R.color;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -14,6 +15,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -216,11 +218,13 @@ public class GestionnaireTaches extends Activity {
 		}
 
 		//Création d'un SimpleAdapter qui se chargera de mettre les items présent dans notre list (listItem) dans la vue affichageitem
-		SimpleAdapter mSchedule = new SimpleAdapter (this.getBaseContext(), listItem, R.layout.affichageitem,
+		AdapterListView mSchedule = new AdapterListView (this.getBaseContext(), listItem, R.layout.affichageitem,
 				new String[] {"img", "titre", "description", "id"}, new int[] {R.id.img, R.id.titre, R.id.description, R.id.id});
 
 		//On attribut à notre listView l'adapter que l'on vient de créer
 		maListViewPerso.setAdapter(mSchedule);
+		//convertView.setBackgroundColor((position & 1) == 1 ? Color.WHITE : Color.LTGRAY);
+		//((View)maListViewPerso.getSelectedItem()).setBackgroundColor(Color.BLUE);
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu){
