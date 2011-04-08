@@ -46,4 +46,19 @@
 		<item>@string/methode_synchronisation_combiner_serveur_mobile</item>
 	</string-array>
 	<string name="label_methode_synchronisation">Méthode de synchronisation</string>
+	<string name="label_affiche_taches_annulees">Afficher les taches annulées</string>
+	<string name="label_desc_affiche_taches_annulees">Sélectionner si vous souhaitez afficher les taches annulées</string>
+	<string name="label_utiliser_compte">Utiliser un compte utilisateur</string>
+	<string name="label_desc_utiliser_compte">Sélectionner si vous souhaitez utiliser un compte</string>
+	<string name="label_login">Nom d\'utilisateur</string>
+	<string name="label_desc_login">Entrez votre nom d\'utilisateur</string>
+	<string name="label_password">Mot de passe</string>
+	<string name="label_desc_password">Entrez votre mot de passe</string>
+	<string name="label_utiliser_proxy">Utiliser un Proxy</string>
+	<string name="label_desc_utiliser_proxy">Sélectionner si vous souhaitez utiliser un proxy</string>
+	<string name="label_adresse_proxy">Adresse du proxy</string>
+	<string name="label_desc_adresse_proxy">Entrez l\'adresse du proxy</string>
+	<string name="label_port_proxy">Port</string>
+	<string name="label_desc_port_proxy">Entrez le port du proxy</string>
+	<string name="erreur_pas_connexion">Erreur : Pas de connexion internet disponible</string>
 </resources>

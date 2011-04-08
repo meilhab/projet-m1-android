@@ -19,12 +19,15 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
 import org.json.JSONObject;
 import org.apache.http.*;
@@ -88,7 +91,6 @@ public class Synchronisation {
 		if(PreferenceManager.getDefaultSharedPreferences(context).getBoolean("utilise_proxy", false))
 			httpClient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
 		
-		
 		try {
 			HttpResponse res;
 			URI uri = new URI(serveur);
@@ -98,12 +100,21 @@ public class Synchronisation {
 	    		methodpost.addHeader("pragma","no-cache");
 	    		//methodpost.setHeader("User-Agent", sUserAgent);
 	    		methodpost.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
+	    		//timeout
+	    		HttpConnectionParams.setConnectionTimeout(methodpost.getParams(), 5000);
+	    		HttpConnectionParams.setSoTimeout(methodpost.getParams(), 20000);
+	    		
 	    		res = httpClient.execute(methodpost);
 		    } else {
 	    		HttpGet methodget = new HttpGet(uri);
 		    	methodget.addHeader("pragma","no-cache");
 		    	//methodget.setHeader("User-Agent", sUserAgent);
-		    	res = httpClient.execute(methodget);
+	    		
+		    	//timeout
+	    		HttpConnectionParams.setConnectionTimeout(methodget.getParams(), 5000);
+	    		HttpConnectionParams.setSoTimeout(methodget.getParams(), 20000);
+		    	
+	    		res = httpClient.execute(methodget);
 		    }
 			
 			StatusLine status = res.getStatusLine();

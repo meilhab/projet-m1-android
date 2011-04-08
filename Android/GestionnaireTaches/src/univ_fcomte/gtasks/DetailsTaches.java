@@ -52,6 +52,7 @@ public class DetailsTaches extends Activity {
         adapter = ArrayAdapter.createFromResource(this, R.array.etat, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerEtat.setAdapter(adapter);
+        spinnerEtat.setSelection(2);
         
         
         

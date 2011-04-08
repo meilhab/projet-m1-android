@@ -61,9 +61,6 @@ public class GestionnaireTaches extends Activity {
 
 		sw=new Synchronisation(this, serveur);
 
-
-
-
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
 		Log.i("login", preferences.getString("login", "gui"));
 
@@ -163,6 +160,7 @@ public class GestionnaireTaches extends Activity {
 			}
 		}); 
 		//((MonApplication)getApplication()).test=false;
+
 	}
 
 	@Override
@@ -176,10 +174,10 @@ public class GestionnaireTaches extends Activity {
 
 		//on regarde quelle Activity a répondu
 		switch(requestCode){
-		case CODE_DE_MON_ACTIVITE:
-			Log.i("update", "test mise a jour");
-			updateList();
-			/*
+			case CODE_DE_MON_ACTIVITE:
+				Log.i("update", "test mise a jour");
+				updateList();
+				/*
 		   		//On regarde qu'elle est la réponse envoyée et en fonction de la réponse on affiche un message différent.
 	    		switch(resultCode){
 			    	case 1:
@@ -187,8 +185,12 @@ public class GestionnaireTaches extends Activity {
 			    		adb.show();
 			    		return;
 	    		}*/
-			break;
-		default : break;
+				break;
+			case CODE_ACTIVITE_PREFERENCES:
+				updateList();
+				break;
+			default :
+				break;
 		}
 
 	}
@@ -200,15 +202,17 @@ public class GestionnaireTaches extends Activity {
 		//On déclare la HashMap qui contiendra les informations pour un item
 		HashMap<String, String> map;
 		for(Tache t:modele.getListeTaches()) {
-			map = new HashMap<String, String>();
-			map.put("titre", t.getNom());
-			map.put("description", t.getDescription());
-			if(t.getEtat() == 4)
-				map.put("img", String.valueOf(R.drawable.btn_check_buttonless_on));
-			else
-				map.put("img", String.valueOf(R.drawable.btn_check_buttonless_off));
-			map.put("id", String.valueOf(t.getIdentifiant()));
-			listItem.add(map);
+			if(t.getEtat() != 1 || PreferenceManager.getDefaultSharedPreferences(this).getBoolean("afficher_taches_annulees", false)) {
+				map = new HashMap<String, String>();
+				map.put("titre", t.getNom());
+				map.put("description", t.getDescription());
+				if(t.getEtat() == 4)
+					map.put("img", String.valueOf(R.drawable.btn_check_buttonless_on));
+				else
+					map.put("img", String.valueOf(R.drawable.btn_check_buttonless_off));
+				map.put("id", String.valueOf(t.getIdentifiant()));
+				listItem.add(map);
+			}
 		}
 
 		//Création d'un SimpleAdapter qui se chargera de mettre les items présent dans notre list (listItem) dans la vue affichageitem
