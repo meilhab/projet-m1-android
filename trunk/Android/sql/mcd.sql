@@ -1,4 +1,4 @@
-SET NAMES 'latin1';
+SET NAMES 'utf8';
 
 drop database if exists gestionnaire_taches;
 CREATE DATABASE gestionnaire_taches;
@@ -42,6 +42,7 @@ create table utilisateur (
 create table tag (
 	idTag int not null,
 	libelleTag varchar(64) not null,
+	versionTag int not null,
 	identifiant varchar(64) not null,
 	primary key(idTag, identifiant),
 	foreign key(identifiant) references utilisateur(identifiant));
@@ -53,6 +54,7 @@ create table tache (
 	dateLimite datetime,
 	idEtat int not null,
 	idPriorite int not null,
+	versionTache int not null,
 	identifiant varchar(64) not null,
 	primary key(idTache, identifiant),
 	foreign key(idEtat) references etat(idEtat),
@@ -79,7 +81,7 @@ create table apourfils (
 
 insert into priorite(idPriorite, libellePriorite) values (null,'sans'), (null,'faible'), (null,'urgent'), (null,'ultra urgent');
 
-insert into etat(idEtat, libelleEtat) values (null,'annulé'), (null,'à prévoir'), (null,'en cours'), (null,'terminé');
+insert into etat(idEtat, libelleEtat) values (null,'annulÃ©'), (null,'Ã  prÃ©voir'), (null,'en cours'), (null,'terminÃ©');
 
 insert into profil(idProfil, libelleProfil) values (null,'administrateur'), (null,'connecte');
 
@@ -88,27 +90,27 @@ insert into utilisateur(identifiant, mdPasse, nom, prenom, mail, idProfil) value
 	('benoit','c31b32364ce19ca8fcd150a417ecce58','benoit','meilhac','guillaume.montavon@gmail.com',1),
 	('anonyme','c31b32364ce19ca8fcd150a417ecce58','anonyme','anonyme','guillaume.montavon@gmail.com',2);
 
-insert into tag(idTag, libelleTag, identifiant) values 
-	(1,'université','guillaume'),
-	(2,'personnel','guillaume'),
-	(3,'professionnel','guillaume'),
-	(4,'examen','guillaume'),
-	(1,'université','benoit'),
-	(2,'personnel','benoit'),
-	(3,'professionnel','benoit'),
-	(4,'examen','benoit'),
-	(1,'université','anonyme'),
-	(2,'personnel','anonyme'),
-	(3,'professionnel','anonyme'),
-	(4,'examen','anonyme');	
+insert into tag(idTag, libelleTag, versionTag, identifiant) values 
+	(1,'universitÃ©',1,'guillaume'),
+	(2,'personnel',1,'guillaume'),
+	(3,'professionnel',1,'guillaume'),
+	(4,'examen',1,'guillaume'),
+	(1,'universitÃ©',1,'benoit'),
+	(2,'personnel',1,'benoit'),
+	(3,'professionnel',1,'benoit'),
+	(4,'examen',1,'benoit'),
+	(1,'universitÃ©',1,'anonyme'),
+	(2,'personnel',1,'anonyme'),
+	(3,'professionnel',1,'anonyme'),
+	(4,'examen',1,'anonyme');	
 	
-insert into tache(idTache, nomTache, descriptionTache, dateLimite, idEtat, idPriorite, identifiant) values 
-	(1,'test tache 1','description test tache 1',null,2,1,'guillaume'),
-	(2,'test tache 2','description test tache 2',null,1,4,'guillaume'),
-	(1,'test tache 1','description test tache 1',null,2,4,'benoit'),
-	(2,'test tache 2','description test tache 2',null,3,3,'benoit'),
-	(1,'test tache 1','description test tache 1',null,4,2,'anonyme'),
-	(2,'test tache 2','description test tache 2',null,3,2,'anonyme');
+insert into tache(idTache, nomTache, descriptionTache, dateLimite, idEtat, idPriorite, versionTache, identifiant) values 
+	(1,'test tache 1','description test tache 1','0000-00-00 00:00:00',2,1,1,'guillaume'),
+	(2,'test tache 2','description test tache 2','0000-00-00 00:00:00',1,4,1,'guillaume'),
+	(1,'test tache 1','description test tache 1','0000-00-00 00:00:00',2,4,1,'benoit'),
+	(2,'test tache 2','description test tache 2','0000-00-00 00:00:00',3,3,1,'benoit'),
+	(1,'test tache 1','description test tache 1','0000-00-00 00:00:00',4,2,1,'anonyme'),
+	(2,'test tache 2','description test tache 2','0000-00-00 00:00:00',3,2,1,'anonyme');
 
 insert into apourtag(idTache, idTag, identifiant) values 
 	(1,2,'guillaume'),
