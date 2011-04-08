@@ -1,16 +1,23 @@
 package univ_fcomte.tasks;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+
+import android.text.format.DateFormat;
 
 public class Tache {
 	private long identifiant;
 	private String nom;
 	private int priorite;
 	private int etat;
+	private Date dateLimite;
 	private String description;
 	private ArrayList<Long> listeTags;
 	private ArrayList<Long> listeTachesFille;
-	
+	private int version;
+
 	public Tache(long identifiant){
 		this.identifiant = identifiant;
 		nom = "";
@@ -21,14 +28,33 @@ public class Tache {
 		listeTachesFille = new ArrayList<Long>();
 	}
 	
-	public Tache(long id, String nom, String description, int priorite, int etat, ArrayList<Long> listeTags,  ArrayList<Long> listeTachesFille){
+	public Tache(long id, String nom, String description, Date dateLimite, int priorite, int etat, int version, ArrayList<Long> listeTags,  ArrayList<Long> listeTachesFille){
 		this.identifiant = id;
 		this.nom = nom;
 		this.priorite=priorite;
 		this.etat = etat;
 		this.description = description;
+		this.version = version;
 		this.listeTags = listeTags;
 		this.listeTachesFille = listeTachesFille;
+		this.dateLimite = dateLimite;
+	}
+	
+	public Tache(long id, String nom, String description, String dateLimite, int priorite, int etat, int version, ArrayList<Long> listeTags,  ArrayList<Long> listeTachesFille){
+		this.identifiant = id;
+		this.nom = nom;
+		this.priorite=priorite;
+		this.etat = etat;
+		this.description = description;
+		this.version = version;
+		this.listeTags = listeTags;
+		this.listeTachesFille = listeTachesFille;
+		this.dateLimite = null;
+		try {
+			this.dateLimite = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(dateLimite);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void ajoutTacheFille(long id){
@@ -97,6 +123,34 @@ public class Tache {
 
 	public ArrayList<Long> getListeTachesFille() {
 		return listeTachesFille;
+	}
+	
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
+	}
+	
+	public Date getDateLimite() {
+		return dateLimite;
+	}
+	
+	public String getDateLimiteToString() {
+		return (String) DateFormat.format("yyyy-MM-dd hh:mm:ss", dateLimite);
+	}
+
+	public void setDateLimite(Date dateLimite) {
+		this.dateLimite = dateLimite;
+	}
+	
+	public void setDateLimiteToString(String dateLimite) {
+		try {
+			this.dateLimite = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(dateLimite);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 	}
 	
 }

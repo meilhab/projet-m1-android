@@ -10,7 +10,7 @@ import univ_fcomte.tasks.Tag;
 
 public class EnvoyerJson {
 
-	Modele modele;
+	private Modele modele;
 	private JSONObject ob;
 	
 	public EnvoyerJson(Modele modele) {
@@ -36,6 +36,7 @@ public class EnvoyerJson {
 				obTemp = new JSONObject();
 				obTemp.put("idTag", t.getIdentifiant());
 				obTemp.put("libelleTag", t.getNom());		
+				obTemp.put("versionTag", t.getVersion());
 				
 				arrayTags.put(i, obTemp);
 				i++;
@@ -50,9 +51,10 @@ public class EnvoyerJson {
 				obTemp.put("idTache", t.getIdentifiant());
 				obTemp.put("nomTache", t.getNom());		
 				obTemp.put("descriptionTache", t.getDescription());	
-				obTemp.put("dateLimite", "");	
+				obTemp.put("dateLimite", t.getDateLimiteToString());	
 				obTemp.put("idEtat", t.getEtat());
 				obTemp.put("idPriorite", t.getPriorite());
+				obTemp.put("versionTache", t.getVersion());
 				
 				arrayTaches.put(i, obTemp);
 				

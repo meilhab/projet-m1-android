@@ -133,7 +133,8 @@ public class DetailsTaches extends Activity {
     	
     	Tache tache = null;
     	if(identifiant == -1) {
-    		tache = new Tache(modele.getIdMaxTache() + 1, nom.getText().toString(), description.getText().toString(), spinnerPriorite.getSelectedItemPosition()+1, spinnerEtat.getSelectedItemPosition()+1, listeTag, new ArrayList<Long>());
+    		//TODO dateLimite
+    		tache = new Tache(modele.getIdMaxTache() + 1, nom.getText().toString(), description.getText().toString(), "0000-00-00 00:00:00", spinnerPriorite.getSelectedItemPosition()+1, spinnerEtat.getSelectedItemPosition()+1, 1, listeTag, new ArrayList<Long>());
     		modele.ajoutTache(tache);
     		
     		modele.getBdd().ajouterTache(tache, -1, false);
@@ -142,9 +143,11 @@ public class DetailsTaches extends Activity {
     		tache = modele.getTacheById(identifiant);
     		tache.setNom(nom.getText().toString());
     		tache.setDescription(description.getText().toString());
+    		//TODO tache.setDateLimiteToString(dateLimite);
     		tache.setEtat(spinnerEtat.getSelectedItemPosition()+1);
     		tache.setPriorite(spinnerPriorite.getSelectedItemPosition()+1);
     		tache.setListeTags(listeTag);
+    		tache.setVersion(tache.getVersion() + 1);
     		
     		modele.getBdd().modifTache(tache);
     	}

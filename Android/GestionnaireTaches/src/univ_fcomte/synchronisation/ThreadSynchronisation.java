@@ -129,6 +129,41 @@ public class ThreadSynchronisation extends Thread {
 	
 	public void combinerServeurMobile(){
 		
+		List<NameValuePair> nvp = new ArrayList<NameValuePair>(2);  
+		nvp.add(new BasicNameValuePair("identifiant", "guillaume"));  
+		nvp.add(new BasicNameValuePair("mdPasse", sw.md5("android")));
+		nvp.add(new BasicNameValuePair("objet", "exporter_puis_importer"));
+		nvp.add(new BasicNameValuePair("json", new EnvoyerJson(modele).genererJson().toString()));
+		Log.i("json envoye",new EnvoyerJson(modele).genererJson().toString());
+		try {
+			reponseServeur = sw.GetHTML(nvp);
+			Log.i("reponse",reponseServeur);
+		} catch (ApiException e) {
+			e.printStackTrace();
+		}
+		
+		if(!reponseServeur.equals("")) {
+			
+			JsonParser json = new JsonParser(modele);
+			try {
+				json.parseAvecVersion(reponseServeur);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			
+			modele.getBdd().reinitialiserBDD(modele.getListeTags(), modele.getListeTaches(), json.getListeAPourTag(), json.getListeAPourFils());
+			
+			gt.runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					Log.i("update", "mise a jour liste, nb tache : " + modele.getListeTaches().size());
+					gt.updateList();
+				}
+			});
+			
+		}
+		
+		
 	}
 	
 }
