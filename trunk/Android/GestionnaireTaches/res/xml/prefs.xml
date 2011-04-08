@@ -1,35 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 	<PreferenceScreen android:title="Ecran 1">
-		<PreferenceCategory android:title="Categorie 1">	
-			
-			<EditTextPreference 
-			android:title="EditText"
-			android:summary="EditText" 
-			android:key="edit"
-			/>
-			
-			<CheckBoxPreference 
-			android:title="CheckBox" 
-			android:key="check"
-			android:summaryOn="On"
-			android:summaryOff="Off"
-			/>
+		<PreferenceCategory android:title="Categorie 1">
 			
 			<ListPreference 
-			android:title="List" 
-			android:key="list" 
-			android:summary="List summary"
-			android:entries="@array/prefentries"
-			android:entryValues="@array/prefvalues"
-			/>
+					android:title="List" 
+					android:key="list" 
+					android:summary="List summary"
+					android:entries="@array/prefentries"
+					android:entryValues="@array/prefvalues" />
 			
 			<RingtonePreference 
-			android:title="Ringtone" 
-			android:key="ring" 
-			android:summary="Ringtone summary"
-			/>
+					android:title="Ringtone" 
+					android:key="ring" 
+					android:summary="Ringtone summary" />
 		
+			<CheckBoxPreference
+	        		android:key="afficher_taches_annulees"
+	                android:title="@string/label_affiche_taches_annulees"
+	                android:summary="@string/label_desc_affiche_taches_annulees" />
+	                
 		</PreferenceCategory>
 		
 		
@@ -37,23 +27,22 @@
 			
 			<CheckBoxPreference
 	                android:key="utilise_compte"
-	                android:title="Utiliser un compte utilisateur"
-	                android:summary="Selectionner si vous souhaitez utiliser un compte" />
+	                android:title="@string/label_utiliser_compte"
+	                android:summary="@string/label_desc_utiliser_compte" />
 	                
 	        <EditTextPreference
 	                android:layout="?android:attr/preferenceLayoutChild"
 	                android:key="login"
-	                android:title="Nom d'utilisateur"
-					android:summary="Entrez votre nom d'utilisateur"
+	                android:title="@string/label_login"
+					android:summary="@string/label_desc_login"
 	                android:dependency="utilise_compte" />
 	        
 	        <EditTextPreference
 	                android:layout="?android:attr/preferenceLayoutChild"
 	                android:key="password"
-	                android:title="Mot de passe"
-					android:summary="Entrez votre mot de passe"
-					android:password="true"
-	                android:dependency="utilise_compte" />
+	                android:title="@string/label_password"
+					android:summary="@string/label_desc_password"
+					android:dependency="utilise_compte" android:password="true"/>
 			
 		</PreferenceCategory>
 		
@@ -62,22 +51,22 @@
 			
 			<CheckBoxPreference
 	                android:key="utilise_proxy"
-	                android:title="Utiliser un Proxy"
-	                android:summary="Selectionner si vous souhaitez utiliser un proxy" />
+	                android:title="@string/label_utiliser_proxy"
+	                android:summary="@string/label_desc_utiliser_proxy" />
 	            
 	        <EditTextPreference
 	                android:layout="?android:attr/preferenceLayoutChild"
 	                android:key="adresse_proxy"
-	                android:title="Adresse du proxy"
-					android:summary="Entrez l'adresse du proxy"
+	                android:title="@string/label_adresse_proxy"
+					android:summary="@string/label_desc_adresse_proxy"
 	                android:dependency="utilise_proxy" />
 	        
 	        <EditTextPreference
 	                android:layout="?android:attr/preferenceLayoutChild"
 	                android:key="port"
-	                android:title="Port"
+	                android:title="@string/label_port_proxy"
 	                android:numeric="integer"
-					android:summary="Entrez le port du proxy"
+					android:summary="@string/label_desc_port_proxy"
 	                android:dependency="utilise_proxy" />
 			
 		</PreferenceCategory>
