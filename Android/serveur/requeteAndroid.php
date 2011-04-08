@@ -25,6 +25,14 @@ if(connexionAutorisee()) {
 			case 'importer' : 
 				echo exporterJson($_POST['identifiant']);
 				break;
+			
+			case 'exporter_puis_importer' : 
+				if(isset($_POST['json']) and !empty($_POST['json'])) {
+					echo importerPuisExporterJson($_POST['json'], $_POST['identifiant']);
+				}
+				else
+					echo 'pas de json';
+				break;
 
 			case 'ajouter_tache' : 
 				if(isset($_POST['json']) and !empty($_POST['json'])) {
