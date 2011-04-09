@@ -108,7 +108,7 @@ public class GestionnaireTaches extends Activity {
 					//((HashMap) maListViewPerso.getItemAtPosition(position)). put("img", String.valueOf(R.drawable.btn_check_buttonless_off));
 				}
 				else {
-					Toast.makeText(maListViewPerso.getContext(), "Nouvelle tache", Toast.LENGTH_SHORT).show();
+					//Toast.makeText(maListViewPerso.getContext(), "Nouvelle tache", Toast.LENGTH_SHORT).show();
 					Bundle objetbunble = new Bundle();
 					Intent intent = new Intent(maListViewPerso.getContext(), DetailsTaches.class);
 					//objetbunble.putAll(new Bundle(b))
@@ -131,31 +131,33 @@ public class GestionnaireTaches extends Activity {
 				Log.i("","appui long sur "+ position);
 				//registerForContextMenu(v);
 				Builder builder = new Builder(v.getContext());
-				HashMap map = (HashMap) maListViewPerso.getItemAtPosition(position);
+				final HashMap map = (HashMap) maListViewPerso.getItemAtPosition(position);
 				//map.get("id");
 				builder.setTitle(map.get("titre")+"");
-			    String[] myItemClickDialog = new String[4];
-				myItemClickDialog[0] = "Add";
-				myItemClickDialog[1] = "Edit";
-				myItemClickDialog[2] = "Open";
-				myItemClickDialog[3] = "Delete";
+			    String[] myItemClickDialog = new String[3];
+				myItemClickDialog[0] = "Ajouter";
+				myItemClickDialog[1] = "Modifier";
+				myItemClickDialog[2] = "Supprimer";
 				String[] items = myItemClickDialog;
 				builder.setItems(items, new DialogInterface.OnClickListener() {
 
 					public void onClick(final DialogInterface dialog, final int which) {
 						switch (which) {
 							case 0:
-							//Do stuff
-							break;
+								//Do stuff
+								break;
 							case 1:
-							//Do stuff
-							break;
+								Bundle objetbunble = new Bundle();
+								objetbunble.putInt("id", Integer.valueOf((String)map.get("id")));
+								Intent intent = new Intent(maListViewPerso.getContext(), DetailsTaches.class);
+								intent.putExtras(objetbunble);
+								startActivityForResult(intent, CODE_DE_MON_ACTIVITE);
+								break;
 							case 2:
-							//Do stuff
-							break;
-							case 3:
-							//Do stuff
-							break;
+								//Do stuff
+								break;
+							default:
+								break;
 						}
 					}
 				});
@@ -164,7 +166,6 @@ public class GestionnaireTaches extends Activity {
 				return true;
 			}
 		}); 
-		//((MonApplication)getApplication()).test=false;
 
 	}
 
@@ -231,14 +232,25 @@ public class GestionnaireTaches extends Activity {
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu){
+		Log.i("test create menu", "test create menu");
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.layout.menu, menu);
 		//menu.getItem(3).getSubMenu().setHeaderIcon(R.drawable.icon);
 		//menu.getItem(0).getSubMenu().setHeaderIcon(R.drawable.);
-
+		
 		return true;
 	}
 
+	@Override
+	public boolean onMenuOpened(int featureId, Menu menu) {
+		Log.i("test open menu", "test open menu");
+		if(PreferenceManager.getDefaultSharedPreferences(this).getBoolean("utilise_compte", false))
+			menu.findItem(R.id.menu_synchronisation).setVisible(true);
+		else
+			menu.findItem(R.id.menu_synchronisation).setVisible(false);
+		return super.onMenuOpened(featureId, menu);
+	}
+	
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.menu_ajout_tache:

@@ -61,4 +61,5 @@
 	<string name="label_port_proxy">Port</string>
 	<string name="label_desc_port_proxy">Entrez le port du proxy</string>
 	<string name="erreur_pas_connexion">Erreur : Pas de connexion internet disponible</string>
+	<string name="erreur_login">Erreur : Identifiant ou mot de passe incorrect</string>
 </resources>

@@ -138,7 +138,11 @@ public class Tache {
 	}
 	
 	public String getDateLimiteToString() {
-		return (String) DateFormat.format("yyyy-MM-dd hh:mm:ss", dateLimite);
+		
+		if(dateLimite != null)
+			return (String) DateFormat.format("yyyy-MM-dd hh:mm:ss", dateLimite);
+		else
+			return "0000-00-00 00:00:00";
 	}
 
 	public void setDateLimite(Date dateLimite) {

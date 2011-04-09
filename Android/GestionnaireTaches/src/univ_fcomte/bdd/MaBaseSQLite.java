@@ -232,6 +232,7 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 							} while (cursorTag.moveToNext());
 						}
 					}
+					cursorTag.close();
 					
 					cursorFils = db.query(TABLE_APOURFILS, new String[] { "idFils" }, "idPere=" + columnId, null, null, null, "idPere asc", null);
 					if (null != cursorFils) {
@@ -242,6 +243,8 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 							} while (cursorFils.moveToNext());
 						}
 					}
+					cursorFils.close();
+					
 					Log.i("curseur", "om" + columnId);
 					Log.i("curseur", cursorResults.getString(columnNom));
 					Log.i("curseur", cursorResults.getString(columnDescription));
@@ -254,6 +257,8 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 			}
 		}
 
+		cursorResults.close();
+		
 		close();
 		
 		return listeTache;
@@ -279,6 +284,8 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 				} while (cursorResults.moveToNext());
 			}
 		}
+		
+		cursorResults.close();
 
 		close();
 		
