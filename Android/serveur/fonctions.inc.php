@@ -46,13 +46,13 @@ function importerJson($json, $id) {
 
 			foreach($tabTags as $tag) {
 				//echo $tag['idTag'].', '.$tag['libelleTag'].', '.$id.'</br>';
-				if(!mysql_query("INSERT INTO tag VALUES('".$tag['idTag']."','".$tag['libelleTag']."','".$tag['versionTag']."','".$id."')"))
+				if(!mysql_query("INSERT INTO tag VALUES('".$tag['idTag']."','".utf8_decode($tag['libelleTag'])."','".$tag['versionTag']."','".$id."')"))
 					$reussi=false;
 			}
 			
 			foreach($tabTaches as $tache) {
 				//echo $tache['idTache'].', '.$tache['nomTache'].', '.$tache['descriptionTache'].', '.$tache['dateLimite'].', '.$tache['idEtat'].', '.$tache['idPriorite'].', '.$id.'</br>';
-				if(!mysql_query("INSERT INTO tache VALUES('".$tache['idTache']."','".$tache['nomTache']."','".$tache['descriptionTache']."','".$tache['dateLimite']."','".$tache['idEtat']."','".$tache['idPriorite']."','".$tache['versionTag']."','".$id."')"))
+				if(!mysql_query("INSERT INTO tache VALUES('".$tache['idTache']."','".utf8_decode($tache['nomTache'])."','".utf8_decode($tache['descriptionTache'])."','".$tache['dateLimite']."','".$tache['idEtat']."','".$tache['idPriorite']."','".$tache['versionTag']."','".$id."')"))
 					$reussi=false;
 			}
 
@@ -189,12 +189,12 @@ function importerPuisExporterJson($json, $id) {
 			$versionTag = getVersionTag($id, intval($tag['idTag']));
 			if($versionTag == -1) {
 				$listeTagsAjoute[] = intval($tag['idTag']);
-				if(!mysql_query("INSERT INTO tag VALUES('".$tag['idTag']."','".$tag['libelleTag']."','".$tag['versionTag']."','".$id."')"))
+				if(!mysql_query("INSERT INTO tag VALUES('".$tag['idTag']."','".utf8_decode($tag['libelleTag'])."','".$tag['versionTag']."','".$id."')"))
 					$reussi=false;
 			}
 			else if(intval($tag['versionTag']) > $versionTag) {
 				$listeTagsAjoute[] = intval($tag['idTag']);
-				if(!mysql_query("UPDATE tag SET libelleTag='".$tag['libelleTag']."', versionTag='".$tag['versionTag']."' WHERE idTag='".$tag['idTag']."' AND identifiant='$id'"))
+				if(!mysql_query("UPDATE tag SET libelleTag='".utf8_decode($tag['libelleTag'])."', versionTag='".$tag['versionTag']."' WHERE idTag='".$tag['idTag']."' AND identifiant='$id'"))
 					$reussi=false;
 			}
 			else if(intval($tag['versionTag']) == $versionTag)
@@ -207,12 +207,12 @@ function importerPuisExporterJson($json, $id) {
 			$versionTache = getVersionTache($id, intval($tache['idTache']));
 			if($versionTache == -1) {
 				$listeTachesAjoute[] = intval($tache['idTache']);
-				if(!mysql_query("INSERT INTO tache VALUES('".$tache['idTache']."','".$tache['nomTache']."','".$tache['descriptionTache']."','".$tache['dateLimite']."','".$tache['idEtat']."','".$tache['idPriorite']."','".$tache['versionTache']."','".$id."')"))
+				if(!mysql_query("INSERT INTO tache VALUES('".$tache['idTache']."','".utf8_decode($tache['nomTache'])."','".utf8_decode($tache['descriptionTache'])."','".$tache['dateLimite']."','".$tache['idEtat']."','".$tache['idPriorite']."','".$tache['versionTache']."','".$id."')"))
 					$reussi=false;
 			}
 			else if(intval($tache['versionTache']) > $versionTache) {
 				$listeTachesAjoute[] = intval($tache['idTache']);
-				if(!mysql_query("UPDATE tache SET nomTache='".$tache['nomTache']."', descriptionTache='".$tache['descriptionTache']."', dateLimite='".$tache['dateLimite']."', idEtat='".$tache['idEtat']."', idPriorite='".$tache['idPriorite']."', versionTache='".$tache['versionTache']."' WHERE idTache='".$tache['idTache']."' AND identifiant='$id'"))
+				if(!mysql_query("UPDATE tache SET nomTache='".utf8_decode($tache['nomTache'])."', descriptionTache='".utf8_decode($tache['descriptionTache'])."', dateLimite='".$tache['dateLimite']."', idEtat='".$tache['idEtat']."', idPriorite='".$tache['idPriorite']."', versionTache='".$tache['versionTache']."' WHERE idTache='".$tache['idTache']."' AND identifiant='$id'"))
 					$reussi=false;
 			}
 			else if(intval($tache['versionTache']) == $versionTache)
@@ -313,7 +313,7 @@ function ajoutTache($json, $id) {
 		if(isset($tache['versionTache']) and intval($tache['versionTache'])>0)
 			$versionTache = intval($tache['versionTache']);
 		
-		$ajout = "INSERT INTO tache VALUES('".$tache['idTache']."','".$tache['nomTache']."','".$tache['descriptionTache']."','".$tache['dateLimite']."','".$tache['idEtat']."','".$tache['idPriorite']."','$versionTache','$id')";
+		$ajout = "INSERT INTO tache VALUES('".$tache['idTache']."','".utf8_decode($tache['nomTache'])."','".utf8_decode($tache['descriptionTache'])."','".$tache['dateLimite']."','".$tache['idEtat']."','".$tache['idPriorite']."','$versionTache','$id')";
 		
 		if(!mysql_query($ajout))
 			$reussi = false;
@@ -347,12 +347,12 @@ function modifierTache($json, $id) {
 			$dateLimite = mysql_real_escape_string($tache['dateLimite']);
 		$descriptionTache = "";
 		if(isset($tache['descriptionTache']) and !empty($tache['descriptionTache']))
-			$descriptionTache = mysql_real_escape_string($tache['descriptionTache']);
+			$descriptionTache = mysql_real_escape_string(utf8_decode($tache['descriptionTache']));
 		
 		if(getVersionTache($id, intval($tache['idTache'])) == -1)
-			$req="INSERT INTO tache VALUES('".intval($tache['idTache'])."','".mysql_real_escape_string($tache['nomTache'])."','$descriptionTache','$dateLimite','".intval($tache['idEtat'])."','".intval($tache['idPriorite'])."','".intval($tache['versionTache'])."','$id')";
+			$req="INSERT INTO tache VALUES('".intval($tache['idTache'])."','".mysql_real_escape_string(utf8_decode($tache['nomTache']))."','$descriptionTache','$dateLimite','".intval($tache['idEtat'])."','".intval($tache['idPriorite'])."','".intval($tache['versionTache'])."','$id')";
 		else
-			$req="UPDATE tache SET nomTache='".mysql_real_escape_string($tache['nomTache'])."', descriptionTache='$descriptionTache', dateLimite='$dateLimite', idEtat='".intval($tache['idEtat'])."', idPriorite='".intval($tache['idPriorite'])."', versionTache='".intval($tache['versionTache'])."' WHERE idTache='".intval($tache['idTache'])."' AND identifiant='$id'";
+			$req="UPDATE tache SET nomTache='".mysql_real_escape_string(utf8_decode($tache['nomTache']))."', descriptionTache='$descriptionTache', dateLimite='$dateLimite', idEtat='".intval($tache['idEtat'])."', idPriorite='".intval($tache['idPriorite'])."', versionTache='".intval($tache['versionTache'])."' WHERE idTache='".intval($tache['idTache'])."' AND identifiant='$id'";
 		
 		if(!mysql_query($req))
 			$reussi = false;
@@ -404,7 +404,7 @@ function ajoutTag($json, $id) {
 		if(isset($_POST['versionTag']) and intval($_POST['versionTag'])>0)
 			$versionTag = intval($_POST['versionTag']);
 		
-		$ajoutTag = "INSERT INTO tag VALUES('".intval($_POST['idTag'])."','".mysql_real_escape_string($_POST['libelleTag'])."','$versionTag','$id')";
+		$ajoutTag = "INSERT INTO tag VALUES('".intval($_POST['idTag'])."','".mysql_real_escape_string(utf8_decode($_POST['libelleTag']))."','$versionTag','$id')";
 		if(mysql_query($ajoutTag))
 			return true;
 		else
@@ -420,9 +420,9 @@ function modifierTag($json, $id) {
 
 	if(isset($_POST['idTag']) and intval($_POST['idTag'])>0 and isset($_POST['libelleTag']) and !empty($_POST['libelleTag']) and isset($_POST['versionTag']) and intval($_POST['versionTag']) > getVersionTag($id, intval($_POST['idTag']))) {
 		if(getVersionTag($id, intval($_POST['idTag'])) == -1)
-			$req="INSERT INTO tag VALUES('".intval($_POST['idTag'])."','".mysql_real_escape_string($_POST['libelleTag'])."','".intval($_POST['versionTag'])."','$id')";
+			$req="INSERT INTO tag VALUES('".intval($_POST['idTag'])."','".mysql_real_escape_string(utf8_decode($_POST['libelleTag']))."','".intval($_POST['versionTag'])."','$id')";
 		else
-			$req="UPDATE tag SET libelleTag='".mysql_real_escape_string($_POST['libelleTag'])."', versionTag='".intval($_POST['versionTag'])."' WHERE idTag='".intval($_POST['idTag'])."' AND identifiant='$id'";
+			$req="UPDATE tag SET libelleTag='".mysql_real_escape_string(utf8_decode($_POST['libelleTag']))."', versionTag='".intval($_POST['versionTag'])."' WHERE idTag='".intval($_POST['idTag'])."' AND identifiant='$id'";
 		
 		if(mysql_query($req))
 			return true;
