@@ -7,6 +7,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 import univ_fcomte.gtasks.GestionnaireTaches;
@@ -24,7 +25,9 @@ public class ThreadSynchronisation extends Thread {
 	public static final int ECRASEMENT_SERVEUR = 0;
 	public static final int ECRASEMENT_MOBILE = 1;
 	public static final int COMBINER_SERVEUR_MOBILE = 2;
-	public String reponseServeur;
+	private String reponseServeur;
+	private String identifiant;
+	private String mdPasse;
 	
 	public ThreadSynchronisation(Modele modele, GestionnaireTaches gt, Synchronisation sw){
 		this.gt = gt;
@@ -32,6 +35,8 @@ public class ThreadSynchronisation extends Thread {
 		this.modele = modele;
 		this.modeSynchronisation = -1;
 		this.reponseServeur = "";
+		identifiant = PreferenceManager.getDefaultSharedPreferences(gt).getString("login", "");
+		mdPasse = PreferenceManager.getDefaultSharedPreferences(gt).getString("password", "");
 	}
 	
 	public void run(){
@@ -62,6 +67,8 @@ public class ThreadSynchronisation extends Thread {
 			public void run() {
 				if(reponseServeur.equals(""))
 					Toast.makeText(gt.getApplicationContext(), gt.getResources().getString(R.string.erreur_pas_connexion), 4000).show();
+				else if(reponseServeur.startsWith("Erreur de connexion"))
+					Toast.makeText(gt.getApplicationContext(), gt.getResources().getString(R.string.erreur_login), 4000).show();
 				gt.setProgressBarIndeterminateVisibility(false);
 			}
 		});
@@ -74,8 +81,8 @@ public class ThreadSynchronisation extends Thread {
 	public void ecraserMobile(){
 		
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);  
-		nameValuePairs.add(new BasicNameValuePair("identifiant", "guillaume"));  
-		nameValuePairs.add(new BasicNameValuePair("mdPasse", sw.md5("android")));
+		nameValuePairs.add(new BasicNameValuePair("identifiant", identifiant));  
+		nameValuePairs.add(new BasicNameValuePair("mdPasse", sw.md5(mdPasse)));
 		nameValuePairs.add(new BasicNameValuePair("objet", "importer"));
 		
         try {
@@ -86,8 +93,8 @@ public class ThreadSynchronisation extends Thread {
 		
 		Log.i("reponse", "code : " + reponseServeur);
 
-		if(!reponseServeur.equals("")) {
-			
+		if(!reponseServeur.equals("") && !reponseServeur.startsWith("Erreur de connexion")) {
+
 			modele.reinitialiserModele();
 			JsonParser json = new JsonParser(modele);
 			try {
@@ -113,8 +120,8 @@ public class ThreadSynchronisation extends Thread {
 	public void ecraserServeur(){
 		
 		List<NameValuePair> nvp = new ArrayList<NameValuePair>(2);  
-		nvp.add(new BasicNameValuePair("identifiant", "guillaume"));  
-		nvp.add(new BasicNameValuePair("mdPasse", sw.md5("android")));
+		nvp.add(new BasicNameValuePair("identifiant", identifiant));  
+		nvp.add(new BasicNameValuePair("mdPasse", sw.md5(mdPasse)));
 		nvp.add(new BasicNameValuePair("objet", "exporter"));
 		nvp.add(new BasicNameValuePair("json", new EnvoyerJson(modele).genererJson().toString()));
 
@@ -130,8 +137,8 @@ public class ThreadSynchronisation extends Thread {
 	public void combinerServeurMobile(){
 		
 		List<NameValuePair> nvp = new ArrayList<NameValuePair>(2);  
-		nvp.add(new BasicNameValuePair("identifiant", "guillaume"));  
-		nvp.add(new BasicNameValuePair("mdPasse", sw.md5("android")));
+		nvp.add(new BasicNameValuePair("identifiant", identifiant));  
+		nvp.add(new BasicNameValuePair("mdPasse", sw.md5(mdPasse)));
 		nvp.add(new BasicNameValuePair("objet", "exporter_puis_importer"));
 		nvp.add(new BasicNameValuePair("json", new EnvoyerJson(modele).genererJson().toString()));
 		Log.i("json envoye",new EnvoyerJson(modele).genererJson().toString());
@@ -142,7 +149,7 @@ public class ThreadSynchronisation extends Thread {
 			e.printStackTrace();
 		}
 		
-		if(!reponseServeur.equals("")) {
+		if(!reponseServeur.equals("") && !reponseServeur.startsWith("Erreur de connexion")) {
 			
 			JsonParser json = new JsonParser(modele);
 			try {
