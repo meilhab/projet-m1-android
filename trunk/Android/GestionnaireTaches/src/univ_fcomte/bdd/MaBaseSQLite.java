@@ -13,6 +13,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class MaBaseSQLite extends SQLiteOpenHelper {
 
@@ -222,28 +223,28 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 					listeTag = new ArrayList<Long>();
 					listeFils = new ArrayList<Long>();
 					
-					cursorTag = db.query(TABLE_APOURTAG, new String[] { "idTag" }, "idTache=" + columnId, null, null, null, "idTag asc", null);
+					cursorTag = db.query(TABLE_APOURTAG, new String[] { "idTag" }, "idTache=" + cursorResults.getInt(columnId), null, null, null, "idTag asc", null);
 					if (null != cursorTag) {
 						if (cursorTag.moveToFirst()) {
 							do {
-								int columnTag= cursorResults.getColumnIndex("idTag");
-								listeTag.add(cursorResults.getLong(columnTag));
+								int columnTag= cursorTag.getColumnIndex("idTag");
+								listeTag.add(cursorTag.getLong(columnTag));
 							} while (cursorTag.moveToNext());
 						}
 					}
 					cursorTag.close();
 					
-					cursorFils = db.query(TABLE_APOURFILS, new String[] { "idFils" }, "idPere=" + columnId, null, null, null, "idPere asc", null);
+					cursorFils = db.query(TABLE_APOURFILS, new String[] { "idFils" }, "idPere=" + cursorResults.getInt(columnId), null, null, null, "idPere asc", null);
 					if (null != cursorFils) {
 						if (cursorFils.moveToFirst()) {
 							do {
-								int columnFils= cursorResults.getColumnIndex("idFils");
-								listeFils.add(cursorResults.getLong(columnFils));
+								int columnFils= cursorFils.getColumnIndex("idFils");
+								listeFils.add(cursorFils.getLong(columnFils));
 							} while (cursorFils.moveToNext());
 						}
 					}
 					cursorFils.close();
-					
+										
 					listeTache.add(new Tache(cursorResults.getInt(columnId), cursorResults.getString(columnNom), cursorResults.getString(columnDescription), cursorResults.getString(columnDate), cursorResults.getInt(columnPriorite), cursorResults.getInt(columnEtat), cursorResults.getInt(columnVersion), listeTag, listeFils));
 					
 				} while (cursorResults.moveToNext());
@@ -293,6 +294,7 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 			open();
 		
 		ContentValues tacheToInsert = new ContentValues();
+		tacheToInsert.put("idTache", tache.getIdentifiant());
 		tacheToInsert.put("nomTache", tache.getNom());
 		tacheToInsert.put("descriptionTache", tache.getDescription());
 		tacheToInsert.put("dateLimite", tache.getDateLimiteToString());
@@ -306,7 +308,7 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 		if(nouveauId != -1 && pere > 0) {
 			ContentValues filsToInsert = new ContentValues();
 			tacheToInsert.put("idPere", pere);
-			tacheToInsert.put("idFils", nouveauId);
+			tacheToInsert.put("idFils", tache.getIdentifiant());
 			if(db.insert(TABLE_APOURFILS, null, filsToInsert) == -1)
 				nouveauId = -1;
 		}
@@ -315,7 +317,7 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 			ContentValues TagsToInsert;
 			for(Long l : tache.getListeTags()) {
 				TagsToInsert = new ContentValues();
-				TagsToInsert.put("idTache", nouveauId);
+				TagsToInsert.put("idTache", tache.getIdentifiant());
 				TagsToInsert.put("idTag", l);
 				if(db.insert(TABLE_APOURTAG, null, TagsToInsert) == -1)
 					nouveauId = -1;

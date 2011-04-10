@@ -74,20 +74,6 @@ public class DetailsTaches extends Activity {
         spinnerEtat.setSelection(2);
 
         boutonDateLimite = (Button) findViewById(R.id.bouton_date_limite);
-        
-        creerBoiteDialogTags();
-        
-        Button boutonTag = (Button) findViewById(R.id.bouton_ajout_tag);
-        boutonTag.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				AlertDialog alert;
-				alert = builderTags.create();
-				alert.show();
-			}
-		});
-        
-        
         // get the current date
 		final Calendar c = GregorianCalendar.getInstance();
 		annneeDateLimite = c.get(Calendar.YEAR);
@@ -110,6 +96,19 @@ public class DetailsTaches extends Activity {
 			    };
 				new DatePickerDialog(DetailsTaches.this, mDateSetListener, annneeDateLimite, moisDateLimite - 1, jourDateLimite).show();
 				
+			}
+		});
+        
+        
+        creerBoiteDialogTags();
+        
+        Button boutonTag = (Button) findViewById(R.id.bouton_ajout_tag);
+        boutonTag.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				AlertDialog alert;
+				alert = builderTags.create();
+				alert.show();
 			}
 		});
         

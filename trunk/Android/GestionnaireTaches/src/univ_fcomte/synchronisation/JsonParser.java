@@ -164,6 +164,8 @@ public class JsonParser {
 					t.setEtat(tache.getInt("idEtat"));
 					t.setPriorite(tache.getInt("idPriorite"));
 					t.setVersion(tache.getInt("versionTache"));
+					t.setListeTags(listeTag);
+					t.setListeFils(listeTachesFilles);
 				}
 				else if(t == null)
 					modele.ajoutTache(new Tache(tache.getLong("idTache"),tache.getString("nomTache"),tache.getString("descriptionTache"), tache.getString("dateLimite"),tache.getInt("idPriorite"), tache.getInt("idEtat"), tache.getInt("versionTache"), listeTag, listeTachesFilles));
