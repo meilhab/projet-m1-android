@@ -127,6 +127,10 @@ public class Tache {
 		return listeTachesFille;
 	}
 	
+	public void setListeFils(ArrayList<Long> listeTachesFille) {
+		this.listeTachesFille = listeTachesFille;
+	}
+	
 	public int getVersion() {
 		return version;
 	}
