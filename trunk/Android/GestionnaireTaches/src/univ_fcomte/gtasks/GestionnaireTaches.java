@@ -48,6 +48,7 @@ public class GestionnaireTaches extends Activity {
 
 	private String serveur;
 	private Synchronisation sw;
+
 	private final int CODE_DE_MON_ACTIVITE = 1;
 	private final int CODE_ACTIVITE_PREFERENCES = 2;
 
@@ -60,6 +61,8 @@ public class GestionnaireTaches extends Activity {
 		setContentView(R.layout.main);
 
 		modele = ((MonApplication)getApplication()).getModele();
+		((MonApplication)getApplication()).setGt(this);
+		
 		modele.initialiserModele();
 		positionX=0;
 		//serveur = "http://10.0.2.2/gestionnaire_taches/requeteAndroid.php";
@@ -68,13 +71,12 @@ public class GestionnaireTaches extends Activity {
 		sw=new Synchronisation(this, serveur);
 
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-		Log.i("login", preferences.getString("login", "gui"));
 
 		//Récupération de la listview crée dans le fichier main.xml
 		maListViewPerso = (ListView) findViewById(R.id.listviewperso);
 
 		updateList();
-
+		
 		//Enfin on met un écouteur d'événement sur notre listView
 		//On met un écouteur d'événement sur notre listView
 		maListViewPerso.setOnTouchListener(new OnTouchListener() {
@@ -90,7 +92,6 @@ public class GestionnaireTaches extends Activity {
 		maListViewPerso.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView a, View v, int position, long id) {
-				Log.i("","item");
 
 				if(positionX<=getResources().getDrawable(R.drawable.btn_check_buttonless_on).getMinimumWidth()+20) {
 					Log.i("","on clic sur l'image");
@@ -113,12 +114,11 @@ public class GestionnaireTaches extends Activity {
 					Intent intent = new Intent(maListViewPerso.getContext(), DetailsTaches.class);
 					//objetbunble.putAll(new Bundle(b))
 					//objetbunble.putString("titre", "Nouvelle tache");
-	
+					
 					HashMap map = (HashMap) maListViewPerso.getItemAtPosition(position);
-	
+					
 					objetbunble.putInt("id", Integer.valueOf((String)map.get("id")));
 					intent.putExtras(objetbunble);
-	
 					startActivityForResult(intent, CODE_DE_MON_ACTIVITE);
 				}
 			}
@@ -128,7 +128,6 @@ public class GestionnaireTaches extends Activity {
 
 			@Override
 			public boolean onItemLongClick(AdapterView a, View v, int position, long id) {
-				Log.i("","appui long sur "+ position);
 				//registerForContextMenu(v);
 				Builder builder = new Builder(v.getContext());
 				final HashMap map = (HashMap) maListViewPerso.getItemAtPosition(position);
@@ -154,7 +153,15 @@ public class GestionnaireTaches extends Activity {
 								startActivityForResult(intent, CODE_DE_MON_ACTIVITE);
 								break;
 							case 2:
-								//Do stuff
+								long identifiant = Long.valueOf((String)map.get("id"));
+								modele.supprimerTache(modele.getTacheById(identifiant));
+								modele.getBdd().supprimerTache(identifiant, true);
+								ArrayList<Long> listeTachesSuppr = new ArrayList<Long>();
+								listeTachesSuppr.add(/*new Long(*/identifiant/*)*/);
+								ThreadSynchronisation tsSupprTache = new ThreadSynchronisation(modele, GestionnaireTaches.this, sw);
+								tsSupprTache.selectionModeSynchronisation(ThreadSynchronisation.SUPPRESSION_TACHES);
+								tsSupprTache.setListeTachesSuppr(listeTachesSuppr);
+								tsSupprTache.start();
 								break;
 							default:
 								break;
@@ -166,7 +173,7 @@ public class GestionnaireTaches extends Activity {
 				return true;
 			}
 		}); 
-
+		//modele.getBdd().supprimerTache(4, true);
 	}
 
 	@Override
@@ -232,7 +239,6 @@ public class GestionnaireTaches extends Activity {
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu){
-		Log.i("test create menu", "test create menu");
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.layout.menu, menu);
 		//menu.getItem(3).getSubMenu().setHeaderIcon(R.drawable.icon);
@@ -243,12 +249,13 @@ public class GestionnaireTaches extends Activity {
 
 	@Override
 	public boolean onMenuOpened(int featureId, Menu menu) {
-		Log.i("test open menu", "test open menu");
+
 		if(PreferenceManager.getDefaultSharedPreferences(this).getBoolean("utilise_compte", false))
 			menu.findItem(R.id.menu_synchronisation).setVisible(true);
 		else
 			menu.findItem(R.id.menu_synchronisation).setVisible(false);
 		return super.onMenuOpened(featureId, menu);
+		
 	}
 	
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -277,6 +284,7 @@ public class GestionnaireTaches extends Activity {
 					if(!etNomTag.getText().toString().equals("")){
 						Tag t = new Tag(modele.getIdMaxTag()+1, etNomTag.getText().toString(), 1);
 						modele.ajoutTag(t);
+						modele.getBdd().ajouterTag(t, false);
 						Toast.makeText(GestionnaireTaches.this, "Nouveau tag ajouté", Toast.LENGTH_SHORT).show();
 					}
 					else{
@@ -309,19 +317,30 @@ public class GestionnaireTaches extends Activity {
 			builderSuppressionTag.setPositiveButton("OK", new OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
+					
+					ArrayList<Long> listeTagsSuppr = new ArrayList<Long>();
+					
 					for(int i=0; i<tagsChoisis.length; i++){
 						tagsChoisis[i] = tagsAffiches[i];
 			    		if(tagsChoisis[i]){
 			    			Long indice = modele.getListeTags().get(i).getIdentifiant();
+			    			listeTagsSuppr.add(indice);
 			    			modele.getListeTags().remove(i);
 			    			for(int j=0; j<modele.getListeTaches().size(); j++){
-			    				if(modele.getListeTaches().get(j).getListeTags().contains(indice)){
+			    				if(modele.getListeTaches().get(j).getListeTags().contains(indice))
 			    					modele.getListeTaches().get(j).getListeTags().remove(indice);
-			    				}
-			    					
+			    				
 			    			}
+			    			
+			    			modele.getBdd().supprimerTag(indice);
 			    		}
+			    		
 					}
+					
+					ThreadSynchronisation tsSupprTag = new ThreadSynchronisation(modele, GestionnaireTaches.this, sw);
+					tsSupprTag.selectionModeSynchronisation(ThreadSynchronisation.SUPPRESSION_TAGS);
+					tsSupprTag.setListeTagsSuppr(listeTagsSuppr);
+					tsSupprTag.start();
 					
 				}
 			});
@@ -351,7 +370,7 @@ public class GestionnaireTaches extends Activity {
 		case R.id.sous_menu_synchronisation_ecrasement_mobile:
 	    	ThreadSynchronisation ts_ecrasement_mobile = new ThreadSynchronisation(modele, GestionnaireTaches.this, sw);
 	    	ts_ecrasement_mobile.selectionModeSynchronisation(ThreadSynchronisation.ECRASEMENT_MOBILE);
-	    	ts_ecrasement_mobile.start();	 
+	    	ts_ecrasement_mobile.start();
 			return true;
 		case R.id.sous_menu_synchronisation_combiner_serveur_mobile:
 	    	ThreadSynchronisation ts_combiner_serveur_mobile = new ThreadSynchronisation(modele, GestionnaireTaches.this, sw);
@@ -361,6 +380,14 @@ public class GestionnaireTaches extends Activity {
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+	
+	public Synchronisation getSw() {
+		return sw;
+	}
+
+	public void setSw(Synchronisation sw) {
+		this.sw = sw;
 	}
 
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import univ_fcomte.bdd.MaBaseSQLite;
 
@@ -126,6 +127,30 @@ public class Modele {
 				max = t.getIdentifiant();
 		
 		return max;
+	}
+	
+	public void supprimerTache(Tache t) {
+		
+		ArrayList<Long> listeTachesSuppr = new ArrayList<Long>();
+		
+		supprimerTache2(t, listeTachesSuppr);
+		
+		for(Tache tache: listeTaches) {
+			for(long l : listeTachesSuppr)
+				tache.getListeTachesFille().remove(l);
+		}
+
+	}
+	
+	public void supprimerTache2(Tache t, ArrayList<Long> listeTachesSuppr) {
+		
+		Log.i("suppr2", t.getIdentifiant() + "");
+		
+		listeTachesSuppr.add(t.getIdentifiant());
+		for(int i = 0; i<t.getListeTachesFille().size(); i++)
+			supprimerTache2(getTacheById(t.getListeTachesFille().get(i)), listeTachesSuppr);
+		listeTaches.remove(t);
+		
 	}
 	
 	public void reinitialiserModele() {

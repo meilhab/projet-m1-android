@@ -11,6 +11,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.util.Log;
+
 import univ_fcomte.tasks.Modele;
 import univ_fcomte.tasks.Tache;
 import univ_fcomte.tasks.Tag;
@@ -93,7 +95,7 @@ public class JsonParser {
 			listeAPourFils=new HashMap<Long, Long>();
 			for (int i = 0;i < apourfils.length();i++) {
 				apourfille = apourfils.getJSONObject(i);
-				listeAPourFils.put(apourfille.getLong("idPere"), apourfille.getLong("idFils"));
+				listeAPourFils.put(apourfille.getLong("idFils"), apourfille.getLong("idPere"));
 			}			
 		} 
 
@@ -177,7 +179,7 @@ public class JsonParser {
 			listeAPourFils=new HashMap<Long, Long>();
 			for (int i = 0;i < apourfils.length();i++) {
 				apourfille = apourfils.getJSONObject(i);
-				listeAPourFils.put(apourfille.getLong("idPere"), apourfille.getLong("idFils"));
+				listeAPourFils.put(apourfille.getLong("idFils"), apourfille.getLong("idPere"));
 			}			
 		}
 	}
