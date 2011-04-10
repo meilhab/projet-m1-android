@@ -21,6 +21,8 @@
     </string-array>
     <string name="ajout_tag">Ajouter un Tag</string>
     <string name="menu_ajout_tache">Ajout tâche</string>
+    <string name="menu_enregistrer_tache">Enregistrer tâche</string>
+    <string name="menu_supprimer_tache">Supprimer tâche</string>
     <string name="menu_ajout_tag">Ajout tag</string>
     <string name="menu_synchronisation">Synchronisation</string>
     <string name="menu_reglage">Réglages</string>

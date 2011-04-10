@@ -4,6 +4,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.util.Log;
+
 import univ_fcomte.tasks.Modele;
 import univ_fcomte.tasks.Tache;
 import univ_fcomte.tasks.Tag;
@@ -27,7 +29,9 @@ public class EnvoyerJson {
 
 		JSONObject obTemp;
 		JSONObject obTemp2;
-		
+		JSONArray obTempTags;
+		JSONArray obTempFils;
+
 		try {
 			
 			int i=0;
@@ -56,30 +60,42 @@ public class EnvoyerJson {
 				obTemp.put("idPriorite", t.getPriorite());
 				obTemp.put("versionTache", t.getVersion());
 				
-				arrayTaches.put(i, obTemp);
-				
-				
-				for(Long l : t.getListeTags()) {
-					
+				int nb = 0;
+				obTempTags = new JSONArray();
+				obTempFils = new JSONArray();
+
+				for(long l : t.getListeTags()) {
+
+					obTempTags.put(nb, l);
 					obTemp2 = new JSONObject();
 					obTemp2.put("idTache", t.getIdentifiant());
 					obTemp2.put("idTag", l);
 					
 					arrayApourtags.put(j, obTemp2);
 					
+					nb++;
 					j++;
 				}
 				
-				for(Long l : t.getListeTags()) {
+				nb = 0;
+				for(long l : t.getListeTachesFille()) {
 					
+					obTempFils.put(nb, l);
 					obTemp2 = new JSONObject();
 					obTemp2.put("idPere", t.getIdentifiant());
 					obTemp2.put("idFils", l);
 					
 					arrayApourfils.put(k, obTemp2);
 					
+					nb++;
 					k++;
 				}
+				
+				obTemp.put("apourtag", obTempTags);
+				obTemp.put("apourfils", obTempFils);
+				
+				arrayTaches.put(i, obTemp);
+				
 				i++;
 				
 			}
@@ -92,7 +108,6 @@ public class EnvoyerJson {
 			ob.put("apourfils", arrayApourfils);
 			
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

@@ -3,7 +3,9 @@ package univ_fcomte.tasks;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import android.text.format.DateFormat;
 
@@ -49,8 +51,8 @@ public class Tache {
 		this.version = version;
 		this.listeTags = listeTags;
 		this.listeTachesFille = listeTachesFille;
-		this.dateLimite = null;
 		try {
+			this.dateLimite = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("0000-00-00 00:00:00");
 			this.dateLimite = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(dateLimite);
 		} catch (ParseException e) {
 			e.printStackTrace();
@@ -144,6 +146,15 @@ public class Tache {
 		else
 			return "0000-00-00 00:00:00";
 	}
+	
+	public String getDateLimiteLettre() {
+		
+		if(dateLimite != null)
+			return (String) DateFormat.format("dd/MM/yyyy", dateLimite);
+		else
+			return "00/00/0000";
+		
+	}
 
 	public void setDateLimite(Date dateLimite) {
 		this.dateLimite = dateLimite;
@@ -155,6 +166,24 @@ public class Tache {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public int getJour() {
+		Calendar c = GregorianCalendar.getInstance();
+    	c.setTime(dateLimite);
+    	return c.get(Calendar.DAY_OF_MONTH);
+	}
+	
+	public int getMois() {
+		Calendar c = GregorianCalendar.getInstance();
+    	c.setTime(dateLimite);
+    	return c.get(Calendar.MONTH) + 1;
+	}
+	
+	public int getAnnee() {
+		Calendar c = GregorianCalendar.getInstance();
+    	c.setTime(dateLimite);
+    	return c.get(Calendar.YEAR);
 	}
 	
 }

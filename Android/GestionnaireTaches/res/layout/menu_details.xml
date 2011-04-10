@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+	<item android:id="@+id/menu_enregistrer_tache"
+          android:title="@string/menu_enregistrer_tache" 
+          android:icon="@android:drawable/ic_menu_save" />
+    <item android:id="@+id/menu_ajout_tag"
+          android:title="@string/menu_ajout_tag" 
+          android:icon="@android:drawable/ic_menu_add" />
+   	<item android:id="@+id/menu_supprimer_tache"
+          android:title="@string/menu_supprimer_tache" 
+          android:icon="@android:drawable/ic_menu_delete" />
+</menu>
