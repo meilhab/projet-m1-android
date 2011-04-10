@@ -57,7 +57,7 @@ if(connexionAutorisee()) {
 				break;
 				
 			case 'supprimer_tache' : 
-				if(supprimerTache($_POST['identifiant']))
+				if(supprimerTache($_POST['identifiant'], intval($_POST['idTache'])))
 					echo 'reussi';
 				else
 					echo 'echec';
