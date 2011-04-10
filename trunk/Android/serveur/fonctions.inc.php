@@ -219,18 +219,32 @@ function importerPuisExporterJson($json, $id) {
 				$listeTachesIdentiques[] = intval($tache['idTache']);
 		}
 		
+		$supprApourTag = array();
 		foreach($tabApourTag as $apourtag) {
 			//echo $apourtag['idTache'].', '.$apourtag['idTag'].', '.$id.'</br>';
-			if(in_array(intval($apourtag['idTache']),$listeTachesAjoute))
-				if(!mysql_query("DELETE FROM apourtag WHERE idTache='".$apourtag['idTache']."' AND identifiant='$id'") or !mysql_query("INSERT INTO apourtag VALUES('".$apourtag['idTache']."','".$apourtag['idTag']."','".$id."')"))
+			if(in_array(intval($apourtag['idTache']),$listeTachesAjoute)) {
+				if(!in_array(intval($apourtag['idTache']),$supprApourTag)) {
+					if(!mysql_query("DELETE FROM apourtag WHERE idTache='".$apourtag['idTache']."' AND identifiant='$id'"))
+						$reussi=false;
+					$supprApourTag[] = intval($apourtag['idTache']);
+				}
+				if(!mysql_query("INSERT INTO apourtag VALUES('".$apourtag['idTache']."','".$apourtag['idTag']."','".$id."')"))
 					$reussi=false;
+			}
 		}
 		
+		$supprApourFils = array();
 		foreach($tabApourFils as $apourfils) {
 			//echo $apourfils['idPere'].', '.$apourfils['idFils'].', '.$id.'</br>';
-			if(in_array(intval($apourfils['idPere']),$listeTachesAjoute))
-				if(!mysql_query("DELETE FROM apourfils WHERE idPere='".$apourfils['idPere']."' AND identifiant='$id'") or !mysql_query("INSERT INTO apourfils VALUES('".$apourfils['idPere']."','".$apourfils['idFils']."','".$id."')"))
+			if(in_array(intval($apourfils['idPere']),$listeTachesAjoute)) {
+				if(!in_array(intval($apourfils['idPere']),$supprApourFils)) {
+					if(!mysql_query("DELETE FROM apourfils WHERE idPere='".$apourfils['idPere']."' AND identifiant='$id'"))
+						$reussi=false;
+					$supprApourFils[] = intval($apourfils['idPere']);
+				}
+				if(!mysql_query("INSERT INTO apourfils VALUES('".$apourfils['idPere']."','".$apourfils['idFils']."','".$id."')"))
 					$reussi=false;
+			}
 		}
 	
 	}
@@ -379,21 +393,24 @@ function modifierTache($json, $id) {
 
 }
 
-function supprimerTache($id) {
+function supprimerTache($id, $idTache) {
 
-/*
-	$req="SELECT * FROM apourfils WHERE idPere='".intval($_POST['idTache'])."' AND identifiant='$id'";
-	$resApourtag = mysql_query($req);
-	$compt = 0;
-	while($apourtag=mysql_fetch_array($resApourtag)) {
-	}
+	$reussi = true;
 
-	$rqt="DELETE * FROM tache WHERE idTache='".intval($_POST['idTache'])."' AND identifiant='$id'";
+	$req="SELECT * FROM apourfils WHERE idPere='$idTache' AND identifiant='$id'";
+	$resFils = mysql_query($req);
+	while($listeFils=mysql_fetch_array($resFils))
+		if(!supprimerTache($id, intval($listeFils['idFils'])))
+			$reussi = false;
+	
+	$delApourtag="DELETE FROM apourtag WHERE idTache='$idTache' AND identifiant='$id'";
+	$delApourfils="DELETE FROM apourfils WHERE (idPere='$idTache' OR idFils='$idTache') AND identifiant='$id'";
+	$rqt="DELETE FROM tache WHERE idTache='$idTache' AND identifiant='$id'";
 		
-	if(mysql_query($rqt))
-*/
+	if(!mysql_query($delApourtag) or !mysql_query($delApourfils) or !mysql_query($rqt))
+		$reussi = false;
 
-	return false;
+	return $reussi;
 }
 
 function ajoutTag($json, $id) {
