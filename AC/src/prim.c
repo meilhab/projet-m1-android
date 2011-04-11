@@ -79,7 +79,7 @@ void insererTas(int *tas[], int x, int *tailleTas) {
 	
 }
 
-void Prim(TypGraphe *graphe) {
+void Prim(TypGraphe *graphe, int sommetDepart) {
 
 	int nbMaxSommets = graphe->nbMaxSommets;
 	int nbArete = 0;
@@ -96,6 +96,7 @@ void Prim(TypGraphe *graphe) {
 	int voisin[nbArete];
 	int poidsArete[nbArete];
 	int cle[nbMaxSommets];
+    int prec[nbMaxSommets];
 	TypVoisins *liste;
 	int j = 0;
 	
@@ -114,6 +115,22 @@ void Prim(TypGraphe *graphe) {
 			}
 		}
 	}
-	
+
+    cle[sommetDepart] = 0;
+	prec[sommetDepart] = -1;
+
+    while(nombreElement(F) != 0){
+        int sommet = min(F);
+        TypVoisins *v = graphe->listesAdjencences[sommet];
+        int sommetSuivant;
+        for(sommetSuivant = v->voisin; v->voisin != -1; v = v->voisinSuivant){
+            if(appartient(F, sommetSuivant) == 0 && 
+                    v->poidsVoisin < cle[sommetSuivant]){
+                prec[sommetSuivant] = sommet;
+                cle[sommetSuivant ] = v->poidsVoisin;
+            }
+        }
+    }
+
 	
 }
