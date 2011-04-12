@@ -132,7 +132,7 @@ void Kruskal(TypGraphe *graphe){
 
 	//nombre d'ar�tes du graphe
 	for(i=0; i<nbMaxSommets; i++){
-		tailleS = taille(graphe->listesAdjencences[i]);
+		tailleS = tailleTypVoisins(graphe->listesAdjencences[i]);
 		if(tailleS > 0)
 			nbArete += tailleS;
 	}

@@ -80,7 +80,6 @@ void insererTas(int *tas[], int x, int *tailleTas) {
 }
 
 void Prim(TypGraphe *graphe, int sommetDepart) {
-
 	int nbMaxSommets = graphe->nbMaxSommets;
 	int nbArete = 0;
 	int tailleS;
@@ -131,6 +130,22 @@ void Prim(TypGraphe *graphe, int sommetDepart) {
             }
         }
     }
-
 	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

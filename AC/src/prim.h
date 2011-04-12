@@ -11,6 +11,7 @@ void construireTas(int *tas[], int poidsArete[], int tailleTas);
 void triTas(int *tas[], int poidsArete[], int tailleTas);
 int extraireMaxTas(int *tas[], int poidsArete[], int *tailleTas);
 void insererTas(int *tas[], int x, int *tailleTas);
-void Prim(TypGraphe *graphe);
+void Prim(TypGraphe *graphe, int sommetDepart);
+
 
 #endif // PRIM_H 

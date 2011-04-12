@@ -177,7 +177,7 @@ casErreur supprimerTout(TypVoisins **liste){
 }
 
 /*
- * Fonction :    taille
+ * Fonction :    tailleTypVoisins
  *
  * Parametres :  TypVoisins*, liste des voisins
  *
@@ -186,7 +186,7 @@ casErreur supprimerTout(TypVoisins **liste){
  * Description : retourne la taille de la liste passée en paramètre
  *
  */
-int taille(TypVoisins *liste){
+int tailleTypVoisins(TypVoisins *liste){
 	if(verifAllocationL(liste) != PAS_ERREUR)
 		return -1;
 
@@ -300,5 +300,5 @@ casErreur existeVoisin(TypVoisins *liste, int voisin){
  *
  */
 int estVide(TypVoisins *liste){
-	return taille(liste);
+	return tailleTypVoisins(liste);
 }
