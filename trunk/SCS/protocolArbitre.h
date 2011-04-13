@@ -2,7 +2,7 @@
  *
  * Programme : protocolArbitre.h
  *
- * Synopsis : entete du protocole d'acces à l'arbitre
+ * Synopsis : entete du protocole d'acces Ã  l'arbitre
  *            pour Yote
  *
  * Ecrit par : LP, 15 / 02 / 11
@@ -69,8 +69,8 @@ typedef struct {
 /*
  * Definition des lignes et colonnes
  */
-typedef enum { LI_ZERO, LI_UN, LI_DEUX, LI_TROIS, LI_QUATRE } TypLigne;
-typedef enum { CO_ZERO, CO_UN, CO_DEUX, CO_TROIS, CO_QUATRE, CO_CINQ } TypColonne;
+typedef enum { LI_ZERO, LI_UN, LI_DEUX, LI_TROIS, LI_QUATRE, LI_MAIN } TypLigne;
+typedef enum { CO_ZERO, CO_UN, CO_DEUX, CO_TROIS, CO_QUATRE, CO_CINQ, CO_MAIN } TypColonne;
 
 /* 
  * Definition d'une case
