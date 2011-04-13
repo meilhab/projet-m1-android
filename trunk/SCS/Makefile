@@ -8,7 +8,7 @@ LDFLAGS=-lm
 #OBJ=$(SRC:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
 #BIN=$(BINDIR)/premier
 SRC=$(wildcard *.c)
-OBJ=$(SRC:%c=%.o)
+OBJ=$(SRC:%.c=%.o)
 BIN=connexionArbitre
 
 all: $(BIN)
