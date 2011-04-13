@@ -2,35 +2,39 @@
 #include "fonctionsSocket.h"
 
 
-typedef enum {
-	ECHEC_CONNEXION,
-	ECHEC_DECONNEXION,
-	ECHEC_ENVOI_IDENTIFICATION,
-	ECHEC_RECEPTION_IDENTIFICATION,
-	ECHEC_ENVOI_NOUVELLE_PARTIE,
-	ECHEC_RECEPTION_NOUVELLE_PARTIE,
-	CODE_FINTOURNOI_INCONNU,
-	CODE_PREMIER_INCONNU,
+void clearScanf(void){
+    char c;
+    while((c = getchar()) != EOF && c != '\n');
 
+    return;
+}
 
-void creationConnexion(int *sock){
-	char machine[TAIL_CHAIN] = "localhost";
-	int port = 2001;
+RetourFonction creationConnexion(int *sock){
+//	char machine[TAIL_CHAIN] = "localhost";
+//	int port = 2001;
 
 	fprintf(stdout, "Procédure de connexion à l'arbitre\n");
+
+    fprintf(stdout, "Nom de la machine distante ?\n-> ");
+    fscanf(stdin, "%s", machine);
+    clearScanf();
+
+    fprintf(stdout, "Numéro du port ?\n-> ");
+    fscanf(stdin, "%d", sock);
+    clearScanf();
 
 	sock = socketClient(machine, port);
 	if(sock < 0){
 		fprintf(stderr, "Echec de connexion à l'arbitre\n");
-		exit(1);
+		return ECHEC_CONNEXION;
 	}
 
 	fprintf(stdout, "Connexion effectuée\n");
 
-	return;
+	return CODE_OK;
 }
 
-void deconnexion(int sock){
+RetourFonction deconnexion(int sock){
 	int err;
 
 	fprintf(stdout, "Procédure de déconnexion à l'arbitre\n");
@@ -40,15 +44,15 @@ void deconnexion(int sock){
 	
 	if(err < 0){
 		fprintf(stderr, "Problème de déconnexion à l'arbitre\n");
-		exit(1);
+		return ECHEC_DECONNEXION;
 	}
 
 	fprintf(stdout, "Déconnexion effectuée\n");
 
-	return;
+	return CODE_OK;
 }
 
-void identification(int sock, int *identifiant){
+RetourFonction identification(int sock, int *identifiant){
 	TypIdentificationReq req;
 	TypIdentificationRep rep;
 	char login[TAIL_CHAIN] = "bmeilhac";
@@ -62,13 +66,13 @@ void identification(int sock, int *identifiant){
 	err = send(sock, (void*) &req, sizeof(req), 0);
 	if(err < 0){
 		fprintf(stderr, "Echec d'identification sur l'arbitre\n");
-		exit(1);
+		return ECHEC_ENVOI_IDENTIFICATION;
 	}
 
 	err = recv(sock, (void*) &rep, sizeof(rep), 0);
 	if(err < 0){
 		fprintf(stderr, "Echec réception identification de l'arbitre\n");
-		exit(2);
+		return ECHEC_RECEPTION_IDENTIFICATION;
 	}
 
 	if(rep.err != ERR_OK){
@@ -80,10 +84,10 @@ void identification(int sock, int *identifiant){
 
 	fprintf(stdout, "Identification effectuée\n");
 	
-	return;
+	return CODE_OK;
 }
 
-void demandeNouvellePartie(int sock, int identifiant){
+RetourFonction demandeNouvellePartie(int sock, int identifiant){
 	TypPartieReq req;
 	TypPartieRep rep;
 	int err;
@@ -96,18 +100,18 @@ void demandeNouvellePartie(int sock, int identifiant){
 	err = send(sock, (void*) &req, sizeof(req), 0);
 	if(err < 0){
 		fprintf(stderr, "Echec de demande de nouvelle partie sur l'arbitre\n");
-		exit(1);
+		return ECHEC_ENVOI_NOUVELLE_PARTIE;
 	}
 
 	err = recv(sock, (void*) &rep, sizeof(rep), 0);
 	if(err < 0){
 		fprintf(stderr, "Echec réception de la demande de nouvelle partie de l'arbitre\n");
-		exit(2);
+		return ECHEC_RECEPTION_NOUVELLE_PARTIE;
 	}
 
 	if(rep.err != ERR_OK){
 		fprintf(stderr, "Erreur de la demande de nouvelle partie\n");
-		exit(3);
+		return ECHEC_RETOUR_NOUVELLE_PARTIE;
 	}
 
 	switch(rep.finTournoi){
@@ -126,19 +130,19 @@ void demandeNouvellePartie(int sock, int identifiant){
 					break;
 				default:
 					fprintf(stderr, "Code de réponse de premier inconnu\n");
-					exit(4);
+					return ECHEC_CODE_PREMIER_INCONNU; 
 			}
 		default:
 			fprintf(stderr, "Code de réponse de finTournoi inconnu\n");
-			exit(5);
+			return ECHEC_CODE_FINTOURNOI_INCONNU;
 	}
 
 	fprintf(stdout, "Partie terminée\n");
 
-	return;
+	return CODE_OK;
 }
 
-int main(){
+int main(void){
 	int socket;
 	int idJoueur;
 	creationConnexion(&socket);
