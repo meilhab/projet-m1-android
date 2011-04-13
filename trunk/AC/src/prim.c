@@ -23,9 +23,9 @@ void entasserTas(int *tas[], int i, int cle[], int tailleTas) {
 		printf("2 : %d\n",tas[min]);
 		printf("3 : %d\n",g);
 		printf("4 : %d\n",i);
-		if(cle[(int)tas[g]] < cle[(int)tas[min]])
+		if(cle[(int)tas[g]] < cle[(int)tas[min]] && cle[(int)tas[g]] != -1)
 			min=g; 
-		if(d <= tailleTas && cle[(int)tas[d]] < cle[(int)tas[min]])
+		if(d <= tailleTas && cle[(int)tas[d]] < cle[(int)tas[min]] && cle[(int)tas[d]] != -1)
 			min=d;
 		
 		if( min!=i ) {
@@ -98,6 +98,7 @@ void insererTas(int *tas[], int x, int *tailleTas) {
 	
 }
 
+//a remplacer par un tableau
 int appartientTas(int *tas[], int sommetSuivant, int tailleTas) {  
 
 	int appartient = -1;
@@ -115,17 +116,19 @@ int extraireMinTab(int *tas[], int cle[], int *tailleTas) {
 	int i;
 	int indiceMin = 0;
 	for(i = 0;i<(*tailleTas); i++)
-		if(cle[(int)tas[i]] < cle[(int)tas[indiceMin]])
+		if(cle[(int)tas[i]] < cle[(int)tas[indiceMin]] && cle[(int)tas[i]] != -1)
 			indiceMin = i;
+	
+	int sommetMin = (int)tas[indiceMin];
 	
 	for(i = 0;i<(*tailleTas); i++)
 		if(i>indiceMin)
 			tas[i-1] = tas[i];
 	(*tailleTas)--;
-	return (int)tas[indiceMin];
+	return sommetMin;
 	
 }
-
+/*
 void afficherTab(int tas[], int tailleTas) {
 	
 	printf("tas : ");
@@ -135,8 +138,12 @@ void afficherTab(int tas[], int tailleTas) {
 	printf("\n");
 	
 }
-
+*/
 void Prim(TypGraphe *graphe, int sommetDepart) {
+	
+	
+	fprintf(stdout, "##################### ACM : ##################\n");
+	
 	int nbMaxSommets = graphe->nbMaxSommets;
 	int nbArete = 0;
 	int tailleS;
@@ -148,16 +155,13 @@ void Prim(TypGraphe *graphe, int sommetDepart) {
 			nbArete += tailleS;
 	}
 	
-	
-	
-	
+
 	
 	int sommet[nbArete];
 	int voisin[nbArete];
 	int poidsArete[nbArete];
 	int cle[nbMaxSommets];
 	int prec[nbMaxSommets];
-	//int marque[nbMaxSommets];
 	int tas[nbMaxSommets/*+1*/]; //commence a 1
 	int tailleTas = nbMaxSommets/*+1*/; //commence a 1
 	TypVoisins *liste;
@@ -168,9 +172,8 @@ void Prim(TypGraphe *graphe, int sommetDepart) {
 	//creation ensemble et recuperation des aretes
 	tailleTas = 0;
 	for(i=0; i<nbMaxSommets; i++){
-		cle[i] = 5000;
+		cle[i] = -1;
 		prec[i] = -1;
-		//marque[i] = -1;
 		//sommet[j] = -1;
 		liste = graphe->listesAdjencences[i];
 		if(estVide(liste) >= 0){
@@ -201,30 +204,24 @@ void Prim(TypGraphe *graphe, int sommetDepart) {
 	
 	while(tailleTas != 0) {
 		//triTas(tas, cle, tailleTas);
-		afficherTab(tas, tailleTas);
-		printf("om\n");
+		
+		//afficherTab(tas, tailleTas);
 		int sommet = extraireMinTab(tas, cle, &tailleTas);
 		
 		TypVoisins *v = graphe->listesAdjencences[sommet];
-		int sommetSuivant;
-
-		for(sommetSuivant = v->voisin; v->voisin != -1; v = v->voisinSuivant){
-			if(appartientTas(tas, sommetSuivant, tailleTas) > 0 && v->poidsVoisin < cle[sommetSuivant]){
-				printf("->%d vers %d\n", sommet, sommetSuivant);
+		int sommetSuivant = v->voisin;
+		
+		while(sommetSuivant != -1) {
+			if(appartientTas(tas, sommetSuivant, tailleTas) > 0 && (v->poidsVoisin < cle[sommetSuivant] || cle[sommetSuivant] == -1)) {
 				prec[sommetSuivant] = sommet;
 				cle[sommetSuivant] = v->poidsVoisin;
 			}
+			v = v->voisinSuivant;
+			sommetSuivant = v->voisin;
 		}
+		if(sommet != sommetDepart)
+			printf("-> %d vers %d\n", prec[sommet], sommet);
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	
