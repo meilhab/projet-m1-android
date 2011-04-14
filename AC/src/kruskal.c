@@ -121,7 +121,7 @@ void tri_a_bulle(TypVoisins *arete[], int nbArete, int *indiceSommetArete[]){
 	return;
 }
 
-void Kruskal(TypGraphe *graphe){
+casErreur Kruskal(TypGraphe *graphe){
 	//fprintf(stdout, "icikruskal\n");
 	int nbMaxSommets = graphe->nbMaxSommets;
 //	int tabEnsemble[nbMaxSommets];
@@ -151,7 +151,7 @@ void Kruskal(TypGraphe *graphe){
 		if(estVide(liste) >= 0){
 			creerEnsemble(&pere, i);
 			while(liste->voisin != -1){
-				indiceSommetArete[j] = i;//TODO : erreur ici
+				indiceSommetArete[j] = i;
 				arete[j] = liste;
 				liste = liste->voisinSuivant;
 				j++;
@@ -188,11 +188,53 @@ void Kruskal(TypGraphe *graphe){
 	//affichage du chemin
 	fprintf(stdout, "##################### ACM : ##################\n");
 	i = 0;
+	TypGraphe *grapheKruskal;
+	casErreur erreur;
+	if((erreur = initialisationGraphe(&grapheKruskal, nbMaxSommets)) 
+			!= PAS_ERREUR)
+		return erreur;
+	/*
 	while(ensembleSolution[i] != -1) {
-		fprintf(stdout, "-> %d vers %d avec %d\n", indiceSommetArete[ensembleSolution[i]]+1, 
-			arete[ensembleSolution[i]]->voisin+1, arete[ensembleSolution[i]]->poidsVoisin);
+		insertionSommet(&grapheKruskal, indiceSommetArete[ensembleSolution[i] + 1]);
+		i++;
+	}*/
+
+	while(ensembleSolution[i] != -1) {
+		fprintf(stdout, "-> %d vers %d avec %d\n", 
+				indiceSommetArete[ensembleSolution[i]]+1, 
+				arete[ensembleSolution[i]]->voisin+1, 
+				arete[ensembleSolution[i]]->poidsVoisin);
+		insertionSommet(&grapheKruskal, indiceSommetArete[ensembleSolution[i]] + 1);
+		insertionSommet(&grapheKruskal, arete[ensembleSolution[i]]->voisin + 1);
+		insertionArete(&grapheKruskal, 
+				indiceSommetArete[ensembleSolution[i]] + 1, 
+				arete[ensembleSolution[i]]->voisin + 1,
+				arete[ensembleSolution[i]]->poidsVoisin);
+
 		i++;
 	}
-	
+	//TODO : gestion erreur
+
+	affichageGraphe(grapheKruskal);
+
+	char c;
+	do{
+		fprintf(stdout, "Enregistrer l'ACM dans un fichier (o/n) ?\n");
+		scanf("%c", &c);
+		clearScanf();
+	}while(c != 'o' || c != 'n');
+
+	if(c == 'o'){
+		char chemin[250];
+		fprintf(stdout, "Nom du fichier ? ");
+		scanf("%s", chemin);
+		ecritureFichier(chemin, grapheKruskal);
+	}
+
+
+
+
+	supprimerGraphe(&grapheKruskal);
+
 
 }
