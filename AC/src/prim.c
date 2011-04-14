@@ -1,5 +1,6 @@
 #include "prim.h" 
 
+/*
 int pere(int i) {
     return (i/2);
 }
@@ -97,6 +98,7 @@ void insererTas(int *tas[], int x, int *tailleTas) {
 	printf("fin insererTas\n");
 	
 }
+*/
 
 //a remplacer par un tableau
 int appartientTas(int *tas[], int sommetSuivant, int tailleTas) {  
@@ -142,6 +144,12 @@ void afficherTab(int tas[], int tailleTas) {
 void Prim(TypGraphe *graphe, int sommetDepart) {
 	
 	
+	if(estNonOriente(graphe) < 1) {
+		  fprintf(stdout, "Votre graphe est oriente et ne peut donc pas");
+		  fprintf(stdout, " etre utilise par l'algorithme de prim\n");
+		  return;
+	}
+	
 	fprintf(stdout, "##################### ACM : ##################\n");
 	
 	int nbMaxSommets = graphe->nbMaxSommets;
@@ -155,8 +163,6 @@ void Prim(TypGraphe *graphe, int sommetDepart) {
 			nbArete += tailleS;
 	}
 	
-
-	
 	int sommet[nbArete];
 	int voisin[nbArete];
 	int poidsArete[nbArete];
@@ -166,8 +172,6 @@ void Prim(TypGraphe *graphe, int sommetDepart) {
 	int tailleTas = nbMaxSommets/*+1*/; //commence a 1
 	TypVoisins *liste;
 	int j = 0;
-	
-	
 	
 	//creation ensemble et recuperation des aretes
 	tailleTas = 0;
@@ -212,7 +216,8 @@ void Prim(TypGraphe *graphe, int sommetDepart) {
 		int sommetSuivant = v->voisin;
 		
 		while(sommetSuivant != -1) {
-			if(appartientTas(tas, sommetSuivant, tailleTas) > 0 && (v->poidsVoisin < cle[sommetSuivant] || cle[sommetSuivant] == -1)) {
+			if(appartientTas(tas, sommetSuivant, tailleTas) > 0 && 
+			  (v->poidsVoisin < cle[sommetSuivant] || cle[sommetSuivant] == -1)) {
 				prec[sommetSuivant] = sommet;
 				cle[sommetSuivant] = v->poidsVoisin;
 			}
@@ -220,9 +225,60 @@ void Prim(TypGraphe *graphe, int sommetDepart) {
 			sommetSuivant = v->voisin;
 		}
 		if(sommet != sommetDepart)
-			printf("-> %d vers %d\n", prec[sommet], sommet);
+			fprintf(stdout, "-> %d vers %d avec poids : %d\n", prec[sommet] + 1, sommet + 1, cle[sommet]);
 	}
 	
 	
+	
+	
+	
+}
+
+
+int areteExiste(TypGraphe *graphe, int sommet, int voisin, int poids) {
+	
+	int existe = -2;
+	
+	if(sommet < graphe->nbMaxSommets && voisin < graphe->nbMaxSommets) {
+		TypVoisins *liste = graphe->listesAdjencences[sommet];
+		if(estVide(liste) >= 0){
+			while(liste->voisin != -1){
+				if(liste->voisin == voisin) {
+					if(liste->poidsVoisin == poids)
+						existe = 1;
+					else
+						existe = -1;
+				}
+				liste = liste->voisinSuivant;
+			}
+		}
+	}
+	
+	return existe;
+	
+}
+
+
+int estNonOriente(TypGraphe *graphe) {
+	
+	int estNonOriente = 1;
+	int i;
+	int nbMaxSommets = graphe->nbMaxSommets;
+	TypVoisins *liste;
+	for(i=0; i<nbMaxSommets; i++){
+		liste = graphe->listesAdjencences[i];
+		if(estVide(liste) >= 0){
+			while(liste->voisin != -1){
+				int existe = areteExiste(graphe, liste->voisin, i, liste->poidsVoisin);
+				if(existe == -2)
+					estNonOriente = -2;
+				else if(existe == -1 && (estNonOriente == -1 || estNonOriente == 1))
+					estNonOriente = -1;
+				liste = liste->voisinSuivant;
+			}
+		}
+	}
+	
+	return estNonOriente;
 	
 }
