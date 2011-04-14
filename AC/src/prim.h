@@ -3,16 +3,8 @@
 
 #include "libgraphe.h"
 
-int pere(int i);
-int filsGauche(int i);
-int filsDroit(int i);
-void entasserTas(int *tas[], int i, int poidsArete[], int tailleTas);
-void construireTas(int *tas[], int poidsArete[], int tailleTas);
-void triTas(int *tas[], int poidsArete[], int tailleTas);
-int extraireMaxTas(int *tas[], int poidsArete[], int *tailleTas);
-void insererTas(int *tas[], int x, int *tailleTas);
-void Prim(TypGraphe *graphe, int sommetDepart);
 int appartientTas(int *tas[], int sommetSuivant, int tailleTas);
-
+int extraireMinTab(int *tas[], int cle[], int *tailleTas);
+casErreur Prim(TypGraphe *graphe, int sommetDepart);
 
 #endif // PRIM_H 
