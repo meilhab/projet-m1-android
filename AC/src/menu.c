@@ -136,11 +136,11 @@ void actionsMenu(TypGraphe** grapheCourant) {
 			break;
 			//ACM Kruskal
 		case KRUSKAL:
-			Kruskal(*grapheCourant);
+            lancerKruskal(*grapheCourant);
 			break;
 			//ACM Prim
 		case PRIM:
-			Prim(*grapheCourant, 0);
+			lancerPrim(*grapheCourant, 0);
 			break;
 			//Affichage du graphe
 		case AFFICHAGE :
@@ -562,4 +562,20 @@ void quitterMenuGraphe(TypGraphe** grapheCourant){
 	exit(0);
 
 	return;
+}
+
+void lancerKruskal(TypGraphe *grapheCourant){
+    casErreur erreur = Kruskal(grapheCourant);
+    if(erreur != PAS_ERREUR)
+        afficherErreur(erreur);
+
+    return;
+}
+
+void lancerPrim(TypGraphe *grapheCourant){
+    casErreur erreur = Prim(grapheCourant);
+    if(erreur != PAS_ERREUR)
+        afficherErreur(erreur);
+
+    return;
 }
