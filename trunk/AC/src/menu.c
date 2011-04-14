@@ -572,8 +572,8 @@ void lancerKruskal(TypGraphe *grapheCourant){
     return;
 }
 
-void lancerPrim(TypGraphe *grapheCourant){
-    casErreur erreur = Prim(grapheCourant);
+void lancerPrim(TypGraphe *grapheCourant, int sommetDepart){
+    casErreur erreur = Prim(grapheCourant, sommetDepart);
     if(erreur != PAS_ERREUR)
         afficherErreur(erreur);
 
