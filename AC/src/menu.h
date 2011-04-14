@@ -30,11 +30,11 @@ void creationGraphe(TypGraphe** grapheCourant);
 void lectureFichierExistant(TypGraphe** grapheCourant);
 void insertionSommetGraphe(TypGraphe** grapheCourant);	
 void insertionAreteGraphe(TypGraphe** grapheCourant);
-void lancerKruskal(TypGraphe *grapheCourant);
-void lancerPrim(TypGraphe *grapheCourant);
 void supprimeSommetGraphe(TypGraphe** grapheCourant);
 void supprimeAreteGraphe(TypGraphe** grapheCourant);
 void sauvegardeGraphe(TypGraphe** grapheCourant);
 void quitterMenuGraphe(TypGraphe** grapheCourant);
+void lancerKruskal(TypGraphe *grapheCourant);
+void lancerPrim(TypGraphe *grapheCourant, int sommetDepart);
 
 #endif //MENU_H
