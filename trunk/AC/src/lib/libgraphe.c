@@ -98,34 +98,22 @@ casErreur insertionSommet(TypGraphe **graphe, int sommet){
  */
 casErreur insertionArete(TypGraphe **graphe, int sommetDebut, 
 		int sommetSuivant, int poids){
-    fprintf(stdout, "\n ----debutAjout---- \n");
 	casErreur erreur = verifAllocationPG(graphe);
-	if(erreur != PAS_ERREUR){
-        fprintf(stdout, "\n ----%d---- \n", erreur);
+	if(erreur != PAS_ERREUR)
 		return erreur;
-    }
 
 	int nbMaxSommets = (*graphe)->nbMaxSommets;
 	if((sommetDebut-1 > nbMaxSommets) || (sommetSuivant-1 > nbMaxSommets) ||
-			sommetDebut-1 < 0 || sommetSuivant-1 < 0){
-        fprintf(stdout, "SA COUILLE ICI 1\n");
+			sommetDebut-1 < 0 || sommetSuivant-1 < 0)
 		return INSERT_ARETE_SOMMET_INCORRECT;
-    }
 
 	if((*graphe)->listesAdjencences[sommetDebut - 1] == NULL ||
-		(*graphe)->listesAdjencences[sommetSuivant - 1] == NULL){
-        fprintf(stdout, "%d et %d = %d\n", (*graphe)->listesAdjencences[sommetDebut - 1], 
-                                    (*graphe)->listesAdjencences[sommetSuivant - 1], NULL);
-        fprintf(stdout, "SA COUILLE ICI 2\n");
+		(*graphe)->listesAdjencences[sommetSuivant - 1] == NULL)
 		return INSERT_ARETE_SOMMET_EXISTE_PAS;
-    }
-
     
-    fprintf(stdout, "\n ----fonction de la liste---- \n");
 	erreur = ajouterDebut(&((*graphe)->listesAdjencences[sommetDebut-1]), 
 		sommetSuivant-1, poids);
 
-    fprintf(stdout, "\n ----AjoutCorrect---- \n");
 	return erreur;
 }
 
