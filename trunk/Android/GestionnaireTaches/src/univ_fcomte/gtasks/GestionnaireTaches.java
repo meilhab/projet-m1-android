@@ -4,48 +4,33 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import univ_fcomte.synchronisation.Synchronisation;
 import univ_fcomte.synchronisation.ThreadSynchronisation;
-import univ_fcomte.tasks.Modele;
+import univ_fcomte.tasks.*;
 import univ_fcomte.tasks.Modele.Tri;
-import univ_fcomte.tasks.Tache;
-import univ_fcomte.tasks.Tag;
-import android.app.Activity;
-import android.app.AlertDialog;
+import android.app.*;
 import android.app.AlertDialog.Builder;
-import android.app.SearchManager;
-import android.content.DialogInterface;
-import android.content.Intent;
+import android.content.*;
 import android.content.DialogInterface.OnClickListener;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
+import android.view.*;
 import android.view.View.OnTouchListener;
-import android.view.Window;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class GestionnaireTaches extends Activity {
-	/** Called when the activity is first created. */
 
 	private int positionX;
 	private Modele modele;
 	private ListView maListViewPerso;
 
-	private String serveur;
 	private Synchronisation sw;
-	private String recherche;
-	private Tri tri;
-	private boolean enCoursSynchro;
+	private MonApplication application;
 
 	private final int CODE_DE_MON_ACTIVITE = 1;
 	private final int CODE_ACTIVITE_PREFERENCES = 2;
-
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -54,22 +39,16 @@ public class GestionnaireTaches extends Activity {
 		
 		setContentView(R.layout.main);
 
-		modele = ((MonApplication)getApplication()).getModele();
-		((MonApplication)getApplication()).setGt(this);
+		application = (MonApplication)getApplication();
+		modele = application.getModele();
+		application.setGt(this);
 		
 		modele.initialiserModele();
 		positionX=0;
-		//serveur = "http://10.0.2.2/gestionnaire_taches/requeteAndroid.php";
-		serveur = "http://projetandroid.hosting.olikeopen.com/gestionnaire_taches/requeteAndroid.php";
-
-		sw=new Synchronisation(this, serveur);
-		
-		recherche = "";
-		tri = Tri.DATE;
-		enCoursSynchro = false;
+		sw=new Synchronisation(this, modele.getServeur());
 		
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-
+		
 		//Récupération de la listview crée dans le fichier main.xml
 		maListViewPerso = (ListView) findViewById(R.id.listviewperso);
 		//Log.i("test", maListViewPerso.toString());
@@ -91,7 +70,7 @@ public class GestionnaireTaches extends Activity {
 			@Override
 			public void onItemClick(AdapterView a, View v, int position, long id) {
 
-				if(!enCoursSynchro) {
+				if(!modele.isEnCoursSynchro()) {
 					if(positionX<=getResources().getDrawable(R.drawable.btn_check_buttonless_on).getMinimumWidth()+20) {
 						Log.i("","on clic sur l'image");
 						Tache t = modele.getTacheById(Integer.valueOf((String)((HashMap)maListViewPerso.getItemAtPosition(position)).get("id")));
@@ -134,7 +113,7 @@ public class GestionnaireTaches extends Activity {
 			public boolean onItemLongClick(AdapterView a, View v, int position, long id) {
 				//registerForContextMenu(v);
 				
-				if(!enCoursSynchro) {
+				if(!modele.isEnCoursSynchro()) {
 				
 					Builder builder = new Builder(v.getContext());
 					final HashMap map = (HashMap) maListViewPerso.getItemAtPosition(position);
@@ -189,8 +168,8 @@ public class GestionnaireTaches extends Activity {
 
 	@Override
 	public void onBackPressed() {
-		if(!recherche.equals("")) {
-			recherche = "";
+		if(!modele.getRechercheCourante().equals("")) {
+			modele.setRechercheCourante("");
 			updateList();
 		}
 		else
@@ -231,11 +210,11 @@ public class GestionnaireTaches extends Activity {
 		//On déclare la HashMap qui contiendra les informations pour un item
 		HashMap<String, String> map;
 		
-		modele.trierTaches(true, tri);
+		modele.trierTaches(true);
 		
 		for(Tache t:modele.getListeTaches()) {
 			if(t.getEtat() != 1 || PreferenceManager.getDefaultSharedPreferences(this).getBoolean("afficher_taches_annulees", false)) {
-				if(t.getNom().indexOf(recherche) != -1 || t.getDescription().indexOf(recherche) != -1) {
+				if(t.getNom().indexOf(modele.getRechercheCourante()) != -1 || t.getDescription().indexOf(modele.getRechercheCourante()) != -1) {
 					map = new HashMap<String, String>();
 					map.put("titre", t.getNom());
 					map.put("description", t.getDescription());
@@ -261,7 +240,13 @@ public class GestionnaireTaches extends Activity {
 
 	public boolean onCreateOptionsMenu(Menu menu){
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.layout.menu, menu);
+		inflater.inflate(R.menu.menu, menu);
+		if(modele.getTri() == Tri.NOM)
+			menu.findItem(R.id.sous_menu_tri_nom).setChecked(true);
+		else if(modele.getTri() == Tri.PRIORITE)
+			menu.findItem(R.id.sous_menu_tri_priorite).setChecked(true);
+		else if(modele.getTri() == Tri.ETAT)
+			menu.findItem(R.id.sous_menu_tri_etat).setChecked(true);
 		//menu.getItem(3).getSubMenu().setHeaderIcon(R.drawable.icon);
 		//menu.getItem(0).getSubMenu().setHeaderIcon(R.drawable.);
 		
@@ -279,10 +264,11 @@ public class GestionnaireTaches extends Activity {
 		
 	}
 	
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.menu_ajout_tache:
-			if(!enCoursSynchro) {
+			if(!modele.isEnCoursSynchro()) {
 				Toast.makeText(this.getApplicationContext(), "Nouvelle tache", Toast.LENGTH_SHORT).show();
 				Intent intent = new Intent(this.getApplicationContext(), DetailsTaches.class);
 				startActivityForResult(intent, CODE_DE_MON_ACTIVITE);
@@ -292,7 +278,7 @@ public class GestionnaireTaches extends Activity {
 				attenteSynchronisation();
 			return true;
 		case R.id.menu_ajout_tag:
-			if(!enCoursSynchro) {
+			if(!modele.isEnCoursSynchro()) {
 				AlertDialog.Builder builderAjoutTag = new AlertDialog.Builder(this);
 				builderAjoutTag.setTitle(getResources().getText(R.string.label_ajout_tag));
 				builderAjoutTag.setMessage(getResources().getText(R.string.label_nom_tag));
@@ -300,10 +286,7 @@ public class GestionnaireTaches extends Activity {
 				builderAjoutTag.setView(etNomTag);
 				builderAjoutTag.setNegativeButton("Annuler", new OnClickListener(){
 					@Override
-					public void onClick(DialogInterface arg0, int arg1) {
-	
-					}
-	
+					public void onClick(DialogInterface arg0, int arg1) {}
 				});
 				builderAjoutTag.setPositiveButton("OK", new OnClickListener() {
 					@Override
@@ -326,7 +309,7 @@ public class GestionnaireTaches extends Activity {
 			return true;
 		case R.id.menu_supprimer_tag:
 			
-			if(!enCoursSynchro) {
+			if(!modele.isEnCoursSynchro()) {
 			
 				CharSequence[] itemsTags = new CharSequence[modele.getListeTags().size()];
 				final boolean[] tagsAffiches = new boolean[modele.getListeTags().size()];
@@ -396,10 +379,10 @@ public class GestionnaireTaches extends Activity {
 			startActivityForResult(intentPrefs, CODE_ACTIVITE_PREFERENCES);
 			transitionActivity();
 			return true;
-		case R.id.menu_plus:
-			return true;
 		case R.id.menu_synchronisation:
-			if(!enCoursSynchro)
+			//item.getSubMenu().setGroupVisible(group, visible)
+			//item.setVisible(visible)
+			if(!modele.isEnCoursSynchro())
 				return true;
 			else
 				return false;
@@ -420,22 +403,22 @@ public class GestionnaireTaches extends Activity {
 			return true;
 		case R.id.sous_menu_tri_date:
 			item.setChecked(true);
-			tri = Tri.DATE;
+			modele.setTri(Tri.DATE);
 			updateList();
 			return true;
 		case R.id.sous_menu_tri_nom:
 			item.setChecked(true);
-			tri = Tri.NOM;
+			modele.setTri(Tri.NOM);
 			updateList();
 			return true;
 		case R.id.sous_menu_tri_etat:
 			item.setChecked(true);
-			tri = Tri.ETAT;
+			modele.setTri(Tri.ETAT);
 			updateList();
 			return true;
 		case R.id.sous_menu_tri_priorite:
 			item.setChecked(true);
-			tri = Tri.PRIORITE;
+			modele.setTri(Tri.PRIORITE);
 			updateList();
 			return true;
 		default:
@@ -472,7 +455,7 @@ public class GestionnaireTaches extends Activity {
 		super.onNewIntent(newIntent);
 		// get and process search query here
 		if (Intent.ACTION_SEARCH.equals(newIntent.getAction())) {
-			recherche = newIntent.getStringExtra(SearchManager.QUERY);
+			modele.setRechercheCourante(newIntent.getStringExtra(SearchManager.QUERY));
 			updateList();
 		}
 	}
@@ -490,14 +473,6 @@ public class GestionnaireTaches extends Activity {
 		       });
 		AlertDialog alert = builder.create();
 		alert.show();
-	}
-	
-	public boolean isEnCoursSynchro() {
-		return enCoursSynchro;
-	}
-
-	public void setEnCoursSynchro(boolean enCoursSynchro) {
-		this.enCoursSynchro = enCoursSynchro;
 	}
 
 }
