@@ -242,7 +242,7 @@ public class DetailsTaches extends Activity {
     
 	public boolean onCreateOptionsMenu(Menu menu){
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.layout.menu_details, menu);
+		inflater.inflate(R.menu.menu_details, menu);
 		//menu.getItem(3).getSubMenu().setHeaderIcon(R.drawable.icon);
 		//menu.getItem(0).getSubMenu().setHeaderIcon(R.drawable.);
 		

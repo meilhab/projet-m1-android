@@ -19,13 +19,22 @@ public class Modele {
 	private Context context;
 	private MaBaseSQLite bdd;
 	private SQLiteDatabase db;
-	
+	private String rechercheCourante;
+	private Tri tri;
+	private boolean enCoursSynchro;
+	private String serveur;
+
 	public Modele(Context context) {
 		listeTags = new ArrayList<Tag>();
 		listeTaches = new ArrayList<Tache>();
 		this.context = context;
 		this.bdd = new MaBaseSQLite(context, "gestionnaire_taches.db", null, 1);
 		this.db = this.bdd.getDb();
+		rechercheCourante = "";
+		tri = Tri.DATE;
+		enCoursSynchro = false;
+		//serveur = "http://10.0.2.2/gestionnaire_taches/requeteAndroid.php";
+		serveur = "http://projetandroid.hosting.olikeopen.com/gestionnaire_taches/requeteAndroid.php";
 		
 	}
 
@@ -66,6 +75,38 @@ public class Modele {
 
 	public SQLiteDatabase getDb() {
 		return db;
+	}
+	
+	public String getRechercheCourante() {
+		return rechercheCourante;
+	}
+
+	public void setRechercheCourante(String rechercheCourante) {
+		this.rechercheCourante = rechercheCourante;
+	}
+	
+	public Tri getTri() {
+		return tri;
+	}
+
+	public void setTri(Tri tri) {
+		this.tri = tri;
+	}
+
+	public boolean isEnCoursSynchro() {
+		return enCoursSynchro;
+	}
+
+	public void setEnCoursSynchro(boolean enCoursSynchro) {
+		this.enCoursSynchro = enCoursSynchro;
+	}
+
+	public String getServeur() {
+		return serveur;
+	}
+
+	public void setServeur(String serveur) {
+		this.serveur = serveur;
 	}
 	
 	public Tache getTacheById(long id) {
@@ -142,14 +183,14 @@ public class Modele {
 		listeTaches = bdd.getListeTache();
 	}
 	
-	public void trierTaches(boolean ascendant, Tri choix) {
+	public void trierTaches(boolean ascendant) {
 
 		Comparator<Tache> compar;
-		if(choix == Tri.PRIORITE)
+		if(tri == Tri.PRIORITE)
 			compar=new ComparateurTachePriorite();
-		else if(choix == Tri.ETAT)
+		else if(tri == Tri.ETAT)
 			compar=new ComparateurTacheEtat();
-		else if(choix == Tri.NOM)
+		else if(tri == Tri.NOM)
 			compar=new ComparateurTache();
 		else
 			compar=new ComparateurTacheDate();

@@ -23,8 +23,6 @@
     <string name="menu_ajout_tache">Ajout tâche</string>
     <string name="menu_ajout_tag">Ajout tag</string>
     <string name="menu_synchronisation">Synchronisation</string>
-    <string name="menu_reglage">Réglages</string>
-    <string name="menu_plus">Plus</string>
     
     <string-array name="prefentries">
     	<item>Item 1</item>
