@@ -6,6 +6,22 @@
     <item android:id="@+id/menu_ajout_tag"
           android:title="@string/menu_ajout_tag" 
           android:icon="@android:drawable/ic_menu_add" />
+    <item android:id="@+id/menu_tri"
+          android:title="@string/menu_tri"
+          android:icon="@android:drawable/ic_menu_sort_by_size" >
+    		<menu>
+          		<group android:checkableBehavior="single">
+	          		<item android:id="@+id/sous_menu_tri_date"
+	          			android:title="@string/tri_date" android:checked="true"/>
+	          		<item android:id="@+id/sous_menu_tri_nom"
+	          			android:title="@string/tri_nom" />
+	          		<item android:id="@+id/sous_menu_tri_etat"
+	          			android:title="@string/tri_etat" />
+	          		<item android:id="@+id/sous_menu_tri_priorite"
+	          			android:title="@string/tri_priorite" />
+          		</group>
+          </menu>
+    </item>
     <item android:id="@+id/menu_supprimer_tag"
     	  android:title="@string/label_menu_supprimer_tag"
     	  android:icon="@*android:drawable/ic_menu_clear_playlist" />
@@ -20,7 +36,7 @@
           			android:title="@string/methode_synchronisation_ecrasement_mobile" />
           		<item android:id="@+id/sous_menu_synchronisation_combiner_serveur_mobile"
           			android:title="@string/methode_synchronisation_combiner_serveur_mobile" />
-          </menu>
+          	</menu>
     </item>
     <item android:id="@+id/menu_reglage"
           android:title="@string/menu_reglage" 

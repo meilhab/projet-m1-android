@@ -1,6 +1,8 @@
 package univ_fcomte.tasks;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -10,6 +12,8 @@ import univ_fcomte.bdd.MaBaseSQLite;
 
 public class Modele {
 
+	static public enum Tri { NOM, DATE, PRIORITE, ETAT };
+	
 	private ArrayList<Tag> listeTags;
 	private ArrayList<Tache> listeTaches;
 	private Context context;
@@ -22,31 +26,6 @@ public class Modele {
 		this.context = context;
 		this.bdd = new MaBaseSQLite(context, "gestionnaire_taches.db", null, 1);
 		this.db = this.bdd.getDb();
-		
-		/*
-		listeTags.add(new Tag(10, "personnel"));
-		listeTags.add(new Tag(20, "professionnel"));
-		listeTags.add(new Tag(30, "Examen"));
-		listeTags.add(new Tag(40, "université"));
-		*/
-		/*
-		Tache t=new Tache(1, "tache 1", "description tache 1", new Etat(1), listeTags);
-		ajoutTache(t);
-		t=new Tache(2, "tache 2", "description tache 2", new Etat(2), listeTags);
-		ajoutTache(t);
-		t=new Tache(3, "tache 3", "description tache 3", new Etat(3), listeTags);
-		ajoutTache(t);
-		t=new Tache(4, "tache 4", "description tache 4", new Etat(3), listeTags);
-		ajoutTache(t);
-		t=new Tache(5, "tache 5", "description tache 5", new Etat(2), listeTags);
-		ajoutTache(t);
-		t=new Tache(6, "tache 6", "description tache 6", new Etat(1), listeTags);
-		ajoutTache(t);
-		t=new Tache(7, "tache 7", "description tache 7", new Etat(2), listeTags);
-		ajoutTache(t);
-		t=new Tache(8, "tache 8", "description tache 8", new Etat(3), listeTags);
-		ajoutTache(t);
-		*/
 		
 	}
 
@@ -156,24 +135,38 @@ public class Modele {
 	public void reinitialiserModele() {
 		listeTags = new ArrayList<Tag>();
 		listeTaches = new ArrayList<Tache>();
-		
-		/*
-		listeTags.add(new Tag(10, "personnel"));
-		listeTags.add(new Tag(20, "professionnel"));
-		listeTags.add(new Tag(30, "Examen"));
-		listeTags.add(new Tag(40, "université"));
-		*/
 	}
 	
 	public void initialiserModele() {
 		listeTags = bdd.getListeTag();
 		listeTaches = bdd.getListeTache();
+	}
+	
+	public void trierTaches(boolean ascendant, Tri choix) {
+
+		Comparator<Tache> compar;
+		if(choix == Tri.PRIORITE)
+			compar=new ComparateurTachePriorite();
+		else if(choix == Tri.ETAT)
+			compar=new ComparateurTacheEtat();
+		else if(choix == Tri.NOM)
+			compar=new ComparateurTache();
+		else
+			compar=new ComparateurTacheDate();
 		
+		if(ascendant)
+			Collections.sort(listeTaches,compar);
+		else
+			Collections.sort(listeTaches,Collections.reverseOrder(compar));
 		/*
-		listeTags.add(new Tag(10, "personnel"));
-		listeTags.add(new Tag(20, "professionnel"));
-		listeTags.add(new Tag(30, "Examen"));
-		listeTags.add(new Tag(40, "université"));
+		for(Tache t:listeTaches)
+			if(t!=null) {
+				if(ascendant)
+					Collections.sort(t.getFils(),compar);
+				else
+					Collections.sort(t.getFils(),Collections.reverseOrder(compar));
+				trierTachesFils(t, ascendant, compar);
+			}
 		*/
 	}
 }

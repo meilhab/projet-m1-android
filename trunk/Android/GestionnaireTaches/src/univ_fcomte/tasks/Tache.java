@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -190,4 +191,39 @@ public class Tache {
     	return c.get(Calendar.YEAR);
 	}
 	
+}
+
+
+class ComparateurTache implements Comparator<Tache> {
+	public int compare(Tache t1, Tache t2){
+		return t1.getNom().compareToIgnoreCase(t2.getNom());
+	}      
+}
+
+class ComparateurTachePriorite implements Comparator<Tache> {
+	public int compare(Tache t1, Tache t2){
+		if(t1.getPriorite() > t2.getPriorite())
+			return 1;
+		else if(t1.getPriorite() < t2.getPriorite())
+			return -1;
+		else
+			return 0;
+	}      
+}
+
+class ComparateurTacheEtat implements Comparator<Tache> {
+	public int compare(Tache t1, Tache t2){
+		if(t1.getEtat() > t2.getEtat())
+			return 1;
+		else if(t1.getEtat() < t2.getEtat())
+			return -1;
+		else
+			return 0;
+	}      
+}
+
+class ComparateurTacheDate implements Comparator<Tache> {
+	public int compare(Tache t1, Tache t2){
+		return t1.getDateLimiteToString().compareToIgnoreCase(t2.getDateLimiteToString());
+	}      
 }
