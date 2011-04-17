@@ -52,6 +52,7 @@ public class ThreadSynchronisation extends Thread {
 			@Override
 			public void run() {
 				gt.setProgressBarIndeterminateVisibility(true);
+				gt.setEnCoursSynchro(true);
 			}
 		});
 		
@@ -83,6 +84,7 @@ public class ThreadSynchronisation extends Thread {
 				else if(reponseServeur.startsWith("Erreur de connexion"))
 					Toast.makeText(gt.getApplicationContext(), gt.getResources().getString(R.string.erreur_login), 4000).show();
 				gt.setProgressBarIndeterminateVisibility(false);
+				gt.setEnCoursSynchro(false);
 			}
 		});
 	}

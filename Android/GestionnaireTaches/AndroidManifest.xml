@@ -8,12 +8,31 @@
 
     <application android:name="MonApplication" android:icon="@drawable/icon" android:label="@string/app_name">
         <activity android:name=".GestionnaireTaches"
-                  android:label="@string/app_name">
+                  android:label="@string/app_name" android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+                <!-- <action android:name="android.intent.action.SEARCH" /> -->
             </intent-filter>
+            <intent-filter>
+				<action android:name="android.intent.action.SEARCH" />
+			</intent-filter>
+            <meta-data android:name="android.app.searchable"
+						android:resource="@xml/searchable"/>
+            <!-- <meta-data android:name="android.app.default_searchable"
+						android:value=".GestionnaireTaches"/> -->
         </activity>
+        <!-- 
+        <activity android:name=".GestionnaireTaches" >
+			<intent-filter>
+				<action android:name="android.intent.action.SEARCH" />
+				<category android:name="android.intent.category.DEFAULT" /> 
+				
+			</intent-filter>
+			<meta-data android:name="android.app.searchable"
+						android:resource="@xml/searchable"/>
+        </activity>
+         -->
         <activity android:label="@string/app_name" android:name="DetailsTaches"></activity>
         <activity android:name="Preferences" android:label="@string/menu_reglage"></activity>
 
