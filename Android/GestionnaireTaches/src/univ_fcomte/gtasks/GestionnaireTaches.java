@@ -32,6 +32,7 @@ public class GestionnaireTaches extends Activity {
 	private Modele modele;
 	private ListView maListViewPerso;
 	private TextView arborescence;
+	private Button back;
 
 	private Synchronisation sw;
 	private MonApplication application;
@@ -61,6 +62,24 @@ public class GestionnaireTaches extends Activity {
 		//Récupération de la listview crée dans le fichier main.xml
 		maListViewPerso = (ListView) findViewById(R.id.listviewperso);
 		arborescence = (TextView) findViewById(R.id.arborecence);
+
+		back = (Button) findViewById(R.id.bouton_precedent);
+		back.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				onBackPressed();
+			}
+		});
+		
+		Button accueil = (Button) findViewById(R.id.bouton_accueil);
+		accueil.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				modele.getArborescenceCourante().clear();
+				updateList();
+			}
+		});
+		
 		//Log.i("test", maListViewPerso.toString());
 		updateList();
 		
@@ -94,7 +113,7 @@ public class GestionnaireTaches extends Activity {
 				int longueurIconFils = getResources().getDrawable(R.drawable.expander_ic_minimized).getMinimumWidth();
 				int paddingIconFils = 10;
 				
-				
+				/*
 				Log.i("haut",""+v.getTop());
 				Log.i("bas",""+v.getBottom());
 				Log.i("gauche",""+v.getLeft());
@@ -104,8 +123,13 @@ public class GestionnaireTaches extends Activity {
 				Log.i("heuteur iconEtat",""+hauteurIconEtat);
 				Log.i("longueur iconEtat",""+longueurIconEtat);
 				Log.i("positionY",""+positionY);
+				*/
 				
-				if(!modele.isEnCoursSynchro()) {
+				if(positionX >= (v.getRight() - paddingIconFils - longueurIconFils) && positionX <= (v.getRight() - paddingIconFils) && positionY >= ((v.getHeight() - hauteurIconFils) / 2) && positionY <= (v.getHeight() - (v.getHeight() - hauteurIconFils) / 2)) {
+					modele.getArborescenceCourante().add(modele.getTacheById(identifiantTache));
+					updateList();
+				}
+				else if(!modele.isEnCoursSynchro()) {
 					if(positionX >= (v.getLeft() + paddingIconEtat) && positionX <= (longueurIconEtat + paddingIconEtat) && positionY >= ((v.getHeight() - hauteurIconEtat) / 2) && positionY <= (v.getBottom() - (v.getHeight() - hauteurIconEtat) / 2)) {
 						Log.i("","on clic sur l'image");
 						Tache t = modele.getTacheById(identifiantTache);
@@ -120,10 +144,6 @@ public class GestionnaireTaches extends Activity {
 						//((ImageView)v.findViewById(R.id.img).);
 						//maListViewPerso.getItemAtPosition(position).;
 						//((HashMap) maListViewPerso.getItemAtPosition(position)). put("img", String.valueOf(R.drawable.btn_check_buttonless_off));
-					}
-					else if(positionX >= (v.getRight() - paddingIconFils - longueurIconFils) && positionX <= (v.getRight() - paddingIconFils) && positionY >= ((v.getHeight() - hauteurIconFils) / 2) && positionY <= (v.getHeight() - (v.getHeight() - hauteurIconFils) / 2)) {
-						modele.getArborescenceCourante().add(modele.getTacheById(identifiantTache));
-						updateList();
 					}
 					else {
 						//Toast.makeText(maListViewPerso.getContext(), "Nouvelle tache", Toast.LENGTH_SHORT).show();
@@ -312,6 +332,13 @@ public class GestionnaireTaches extends Activity {
 			titre += t.getNom() + "/";
 		
 		arborescence.setText(titre);
+		
+		if(modele.getArborescenceCourante().size() == 0)
+			//back.setEnabled(false);
+			back.setVisibility(View.INVISIBLE);
+		else
+			back.setVisibility(View.VISIBLE);
+			//back.setEnabled(true);
 		
 	}
 	
@@ -538,6 +565,12 @@ public class GestionnaireTaches extends Activity {
 			Intent intentPrefs = new Intent(this.getApplicationContext(), Preferences.class);
 			startActivityForResult(intentPrefs, CODE_ACTIVITE_PREFERENCES);
 			transitionActivity();
+			return true;
+		case R.id.menu_a_propos:
+			Dialog about = new Dialog(this);
+			about.setContentView(R.layout.about_dialog);
+			about.setTitle(R.string.menu_a_propos);
+			about.show();
 			return true;
 		case R.id.menu_synchronisation:
 			item.getSubMenu().setGroupVisible(R.id.groupe_synchronisation, true);
