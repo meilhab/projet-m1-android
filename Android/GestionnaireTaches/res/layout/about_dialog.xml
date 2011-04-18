@@ -2,10 +2,14 @@
 	android:orientation="horizontal"
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
 	android:padding="10dp">
-	<TableLayout android:id="@+id/tableLayout1" android:layout_width="wrap_content" android:layout_height="match_parent">
-		<TableRow android:id="@+id/tableRow1" android:layout_width="wrap_content" android:layout_height="wrap_content">
-			<ImageView android:layout_marginRight="10dp" android:id="@+id/imageView1" android:background="@drawable/todo" android:layout_width="wrap_content" android:layout_height="wrap_content"></ImageView>
-			<TextView android:id="@+id/textView1" android:textColor="#FFF" android:text="@string/a_propos_description" android:layout_height="wrap_content" android:layout_width="wrap_content"></TextView>
+	<TableLayout android:layout_width="wrap_content" android:layout_height="match_parent">
+		<TableRow android:layout_width="wrap_content" android:layout_height="wrap_content">
+			<LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical">
+				<ImageView android:layout_marginRight="10dp" android:layout_height="wrap_content" android:layout_width="wrap_content" android:src="@drawable/todo"></ImageView>
+				<ImageView android:layout_marginRight="10dp" android:layout_height="wrap_content" android:layout_width="wrap_content" android:src="@drawable/logo_ufc" android:layout_marginTop="15dp"></ImageView>
+			</LinearLayout>
+			<!-- <WebView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/about_description"></WebView> -->
+			<TextView android:textColor="#FFF" android:text="@string/a_propos_description" android:layout_weight="1" android:layout_gravity="fill_horizontal" android:layout_width="match_parent" android:layout_height="wrap_content"></TextView>
 		</TableRow>
 	</TableLayout>
 </LinearLayout>

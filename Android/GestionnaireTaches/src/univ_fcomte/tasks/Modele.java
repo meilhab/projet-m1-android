@@ -226,15 +226,13 @@ public class Modele {
 	public void reinitialiserModele() {
 		listeTags = new ArrayList<Tag>();
 		listeTaches = new ArrayList<Tache>();
-		tachesRacines = new ArrayList<Long>();
-		arborescenceCourante = new ArrayList<Tache>();
 	}
 	
 	public void initialiserModele() {
 		listeTags = bdd.getListeTag();
 		listeTaches = bdd.getListeTache();
 		tachesRacines = bdd.getListeTachesRacines();
-		arborescenceCourante = new ArrayList<Tache>();
+
 		if(tagsVisibles == null) {
 			tagsVisibles = new ArrayList<Long>();
 			for(Tag t : listeTags)
