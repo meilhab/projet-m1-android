@@ -52,4 +52,7 @@
     <item android:id="@+id/menu_reglage"
           android:title="@string/menu_reglage" 
           android:icon="@android:drawable/ic_menu_preferences" />
+    <item android:id="@+id/menu_a_propos"
+          android:title="@string/menu_a_propos" 
+          android:icon="@android:drawable/ic_menu_info_details" />
 </menu>

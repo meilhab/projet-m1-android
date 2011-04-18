@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hello">Hello World, GestionnaireTaches!</string>
-    <string name="app_name">Gestionnaire de Taches</string>
+    <string name="app_name">Gestionnaire de Tâches</string>
     <string name="label_priorite">Priorité</string>
     <string name="label_etat">Etat</string>
     <string name="label_tag">Tags</string>
@@ -28,6 +28,7 @@
     <string name="menu_tri_par">Trier par</string>
     <string name="menu_synchronisation">Synchronisation</string>
     <string name="menu_reglage">Réglages</string>
+    <string name="menu_a_propos">A propos de Gestionnaire de Tâches</string>
    
     <string-array name="prefentries">
     	<item>Item 1</item>
@@ -75,4 +76,5 @@
 	<string name="attente_synchronisation">Veuillez attendre que les tâches soient synchronisées pour les modifier</string>
 	<string name="ok">OK</string>
 	<string name="afficher_toutes_taches">Peu importe les tags</string>
+	<string name="a_propos_description">Application réalisée par Guillaume MONTAVON et Benoît MEILHAC dans le cardre du projet de Master 1 Informatique. \nProjet encadré par Bruno TATIBOUET et François PIAT.</string>
 </resources>

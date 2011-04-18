@@ -1,0 +1,11 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="horizontal"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:padding="10dp">
+	<TableLayout android:id="@+id/tableLayout1" android:layout_width="wrap_content" android:layout_height="match_parent">
+		<TableRow android:id="@+id/tableRow1" android:layout_width="wrap_content" android:layout_height="wrap_content">
+			<ImageView android:layout_marginRight="10dp" android:id="@+id/imageView1" android:background="@drawable/todo" android:layout_width="wrap_content" android:layout_height="wrap_content"></ImageView>
+			<TextView android:id="@+id/textView1" android:textColor="#FFF" android:text="@string/a_propos_description" android:layout_height="wrap_content" android:layout_width="wrap_content"></TextView>
+		</TableRow>
+	</TableLayout>
+</LinearLayout>
