@@ -222,6 +222,17 @@ class ComparateurTacheEtat implements Comparator<Tache> {
 	}      
 }
 
+class ComparateurTacheIdentifiant implements Comparator<Tache> {
+	public int compare(Tache t1, Tache t2){
+		if(t1.getIdentifiant() > t2.getIdentifiant())
+			return 1;
+		else if(t1.getIdentifiant() < t2.getIdentifiant())
+			return -1;
+		else
+			return 0;
+	}      
+}
+
 class ComparateurTacheDate implements Comparator<Tache> {
 	public int compare(Tache t1, Tache t2){
 		return t1.getDateLimiteToString().compareToIgnoreCase(t2.getDateLimiteToString());

@@ -25,7 +25,7 @@
     <string name="menu_supprimer_tache">Supprimer tâche</string>
     <string name="menu_ajout_tag">Ajout tag</string>
     <string name="menu_tri">Trier</string>
-    <string name="menu_tri_par">Trier par :</string>
+    <string name="menu_tri_par">Trier par</string>
     <string name="menu_synchronisation">Synchronisation</string>
     <string name="menu_reglage">Réglages</string>
    
@@ -39,11 +39,13 @@
 	</string-array>
 	<string name="label_nom_tag">Nom du tag</string>
 	<string name="label_ajout_tag">Ajout d\'un tag</string>
+	<string name="label_menu_afficher_tag">Afficher tags</string>
 	<string name="label_menu_supprimer_tag">Suppression de tags</string>
 	<string name="tri_date">Date</string>
 	<string name="tri_nom">Tâche</string>
 	<string name="tri_etat">Etat</string>
 	<string name="tri_priorite">Priorité</string>
+	<string name="tri_ordre_creation">Ordre de création</string>
 	<string name="methode_synchronisation_ecrasement_serveur">Ecrasement serveur</string>
 	<string name="methode_synchronisation_ecrasement_mobile">Ecrasement mobile</string>
 	<string name="methode_synchronisation_combiner_serveur_mobile">Combiner serveur-mobile</string>
@@ -72,4 +74,5 @@
 	<string name="search_hint">Rechercher une tâche</string>
 	<string name="attente_synchronisation">Veuillez attendre que les tâches soient synchronisées pour les modifier</string>
 	<string name="ok">OK</string>
+	<string name="afficher_toutes_taches">Peu importe les tags</string>
 </resources>

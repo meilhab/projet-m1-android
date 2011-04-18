@@ -1,21 +1,10 @@
 package univ_fcomte.synchronisation;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.util.Log;
-
-import univ_fcomte.tasks.Modele;
-import univ_fcomte.tasks.Tache;
-import univ_fcomte.tasks.Tag;
+import org.json.*;
+import univ_fcomte.tasks.*;
 
 public class JsonParser {
 
