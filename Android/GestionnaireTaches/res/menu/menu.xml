@@ -7,7 +7,7 @@
           android:title="@string/menu_ajout_tag" 
           android:icon="@android:drawable/ic_menu_add" />
     <item android:id="@+id/menu_tri"
-          android:title="@string/menu_tri"
+          android:title="@string/menu_tri_par"
           android:icon="@android:drawable/ic_menu_sort_by_size" >
     		<menu>
           		<group android:checkableBehavior="single">
@@ -15,6 +15,8 @@
 	          			android:title="@string/tri_date" android:checked="true"/>
 	          		<item android:id="@+id/sous_menu_tri_nom"
 	          			android:title="@string/tri_nom" />
+	          		<item android:id="@+id/sous_menu_tri_ordre_creation"
+	          			android:title="@string/tri_ordre_creation" />
 	          		<item android:id="@+id/sous_menu_tri_etat"
 	          			android:title="@string/tri_etat" />
 	          		<item android:id="@+id/sous_menu_tri_priorite"
@@ -22,20 +24,29 @@
           		</group>
           </menu>
     </item>
-    <item android:id="@+id/menu_supprimer_tag"
+    <item android:id="@+id/menu_afficher_tags"
+    	  android:title="@string/label_menu_afficher_tag"
+    	  android:icon="@*android:drawable/ic_menu_view" >
+   		<menu android:id="@+id/sous_menu_afficher_tags" >
+   			<group android:id="@+id/groupe_afficher_tags" android:checkableBehavior="all">
+   			</group>
+   		</menu>
+   	</item>
+   	<item android:id="@+id/menu_supprimer_tag"
     	  android:title="@string/label_menu_supprimer_tag"
     	  android:icon="@*android:drawable/ic_menu_clear_playlist" />
     <item android:id="@+id/menu_synchronisation"
           android:title="@string/menu_synchronisation" 
           android:icon="@android:drawable/ic_menu_rotate" >
-          	<menu android:id="@+id/sous_menu_synchronisation" 
-          		android:icon="@android:drawable/ic_menu_rotate">
-          		<item android:id="@+id/sous_menu_synchronisation_ecrasement_serveur"
-          			android:title="@string/methode_synchronisation_ecrasement_serveur" />
-          		<item android:id="@+id/sous_menu_synchronisation_ecrasement_mobile"
-          			android:title="@string/methode_synchronisation_ecrasement_mobile" />
-          		<item android:id="@+id/sous_menu_synchronisation_combiner_serveur_mobile"
-          			android:title="@string/methode_synchronisation_combiner_serveur_mobile" />
+          	<menu android:id="@+id/sous_menu_synchronisation" >
+          		<group android:id="@+id/groupe_synchronisation">
+	          		<item android:id="@+id/sous_menu_synchronisation_ecrasement_serveur"
+	          			android:title="@string/methode_synchronisation_ecrasement_serveur" />
+	          		<item android:id="@+id/sous_menu_synchronisation_ecrasement_mobile"
+	          			android:title="@string/methode_synchronisation_ecrasement_mobile" />
+	          		<item android:id="@+id/sous_menu_synchronisation_combiner_serveur_mobile"
+	          			android:title="@string/methode_synchronisation_combiner_serveur_mobile" />
+          		</group>
           	</menu>
     </item>
     <item android:id="@+id/menu_reglage"

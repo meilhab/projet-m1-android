@@ -1,9 +1,6 @@
 package univ_fcomte.bdd;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 import univ_fcomte.tasks.Tache;
 import univ_fcomte.tasks.Tag;
@@ -13,11 +10,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 public class MaBaseSQLite extends SQLiteOpenHelper {
 
 	protected SQLiteDatabase db = null;
+	
+	private ArrayList<Long> listeTachesRacines;
 
 	public static String TABLE_TAG = "tag";
 	public static String TABLE_PRIORITE = "priorite";
@@ -71,6 +69,7 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 	
 	public MaBaseSQLite(Context context, String name, CursorFactory factory, int version) {
 		super(context, name, factory, version);
+		listeTachesRacines = new ArrayList<Long>();
 	}
 
 	@Override
@@ -199,6 +198,9 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 		
 		open();
 		
+		listeTachesRacines = new ArrayList<Long>();
+		ArrayList<Long> listeTachesFilles = new ArrayList<Long>();
+		
 		ArrayList<Tache> listeTache = new ArrayList<Tache>();
 		
 		ArrayList<Long> listeTag;
@@ -240,12 +242,16 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 							do {
 								int columnFils= cursorFils.getColumnIndex("idFils");
 								listeFils.add(cursorFils.getLong(columnFils));
+								
+								if(!listeTachesFilles.contains(cursorFils.getLong(columnFils)))
+									listeTachesFilles.add(cursorFils.getLong(columnFils));
+							
 							} while (cursorFils.moveToNext());
 						}
 					}
 					cursorFils.close();
 										
-					listeTache.add(new Tache(cursorResults.getInt(columnId), cursorResults.getString(columnNom), cursorResults.getString(columnDescription), cursorResults.getString(columnDate), cursorResults.getInt(columnPriorite), cursorResults.getInt(columnEtat), cursorResults.getInt(columnVersion), listeTag, listeFils));
+					listeTache.add(new Tache(cursorResults.getLong(columnId), cursorResults.getString(columnNom), cursorResults.getString(columnDescription), cursorResults.getString(columnDate), cursorResults.getInt(columnPriorite), cursorResults.getInt(columnEtat), cursorResults.getInt(columnVersion), listeTag, listeFils));					
 					
 				} while (cursorResults.moveToNext());
 			}
@@ -254,6 +260,11 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 		cursorResults.close();
 		
 		close();
+		
+		
+		for(Tache t : listeTache)
+			if(!listeTachesFilles.contains(t.getIdentifiant()))
+				listeTachesRacines.add(t.getIdentifiant());
 		
 		return listeTache;
 		
@@ -307,8 +318,8 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 		
 		if(nouveauId != -1 && pere > 0) {
 			ContentValues filsToInsert = new ContentValues();
-			tacheToInsert.put("idPere", pere);
-			tacheToInsert.put("idFils", tache.getIdentifiant());
+			filsToInsert.put("idPere", pere);
+			filsToInsert.put("idFils", tache.getIdentifiant());
 			if(db.insert(TABLE_APOURFILS, null, filsToInsert) == -1)
 				nouveauId = -1;
 		}
@@ -389,8 +400,8 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 		if(listeAPourFils != null) {
 			open();
 	
-			Set cles = listeAPourFils.keySet();
-			Iterator it = cles.iterator();
+			Set<Long> cles = listeAPourFils.keySet();
+			Iterator<Long> it = cles.iterator();
 			while (it.hasNext()){
 				Long cle = (Long) it.next();
 				ContentValues apourfilsToInsert = new ContentValues();
@@ -413,8 +424,8 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 		if(listeAPourTag != null) {
 			open();
 			
-			Set cles = listeAPourTag.keySet();
-			Iterator it = cles.iterator();
+			Set<Long> cles = listeAPourTag.keySet();
+			Iterator<Long> it = cles.iterator();
 			while (it.hasNext()){
 				Long cle = (Long) it.next();
 				ContentValues apourtagToInsert = new ContentValues();
@@ -539,4 +550,7 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 		
 	}
 	
+	public ArrayList<Long> getListeTachesRacines() {
+		return listeTachesRacines;
+	}
 }

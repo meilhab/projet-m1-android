@@ -1,14 +1,7 @@
 package univ_fcomte.synchronisation;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.util.Log;
-
-import univ_fcomte.tasks.Modele;
-import univ_fcomte.tasks.Tache;
-import univ_fcomte.tasks.Tag;
+import org.json.*;
+import univ_fcomte.tasks.*;
 
 public class EnvoyerJson {
 

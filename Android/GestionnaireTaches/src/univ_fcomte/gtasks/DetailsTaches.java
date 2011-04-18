@@ -3,9 +3,7 @@ package univ_fcomte.gtasks;
 import java.util.*;
 
 import univ_fcomte.synchronisation.ThreadSynchronisation;
-import univ_fcomte.tasks.Modele;
-import univ_fcomte.tasks.Tache;
-import univ_fcomte.tasks.Tag;
+import univ_fcomte.tasks.*;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -13,23 +11,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.Toast;
+import android.view.*;
+import android.widget.*;
 
 public class DetailsTaches extends Activity {
     
 	private Modele modele;
 	private GestionnaireTaches gt;
-	private int identifiant;
+	private long identifiant;
 	private EditText description;
 	private EditText nom;
 	private Spinner spinnerEtat;
@@ -52,9 +41,9 @@ public class DetailsTaches extends Activity {
         Bundle objetbunble  = this.getIntent().getExtras();
         
         if(objetbunble != null && objetbunble.containsKey("id"))
-        	identifiant=this.getIntent().getIntExtra("id",-1);
+        	identifiant=this.getIntent().getLongExtra("id",-1);
         else
-        	identifiant =- 1;
+        	identifiant = -1;
         
         gt = ((MonApplication)getApplication()).getGt();
         
@@ -198,7 +187,15 @@ public class DetailsTaches extends Activity {
     		tache = new Tache(modele.getIdMaxTache() + 1, nom.getText().toString(), description.getText().toString(), date, spinnerPriorite.getSelectedItemPosition()+1, spinnerEtat.getSelectedItemPosition()+1, 1, listeTag, new ArrayList<Long>());
     		modele.ajoutTache(tache);
     		
-    		modele.getBdd().ajouterTache(tache, -1, false);
+    		if(modele.getTachePereCourant() == null)
+    			modele.getTachesRacines().add(tache.getIdentifiant());
+    		
+    		long pere = -1;
+    		if(modele.getTachePereCourant() != null) {
+    			modele.getTachePereCourant().getListeTachesFille().add(tache.getIdentifiant());
+    			pere = modele.getTachePereCourant().getIdentifiant();
+    		}
+    		modele.getBdd().ajouterTache(tache, pere, false);
     	}
     	else {
     		tache = modele.getTacheById(identifiant);
