@@ -5,6 +5,7 @@
     <string name="label_priorite">Priorité</string>
     <string name="label_etat">Etat</string>
     <string name="label_tag">Tags</string>
+    <string name="label_date">Date</string>
     <string name="label_description">Description</string>
     <string name="label_nom">Nom</string>
     <string-array name="priorite">
@@ -76,5 +77,5 @@
 	<string name="attente_synchronisation">Veuillez attendre que les tâches soient synchronisées pour les modifier</string>
 	<string name="ok">OK</string>
 	<string name="afficher_toutes_taches">Peu importe les tags</string>
-	<string name="a_propos_description">Application réalisée par Guillaume MONTAVON et Benoît MEILHAC dans le cardre du projet de Master 1 Informatique. \nProjet encadré par Bruno TATIBOUET et François PIAT.</string>
+	<string name="a_propos_description">Application réalisée par Guillaume MONTAVON et Benoît MEILHAC dans le cadre du projet de Master 1 Informatique. \nProjet encadré par Bruno TATIBOUET et François PIAT.</string>
 </resources>

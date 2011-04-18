@@ -24,17 +24,6 @@
           		</group>
           </menu>
     </item>
-    <item android:id="@+id/menu_afficher_tags"
-    	  android:title="@string/label_menu_afficher_tag"
-    	  android:icon="@*android:drawable/ic_menu_view" >
-   		<menu android:id="@+id/sous_menu_afficher_tags" >
-   			<group android:id="@+id/groupe_afficher_tags" android:checkableBehavior="all">
-   			</group>
-   		</menu>
-   	</item>
-   	<item android:id="@+id/menu_supprimer_tag"
-    	  android:title="@string/label_menu_supprimer_tag"
-    	  android:icon="@*android:drawable/ic_menu_clear_playlist" />
     <item android:id="@+id/menu_synchronisation"
           android:title="@string/menu_synchronisation" 
           android:icon="@android:drawable/ic_menu_rotate" >
@@ -52,6 +41,19 @@
     <item android:id="@+id/menu_reglage"
           android:title="@string/menu_reglage" 
           android:icon="@android:drawable/ic_menu_preferences" />
+          
+        <item android:id="@+id/menu_afficher_tags"
+    	  android:title="@string/label_menu_afficher_tag"
+    	  android:icon="@*android:drawable/ic_menu_view" >
+   		<menu android:id="@+id/sous_menu_afficher_tags" >
+   			<group android:id="@+id/groupe_afficher_tags" android:checkableBehavior="all">
+   			</group>
+   		</menu>
+   	</item>
+   	<item android:id="@+id/menu_supprimer_tag"
+    	  android:title="@string/label_menu_supprimer_tag"
+    	  android:icon="@*android:drawable/ic_menu_clear_playlist" />
+   	
     <item android:id="@+id/menu_a_propos"
           android:title="@string/menu_a_propos" 
           android:icon="@android:drawable/ic_menu_info_details" />

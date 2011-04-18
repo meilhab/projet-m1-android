@@ -8,8 +8,7 @@
  	<TextView android:id="@+id/id"
  		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-	    android:visibility="invisible"
-	    />
+	    android:visibility="invisible" android:width="0px"/>
  
     <ImageView
 		android:id="@+id/img"
@@ -32,8 +31,7 @@
 	         android:layout_width="fill_parent"
 	         android:layout_height="fill_parent"
 	         android:textSize="16px"
-	         android:textStyle="bold"
-	         />
+	         android:textStyle="bold"/>
  
 	    <TextView android:id="@+id/description"
 	         android:layout_width="fill_parent"

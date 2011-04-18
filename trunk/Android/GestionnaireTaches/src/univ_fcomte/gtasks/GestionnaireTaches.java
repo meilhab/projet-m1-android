@@ -21,6 +21,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.LayoutAnimationController;
 import android.view.animation.TranslateAnimation;
+import android.webkit.WebView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
