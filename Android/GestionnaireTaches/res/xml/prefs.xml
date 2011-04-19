@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-	<PreferenceScreen android:title="Ecran 1">
 		<PreferenceCategory android:title="Categorie 1">
 			
 			<ListPreference 
@@ -65,31 +64,9 @@
 	                android:layout="?android:attr/preferenceLayoutChild"
 	                android:key="port"
 	                android:title="@string/label_port_proxy"
-	                android:numeric="integer"
-					android:summary="@string/label_desc_port_proxy"
-	                android:dependency="utilise_proxy" />
+	                android:summary="@string/label_desc_port_proxy"
+	                android:dependency="utilise_proxy" android:numeric="integer" android:shouldDisableView="true"/>
 			
 		</PreferenceCategory>
-		
-		<PreferenceCategory  android:title="Categorie 2">
-			<Preference 
-				android:key="write"
-				android:title="Write"
-				android:summary="Ecrire une preference"
-			/>
-			<Preference 
-				android:key="read"
-				android:title="Read"
-				android:summary="Lire une preference"
-			/>	
-		</PreferenceCategory>	
-	</PreferenceScreen>	
-	<PreferenceScreen android:title="Ecran 2">
-		<PreferenceCategory  android:title="Categorie 3">
-			<Preference 
-				android:key="key"
-				android:title="title"
-			/>
-		</PreferenceCategory>
-	</PreferenceScreen>
+
 </PreferenceScreen>

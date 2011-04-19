@@ -226,6 +226,8 @@ public class Modele {
 	public void reinitialiserModele() {
 		listeTags = new ArrayList<Tag>();
 		listeTaches = new ArrayList<Tache>();
+		tachesRacines = new ArrayList<Long>();
+		tagsVisibles = new ArrayList<Long>();
 	}
 	
 	public void initialiserModele() {

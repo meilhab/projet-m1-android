@@ -23,9 +23,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
                         
         pref = getPreferenceManager().getSharedPreferences();
         pref.registerOnSharedPreferenceChangeListener(this);
-        
-        findPreference("read").setOnPreferenceClickListener(this);
-        findPreference("write").setOnPreferenceClickListener(this); 
+
     }
 
 	@Override
@@ -35,6 +33,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 
 	@Override
 	public boolean onPreferenceClick(Preference preference) {
+		/*
 		if(preference.getKey().equals("read")){
 				        
 	        SharedPreferences mgr = PreferenceManager.getDefaultSharedPreferences(this);
@@ -51,6 +50,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 		}else{		
 			Toast.makeText(this, preference.getKey()+preference.getTitle(), Toast.LENGTH_LONG).show();
 		}
+		*/
 		return true;
 	}
 }
