@@ -92,13 +92,6 @@ if(connexionAutorisee()) {
 					echo 'echec';
 				break;
 				
-			case 'ajouter_user' : 
-				if(ajoutUtilisateur())
-					echo 'reussi';
-				else
-					echo 'echec';
-				break;
-				
 			case 'supprimer_user' : 
 				if(supprimerUtilisateur($id))
 					echo 'reussi';
@@ -113,6 +106,12 @@ if(connexionAutorisee()) {
 	}
 	else
 		echo 'pas d\'objets';
+}
+else if(isset($_POST['objet']) and $_POST['objet'] == 'ajouter_user') {
+	if(ajoutUtilisateur())
+		echo 'reussi';
+	else
+		echo 'echec';
 }
 else
 	echo 'Erreur de connexion';
