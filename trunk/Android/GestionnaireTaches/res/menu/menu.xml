@@ -53,7 +53,10 @@
    	<item android:id="@+id/menu_supprimer_tag"
     	  android:title="@string/label_menu_supprimer_tag"
     	  android:icon="@*android:drawable/ic_menu_clear_playlist" />
-   	
+   	<item android:id="@+id/menu_ajout_utilisateur"
+    	  android:title="@string/label_menu_ajout_utilisateur"
+    	  android:icon="@*android:drawable/ic_menu_invite" />
+    	  
     <item android:id="@+id/menu_a_propos"
           android:title="@string/menu_a_propos" 
           android:icon="@android:drawable/ic_menu_info_details" />

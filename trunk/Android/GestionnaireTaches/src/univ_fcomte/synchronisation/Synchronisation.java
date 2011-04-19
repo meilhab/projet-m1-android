@@ -75,7 +75,7 @@ public class Synchronisation {
 			throw new ApiException("User-Agent string must be prepared");
 		
 		DefaultHttpClient httpClient = new DefaultHttpClient();
-		HttpHost proxy = new HttpHost("proxy-web.univ-fcomte.fr", 3128);
+		HttpHost proxy = new HttpHost(PreferenceManager.getDefaultSharedPreferences(context).getString("adresse_proxy", ""), PreferenceManager.getDefaultSharedPreferences(context).getInt("port", 0000));
 		if(PreferenceManager.getDefaultSharedPreferences(context).getBoolean("utilise_proxy", false))
 			httpClient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
 		

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" android:padding="15dp" android:orientation="vertical">
+    <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="@string/label_user_prenom" android:id="@+id/label_user_prenom"></TextView>
+    <EditText android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/edit_user_prenom"></EditText>
+    <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/label_user_nom" android:text="@string/label_user_nom"></TextView>
+    <EditText android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/edit_user_nom"></EditText>
+    <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="@string/label_user_identifiant" android:id="@+id/label_user_identifiant"></TextView>
+    <EditText android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/edit_user_identifiant"></EditText>
+    <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="@string/label_user_md_passe" android:id="@+id/label_user_md_passe"></TextView>
+    <EditText android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/edit_user_md_passe" android:inputType="textPassword"></EditText>
+    <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="@string/label_user_mail" android:id="@+id/label_user_mail"></TextView>
+    <EditText android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/edit_user_mail" android:inputType="textEmailAddress"></EditText>
+    <LinearLayout android:layout_height="wrap_content" android:id="@+id/linearLayout1" android:layout_width="fill_parent" android:layout_marginTop="15dp" android:gravity="center_horizontal|center">
+        <Button android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/bouton_valider_ajout_user" android:text="@string/label_enregistrer" android:layout_marginRight="10dp"></Button>
+        <Button android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/bouton_annuler_ajout_user" android:text="@string/label_annuler" android:layout_marginLeft="10dp"></Button>
+    </LinearLayout>
+</LinearLayout>

@@ -1,15 +1,20 @@
 package univ_fcomte.synchronisation;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 
+import android.content.ContentValues;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
+import univ_fcomte.gtasks.AjoutUtilisateur;
 import univ_fcomte.gtasks.GestionnaireTaches;
 import univ_fcomte.gtasks.R;
 import univ_fcomte.synchronisation.Synchronisation.ApiException;
@@ -27,13 +32,16 @@ public class ThreadSynchronisation extends Thread {
 	public static final int COMBINER_SERVEUR_MOBILE = 2;
 	public static final int SUPPRESSION_TACHES = 3;
 	public static final int SUPPRESSION_TAGS = 4;
+	public static final int AJOUT_UTILISATEUR = 5;
 
 	private String reponseServeur;
 	private String identifiant;
 	private String mdPasse;
 	private ArrayList<Long> listeTachesSuppr;
 	private ArrayList<Long> listeTagsSuppr;
-	
+	private HashMap<String,String> profilUtilisateur;
+	private AjoutUtilisateur au;
+
 	public ThreadSynchronisation(Modele modele, GestionnaireTaches gt, Synchronisation sw){
 		this.gt = gt;
 		this.sw = sw;
@@ -42,6 +50,7 @@ public class ThreadSynchronisation extends Thread {
 		this.reponseServeur = "";
 		this.listeTachesSuppr = new ArrayList<Long>();
 		this.listeTagsSuppr = new ArrayList<Long>();
+		this.profilUtilisateur = new HashMap<String, String>();
 		identifiant = PreferenceManager.getDefaultSharedPreferences(gt).getString("login", "");
 		mdPasse = PreferenceManager.getDefaultSharedPreferences(gt).getString("password", "");
 	}
@@ -71,6 +80,9 @@ public class ThreadSynchronisation extends Thread {
 				break;
 			case SUPPRESSION_TAGS:
 				supprimerTags();
+				break;
+			case AJOUT_UTILISATEUR:
+				ajoutUtilisateur();
 				break;
 			default:
 				return;	
@@ -250,5 +262,42 @@ public class ThreadSynchronisation extends Thread {
 		
 	}
 	
+	public void setProfilUtilisateur(AjoutUtilisateur au, HashMap<String,String> profilUtilisateur) {
+		
+		this.au = au;
+		this.profilUtilisateur = profilUtilisateur;
+		
+	}
+	
+	private void ajoutUtilisateur() {
+		
+		List<NameValuePair> nvp = new ArrayList<NameValuePair>();  
+		nvp.add(new BasicNameValuePair("identifiant", identifiant));  
+		nvp.add(new BasicNameValuePair("mdPasse", sw.md5(mdPasse)));
+		nvp.add(new BasicNameValuePair("objet", "ajouter_user"));
+		
+		Set<String> cles = profilUtilisateur.keySet();
+		Iterator<String> it = cles.iterator();
+		while (it.hasNext()){
+			String cle = (String) it.next();
+			nvp.add(new BasicNameValuePair(cle, profilUtilisateur.get(cle)));
+		}
+		
+		try {
+			reponseServeur = sw.GetHTML(nvp);
+			Log.i("reponse",reponseServeur);
+		} catch (ApiException e) {
+			e.printStackTrace();
+		}
+		
+		if(reponseServeur.startsWith("reussi"))
+			au.runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					au.ajoutDansPrefNouveauUser();
+				}
+			});
+		
+	}
 	
 }

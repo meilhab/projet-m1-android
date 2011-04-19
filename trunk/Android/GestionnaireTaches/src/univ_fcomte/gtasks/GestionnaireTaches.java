@@ -10,7 +10,10 @@ import android.app.*;
 import android.app.AlertDialog.Builder;
 import android.content.*;
 import android.content.DialogInterface.OnClickListener;
+import android.content.SharedPreferences.Editor;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.*;
@@ -40,6 +43,7 @@ public class GestionnaireTaches extends Activity {
 
 	private final int CODE_DE_MON_ACTIVITE = 1;
 	private final int CODE_ACTIVITE_PREFERENCES = 2;
+	private final int CODE_ACTIVITE_AJOUT_UTILISATEUR = 3;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -59,11 +63,13 @@ public class GestionnaireTaches extends Activity {
 		sw=new Synchronisation(this, modele.getServeur());
 		
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        
+		application.afficherMessageBienvenu();
 		
 		//Récupération de la listview crée dans le fichier main.xml
 		maListViewPerso = (ListView) findViewById(R.id.listviewperso);
 		arborescence = (TextView) findViewById(R.id.arborecence);
-
+		
 		back = (Button) findViewById(R.id.bouton_precedent);
 		back.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -250,6 +256,9 @@ public class GestionnaireTaches extends Activity {
 				break;
 			case CODE_ACTIVITE_PREFERENCES:
 				updateList();
+				break;
+			case CODE_ACTIVITE_AJOUT_UTILISATEUR:
+				//TODO
 				break;
 			default :
 				break;
@@ -561,6 +570,11 @@ public class GestionnaireTaches extends Activity {
 			}
 			else
 				attenteSynchronisation();
+			return true;
+		case R.id.menu_ajout_utilisateur:
+			Intent intentNewUser = new Intent(this.getApplicationContext(), AjoutUtilisateur.class);
+			startActivityForResult(intentNewUser, CODE_ACTIVITE_AJOUT_UTILISATEUR);
+			transitionActivity();
 			return true;
 		case R.id.menu_reglage:
 			Intent intentPrefs = new Intent(this.getApplicationContext(), Preferences.class);
