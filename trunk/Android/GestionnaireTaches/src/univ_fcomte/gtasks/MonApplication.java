@@ -51,9 +51,7 @@ public class MonApplication extends Application{
 		try {
 			v = getPackageManager().getPackageInfo(getApplicationInfo().packageName, 0).versionCode;
 		} catch (NameNotFoundException e) {}
-		
-		Log.i("version appli", "" +v);
-		
+				
 		return v;
 	}
 	

@@ -572,9 +572,13 @@ public class GestionnaireTaches extends Activity {
 				attenteSynchronisation();
 			return true;
 		case R.id.menu_ajout_utilisateur:
-			Intent intentNewUser = new Intent(this.getApplicationContext(), AjoutUtilisateur.class);
-			startActivityForResult(intentNewUser, CODE_ACTIVITE_AJOUT_UTILISATEUR);
-			transitionActivity();
+			if(!modele.isEnCoursSynchro()) {
+				Intent intentNewUser = new Intent(this.getApplicationContext(), AjoutUtilisateur.class);
+				startActivityForResult(intentNewUser, CODE_ACTIVITE_AJOUT_UTILISATEUR);
+				transitionActivity();
+			}
+			else
+				attenteSynchronisation();
 			return true;
 		case R.id.menu_reglage:
 			Intent intentPrefs = new Intent(this.getApplicationContext(), Preferences.class);
@@ -643,10 +647,6 @@ public class GestionnaireTaches extends Activity {
 	
 	public Synchronisation getSw() {
 		return sw;
-	}
-
-	public void setSw(Synchronisation sw) {
-		this.sw = sw;
 	}
 	
 	@Override

@@ -107,7 +107,7 @@ public class DetailsTaches extends Activity {
     	
     	if(identifiant!=-1) {
         	Tache t=modele.getTacheById(identifiant);
-        	this.setTitle(t.getNom());
+        	//this.setTitle(t.getNom());
         	nom.setText(t.getNom());
         	description.setText(t.getDescription());
         	for(int i=0; i<modele.getListeTags().size(); i++) {
