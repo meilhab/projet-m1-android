@@ -1,33 +1,20 @@
 package univ_fcomte.gtasks;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import univ_fcomte.synchronisation.Synchronisation;
-import univ_fcomte.synchronisation.ThreadSynchronisation;
+import java.util.*;
+import univ_fcomte.synchronisation.*;
 import univ_fcomte.tasks.*;
 import univ_fcomte.tasks.Modele.Tri;
 import android.app.*;
 import android.app.AlertDialog.Builder;
 import android.content.*;
 import android.content.DialogInterface.OnClickListener;
-import android.content.SharedPreferences.Editor;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.*;
-import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View.OnTouchListener;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.LayoutAnimationController;
-import android.view.animation.TranslateAnimation;
-import android.webkit.WebView;
-import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.AdapterView.*;
 import android.widget.*;
-import android.widget.AdapterView.OnItemClickListener;
 
 public class GestionnaireTaches extends Activity {
 
@@ -61,12 +48,9 @@ public class GestionnaireTaches extends Activity {
 		positionX = 0;
 		positionY = 0;
 		sw=new Synchronisation(this, modele.getServeur());
-		
-		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         
 		application.afficherMessageBienvenu();
 		
-		//Récupération de la listview crée dans le fichier main.xml
 		maListViewPerso = (ListView) findViewById(R.id.listviewperso);
 		arborescence = (TextView) findViewById(R.id.arborecence);
 		
@@ -87,19 +71,14 @@ public class GestionnaireTaches extends Activity {
 			}
 		});
 		
-		//Log.i("test", maListViewPerso.toString());
 		updateList();
 		
-		//Enfin on met un écouteur d'événement sur notre listView
-		//On met un écouteur d'événement sur notre listView
-		maListViewPerso.setOnTouchListener(new OnTouchListener() {
 
+		maListViewPerso.setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				//Log.i("","position : "+event.getX());
 				positionX=(int) event.getX();
 				positionY=(int) event.getY();
-				//Log.i("test",""+(event.getY()%68));
 				return false;
 			}
 		});
@@ -120,18 +99,6 @@ public class GestionnaireTaches extends Activity {
 				int longueurIconFils = getResources().getDrawable(R.drawable.expander_ic_minimized).getMinimumWidth();
 				int paddingIconFils = 10;
 				
-				/*
-				Log.i("haut",""+v.getTop());
-				Log.i("bas",""+v.getBottom());
-				Log.i("gauche",""+v.getLeft());
-				Log.i("droite",""+v.getRight());
-				Log.i("largeur",""+v.getWidth());
-				Log.i("hauteur",""+v.getHeight());
-				Log.i("heuteur iconEtat",""+hauteurIconEtat);
-				Log.i("longueur iconEtat",""+longueurIconEtat);
-				Log.i("positionY",""+positionY);
-				*/
-				
 				if(positionX >= (v.getRight() - paddingIconFils - longueurIconFils) && positionX <= (v.getRight() - paddingIconFils) && positionY >= ((v.getHeight() - hauteurIconFils) / 2) && positionY <= (v.getHeight() - (v.getHeight() - hauteurIconFils) / 2)) {
 					modele.getArborescenceCourante().add(modele.getTacheById(identifiantTache));
 					updateList();
@@ -147,13 +114,8 @@ public class GestionnaireTaches extends Activity {
 						t.setVersion(t.getVersion() + 1);
 						modele.getBdd().modifTache(t);
 						updateList();
-							
-						//((ImageView)v.findViewById(R.id.img).);
-						//maListViewPerso.getItemAtPosition(position).;
-						//((HashMap) maListViewPerso.getItemAtPosition(position)). put("img", String.valueOf(R.drawable.btn_check_buttonless_off));
 					}
 					else {
-						//Toast.makeText(maListViewPerso.getContext(), "Nouvelle tache", Toast.LENGTH_SHORT).show();
 						Bundle objetbunble = new Bundle();
 						Intent intent = new Intent(maListViewPerso.getContext(), DetailsTaches.class);
 						//objetbunble.putAll(new Bundle(b))
@@ -175,13 +137,12 @@ public class GestionnaireTaches extends Activity {
 
 			@Override
 			public boolean onItemLongClick(AdapterView a, View v, int position, long id) {
-				//registerForContextMenu(v);
 				
 				if(!modele.isEnCoursSynchro()) {
 				
 					Builder builder = new Builder(v.getContext());
 					final HashMap map = (HashMap) maListViewPerso.getItemAtPosition(position);
-					//map.get("id");
+					final long identifiant = Long.valueOf((String)map.get("id"));
 					builder.setTitle(map.get("titre")+"");
 				    String[] myItemClickDialog = new String[3];
 					myItemClickDialog[0] = "Ajouter";
@@ -193,22 +154,24 @@ public class GestionnaireTaches extends Activity {
 						public void onClick(final DialogInterface dialog, final int which) {
 							switch (which) {
 								case 0:
-									//Do stuff
+									modele.getArborescenceCourante().add(modele.getTacheById(identifiant));
+									Intent intentNewTache = new Intent(maListViewPerso.getContext(), DetailsTaches.class);
+									startActivityForResult(intentNewTache, CODE_DE_MON_ACTIVITE);
+									transitionActivity();
 									break;
 								case 1:
 									Bundle objetbunble = new Bundle();
-									objetbunble.putInt("id", Integer.valueOf((String)map.get("id")));
+									objetbunble.putLong("id", identifiant);
 									Intent intent = new Intent(maListViewPerso.getContext(), DetailsTaches.class);
 									intent.putExtras(objetbunble);
 									startActivityForResult(intent, CODE_DE_MON_ACTIVITE);
 									transitionActivity();
 									break;
 								case 2:
-									long identifiant = Long.valueOf((String)map.get("id"));
 									modele.supprimerTache(modele.getTacheById(identifiant));
 									modele.getBdd().supprimerTache(identifiant, true);
 									ArrayList<Long> listeTachesSuppr = new ArrayList<Long>();
-									listeTachesSuppr.add(/*new Long(*/identifiant/*)*/);
+									listeTachesSuppr.add(identifiant);
 									ThreadSynchronisation tsSupprTache = new ThreadSynchronisation(modele, GestionnaireTaches.this, sw);
 									tsSupprTache.selectionModeSynchronisation(ThreadSynchronisation.SUPPRESSION_TACHES);
 									tsSupprTache.setListeTachesSuppr(listeTachesSuppr);
@@ -227,7 +190,6 @@ public class GestionnaireTaches extends Activity {
 			return true;
 			}
 		}); 
-		//modele.getBdd().supprimerTache(4, true);
 	}
 
 	@Override
@@ -247,11 +209,8 @@ public class GestionnaireTaches extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data){
 
-		Log.i("request","" + requestCode);
-		//on regarde quelle Activity a répondu
 		switch(requestCode){
 			case CODE_DE_MON_ACTIVITE:
-				Log.i("update", "test mise a jour");
 				updateList();
 				break;
 			case CODE_ACTIVITE_PREFERENCES:
@@ -277,6 +236,9 @@ public class GestionnaireTaches extends Activity {
 		
 		modele.trierTaches(true);
 		
+		String description = "";
+		String nom = "";
+		
 		for(Tache t:modele.getListeTaches()) {
 			if(t.getEtat() != 1 || PreferenceManager.getDefaultSharedPreferences(this).getBoolean("afficher_taches_annulees", false)) {
 				if(t.getNom().indexOf(modele.getRechercheCourante()) != -1 || t.getDescription().indexOf(modele.getRechercheCourante()) != -1) {
@@ -294,8 +256,23 @@ public class GestionnaireTaches extends Activity {
 						
 						if((modele.getTachePereCourant() == null && modele.getTachesRacines().contains(t.getIdentifiant())) || (modele.getTachePereCourant() != null && modele.getTachePereCourant().getListeTachesFille().contains(t.getIdentifiant()))) {
 							map = new HashMap<String, String>();
-							map.put("titre", t.getNom());
-							map.put("description", t.getDescription());
+							
+							if(t.getNom().length() > 21) {
+								nom = t.getNom().substring(0, 20);
+								nom += " ...";
+							}
+							else
+								nom = t.getNom();
+							
+							if(t.getDescription().length() > 71) {
+								description = t.getDescription().substring(0, 70);
+								description += " ...";
+							}
+							else
+								description = t.getDescription();
+							
+							map.put("titre", nom);
+							map.put("description", description);
 							if(t.getEtat() == 4)
 								map.put("img", String.valueOf(R.drawable.btn_check_buttonless_on));
 							else
@@ -310,11 +287,9 @@ public class GestionnaireTaches extends Activity {
 			}
 		}
 
-		//Création d'un SimpleAdapter qui se chargera de mettre les items présent dans notre list (listItem) dans la vue affichageitem
 		AdapterListView mSchedule = new AdapterListView (this.getBaseContext(), listItem, R.layout.affichageitem,
 				new String[] {"img", "titre", "description", "id", "img_fils"}, new int[] {R.id.img, R.id.titre, R.id.description, R.id.id, R.id.img_fils});
 
-		//On attribut à notre listView l'adapter que l'on vient de créer
 		maListViewPerso.setAdapter(mSchedule);
 		
 		/*
@@ -344,11 +319,9 @@ public class GestionnaireTaches extends Activity {
 		arborescence.setText(titre);
 		
 		if(modele.getArborescenceCourante().size() == 0)
-			//back.setEnabled(false);
 			back.setVisibility(View.INVISIBLE);
 		else
 			back.setVisibility(View.VISIBLE);
-			//back.setEnabled(true);
 		
 	}
 	
@@ -363,8 +336,6 @@ public class GestionnaireTaches extends Activity {
 			menu.findItem(R.id.sous_menu_tri_priorite).setChecked(true);
 		else if(modele.getTri() == Tri.ETAT)
 			menu.findItem(R.id.sous_menu_tri_etat).setChecked(true);
-		//menu.getItem(3).getSubMenu().setHeaderIcon(R.drawable.icon);
-		//menu.getItem(0).getSubMenu().setHeaderIcon(R.drawable.);
 		
 		return true;
 	}
@@ -377,13 +348,6 @@ public class GestionnaireTaches extends Activity {
 		else
 			menu.findItem(R.id.menu_synchronisation).setVisible(false);
 		
-		/*
-		//int i = 0;
-		for(Long l : modele.getTagsVisibles()) {
-			menu.findItem(R.id.menu_afficher_tags).getSubMenu().add(R.id.groupe_afficher_tags,Menu.NONE,Menu.NONE,"om"+l);
-			//i++;
-		}*/
-		
 		return super.onMenuOpened(featureId, menu);
 		
 	}
@@ -393,7 +357,6 @@ public class GestionnaireTaches extends Activity {
 		switch (item.getItemId()) {
 		case R.id.menu_ajout_tache:
 			if(!modele.isEnCoursSynchro()) {
-				Toast.makeText(this.getApplicationContext(), "Nouvelle tache", Toast.LENGTH_SHORT).show();
 				Intent intent = new Intent(this.getApplicationContext(), DetailsTaches.class);
 				startActivityForResult(intent, CODE_DE_MON_ACTIVITE);
 				transitionActivity();
@@ -651,24 +614,23 @@ public class GestionnaireTaches extends Activity {
 	
 	@Override
 	public boolean onSearchRequested() {
-
-        //final String queryAppDataString = mQueryAppData.getText().toString();
-        //if (queryAppDataString != null) {
-        //    appDataBundle = new Bundle();
-            //appDataBundle.putString("demo_key", queryAppDataString);
-       // }
-        
-        // Now call the Activity member function that invokes the Search Manager UI.
-		//Bundle appDataBundle = new Bundle();
-		//startSearch("", false, null, false); 
 		
+		/*
+        final String queryAppDataString = mQueryAppData.getText().toString();
+        if (queryAppDataString != null) {
+        	appDataBundle = new Bundle();
+        	appDataBundle.putString("demo_key", queryAppDataString);
+       	}
+		Bundle appDataBundle = new Bundle();
+		startSearch("", false, null, false); 
+		*/
 		return super.onSearchRequested();
 	}
 	
 	@Override
 	public void onNewIntent(final Intent newIntent) {
 		super.onNewIntent(newIntent);
-		// get and process search query here
+
 		if (Intent.ACTION_SEARCH.equals(newIntent.getAction())) {
 			modele.setRechercheCourante(newIntent.getStringExtra(SearchManager.QUERY));
 			updateList();

@@ -67,10 +67,12 @@
 	<string name="label_desc_affiche_taches_annulees">Sélectionner si vous souhaitez afficher les taches annulées</string>
 	<string name="label_utiliser_compte">Utiliser un compte utilisateur</string>
 	<string name="label_desc_utiliser_compte">Sélectionner si vous souhaitez utiliser un compte</string>
+	<string name="label_generale">Générale</string>
 	<string name="label_login">Nom d\'utilisateur</string>
 	<string name="label_desc_login">Entrez votre nom d\'utilisateur</string>
 	<string name="label_password">Mot de passe</string>
 	<string name="label_desc_password">Entrez votre mot de passe</string>
+	<string name="label_proxy">Proxy</string>
 	<string name="label_utiliser_proxy">Utiliser un Proxy</string>
 	<string name="label_desc_utiliser_proxy">Sélectionner si vous souhaitez utiliser un proxy</string>
 	<string name="label_adresse_proxy">Adresse du proxy</string>

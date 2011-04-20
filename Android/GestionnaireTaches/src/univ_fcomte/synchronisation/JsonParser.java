@@ -14,12 +14,10 @@ public class JsonParser {
 	private HashMap<Long, Long> listeAPourFils;
 	
 	public JsonParser(Modele modele) {
-		// TODO Auto-generated constructor stub
 		this.modele = modele;
 	}
 	
 	public void parseStream(InputStream is) throws JSONException {
-		//is = context.getResources().openRawResource(fichier)
 		parse(stream2String(is));
 	}
 	
@@ -29,11 +27,9 @@ public class JsonParser {
 			
 			ob = new JSONObject(contenu);
 			
-			int nbTaches=ob.getInt("nbTaches");
-			int nbTags=ob.getInt("nbTags");
+			//int nbTaches=ob.getInt("nbTaches");
+			//int nbTags=ob.getInt("nbTags");
 
-			// On charge le tableau de personnes qui
-			// se trouve dans le fichier json
 			JSONArray tags = ob.getJSONArray("tags");
 			JSONArray taches = ob.getJSONArray("taches");
 			JSONArray apourtags = ob.getJSONArray("apourtag");
@@ -96,8 +92,8 @@ public class JsonParser {
 		
 			ob = new JSONObject(contenu);
 			
-			int nbTaches=ob.getInt("nbTaches");
-			int nbTags=ob.getInt("nbTags");
+			//int nbTaches=ob.getInt("nbTaches");
+			//int nbTags=ob.getInt("nbTags");
 
 			// On charge le tableau de personnes qui
 			// se trouve dans le fichier json

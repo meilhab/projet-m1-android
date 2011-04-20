@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-		<PreferenceCategory android:title="Categorie 1">
+		<PreferenceCategory android:title="@string/label_generale">
 			
+			<!-- 
 			<ListPreference 
 					android:title="List" 
 					android:key="list" 
@@ -13,7 +14,7 @@
 					android:title="Ringtone" 
 					android:key="ring" 
 					android:summary="Ringtone summary" />
-		
+			 -->
 			<CheckBoxPreference
 	        		android:key="afficher_taches_annulees"
 	                android:title="@string/label_affiche_taches_annulees"
@@ -22,7 +23,7 @@
 		</PreferenceCategory>
 		
 		
-		<PreferenceCategory android:title="Synchronisation">
+		<PreferenceCategory android:title="@string/menu_synchronisation">
 			
 			<CheckBoxPreference
 	                android:key="utilise_compte"
@@ -46,7 +47,7 @@
 		</PreferenceCategory>
 		
 		
-		<PreferenceCategory android:title="Proxy">
+		<PreferenceCategory android:title="@string/label_proxy">
 			
 			<CheckBoxPreference
 	                android:key="utilise_proxy"
