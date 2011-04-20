@@ -12,14 +12,12 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.*;
-import android.view.View.OnTouchListener;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView.*;
 import android.widget.*;
 
-public class GestionnaireTaches extends Activity {
+public class GestionnaireTaches extends Activity implements View.OnClickListener {
 
-	private int positionX;
-	private int positionY;
 	private Modele modele;
 	private ListView maListViewPerso;
 	private TextView arborescence;
@@ -45,8 +43,7 @@ public class GestionnaireTaches extends Activity {
 		application.setGt(this);
 		
 		modele.initialiserModele();
-		positionX = 0;
-		positionY = 0;
+		
 		sw=new Synchronisation(this, modele.getServeur());
         
 		application.afficherMessageBienvenu();
@@ -67,68 +64,36 @@ public class GestionnaireTaches extends Activity {
 			@Override
 			public void onClick(View v) {
 				modele.getArborescenceCourante().clear();
-				updateList();
+				updateList(true);
 			}
 		});
 		
-		updateList();
-		
-
-		maListViewPerso.setOnTouchListener(new OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				positionX=(int) event.getX();
-				positionY=(int) event.getY();
-				return false;
-			}
-		});
+		if(application.isPremierLancement()) {
+			updateList(true);
+			Log.i("premier","premier");
+			application.setPremierLancement();
+		}
+		else
+			updateList(false);
 
 		maListViewPerso.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView a, View v, int position, long id) {
-
+				
 				long identifiantTache = Long.valueOf((String)((HashMap)maListViewPerso.getItemAtPosition(position)).get("id"));
 				
-				positionY = positionY % (v.getHeight()+1);
-				
-				int hauteurIconEtat = getResources().getDrawable(R.drawable.btn_check_buttonless_on).getMinimumHeight();
-				int longueurIconEtat = getResources().getDrawable(R.drawable.btn_check_buttonless_on).getMinimumWidth();
-				int paddingIconEtat = 10;
-				
-				int hauteurIconFils = getResources().getDrawable(R.drawable.expander_ic_minimized).getMinimumHeight();
-				int longueurIconFils = getResources().getDrawable(R.drawable.expander_ic_minimized).getMinimumWidth();
-				int paddingIconFils = 10;
-				
-				if(positionX >= (v.getRight() - paddingIconFils - longueurIconFils) && positionX <= (v.getRight() - paddingIconFils) && positionY >= ((v.getHeight() - hauteurIconFils) / 2) && positionY <= (v.getHeight() - (v.getHeight() - hauteurIconFils) / 2)) {
-					modele.getArborescenceCourante().add(modele.getTacheById(identifiantTache));
-					updateList();
-				}
-				else if(!modele.isEnCoursSynchro()) {
-					if(positionX >= (v.getLeft() + paddingIconEtat) && positionX <= (longueurIconEtat + paddingIconEtat) && positionY >= ((v.getHeight() - hauteurIconEtat) / 2) && positionY <= (v.getBottom() - (v.getHeight() - hauteurIconEtat) / 2)) {
-						Log.i("","on clic sur l'image");
-						Tache t = modele.getTacheById(identifiantTache);
-						if(t.getEtat() != 4)
-							t.setEtat(4);
-						else
-							t.setEtat(3);
-						t.setVersion(t.getVersion() + 1);
-						modele.getBdd().modifTache(t);
-						updateList();
-					}
-					else {
+				if(!modele.isEnCoursSynchro()) {
 						Bundle objetbunble = new Bundle();
 						Intent intent = new Intent(maListViewPerso.getContext(), DetailsTaches.class);
-						//objetbunble.putAll(new Bundle(b))
-						//objetbunble.putString("titre", "Nouvelle tache");
 						
 						objetbunble.putLong("id", identifiantTache);
 						intent.putExtras(objetbunble);
 						startActivityForResult(intent, CODE_DE_MON_ACTIVITE);
 						transitionActivity();
-					}
 				}
 				else
 					attenteSynchronisation();
+
 			}
 				
 		});
@@ -189,18 +154,19 @@ public class GestionnaireTaches extends Activity {
 				attenteSynchronisation();
 			return true;
 			}
-		}); 
+		});
+		
 	}
 
 	@Override
 	public void onBackPressed() {
 		if(!modele.getRechercheCourante().equals("")) {
 			modele.setRechercheCourante("");
-			updateList();
+			updateList(true);
 		}
 		else if(modele.getTachePereCourant() != null) {
 			modele.getArborescenceCourante().remove(modele.getArborescenceCourante().size() - 1);
-			updateList();
+			updateList(true);
 		}
 		else
 			super.onBackPressed();
@@ -211,10 +177,10 @@ public class GestionnaireTaches extends Activity {
 
 		switch(requestCode){
 			case CODE_DE_MON_ACTIVITE:
-				updateList();
+				updateList(false);
 				break;
 			case CODE_ACTIVITE_PREFERENCES:
-				updateList();
+				updateList(true);
 				break;
 			case CODE_ACTIVITE_AJOUT_UTILISATEUR:
 				//TODO
@@ -226,7 +192,7 @@ public class GestionnaireTaches extends Activity {
 	}
 
 
-	public void updateList() {
+	public void updateList(boolean animation) {
 		
 		updateArborecence();
 		//Création de la ArrayList qui nous permettra de remplire la listView
@@ -235,9 +201,6 @@ public class GestionnaireTaches extends Activity {
 		HashMap<String, String> map;
 		
 		modele.trierTaches(true);
-		
-		String description = "";
-		String nom = "";
 		
 		for(Tache t:modele.getListeTaches()) {
 			if(t.getEtat() != 1 || PreferenceManager.getDefaultSharedPreferences(this).getBoolean("afficher_taches_annulees", false)) {
@@ -257,28 +220,13 @@ public class GestionnaireTaches extends Activity {
 						if((modele.getTachePereCourant() == null && modele.getTachesRacines().contains(t.getIdentifiant())) || (modele.getTachePereCourant() != null && modele.getTachePereCourant().getListeTachesFille().contains(t.getIdentifiant()))) {
 							map = new HashMap<String, String>();
 							
-							if(t.getNom().length() > 21) {
-								nom = t.getNom().substring(0, 20);
-								nom += " ...";
-							}
-							else
-								nom = t.getNom();
-							
-							if(t.getDescription().length() > 71) {
-								description = t.getDescription().substring(0, 70);
-								description += " ...";
-							}
-							else
-								description = t.getDescription();
-							
-							map.put("titre", nom);
-							map.put("description", description);
+							map.put("titre", t.getNom());
+							map.put("description", t.getDescription());
 							if(t.getEtat() == 4)
 								map.put("img", String.valueOf(R.drawable.btn_check_buttonless_on));
 							else
 								map.put("img", String.valueOf(R.drawable.btn_check_buttonless_off));
 							map.put("id", String.valueOf(t.getIdentifiant()));
-							map.put("img_fils", String.valueOf(R.drawable.expander_ic_minimized));
 							listItem.add(map);
 						}
 					}
@@ -288,7 +236,7 @@ public class GestionnaireTaches extends Activity {
 		}
 
 		AdapterListView mSchedule = new AdapterListView (this.getBaseContext(), listItem, R.layout.affichageitem,
-				new String[] {"img", "titre", "description", "id", "img_fils"}, new int[] {R.id.img, R.id.titre, R.id.description, R.id.id, R.id.img_fils});
+				new String[] { "img", "titre", "description", "id" }, new int[] {R.id.img, R.id.titre, R.id.description, R.id.id });
 
 		maListViewPerso.setAdapter(mSchedule);
 		
@@ -305,7 +253,13 @@ public class GestionnaireTaches extends Activity {
 		LayoutAnimationController controller = new LayoutAnimationController(set, 0.25f);
 		maListViewPerso.setLayoutAnimation(controller);
 		*/
-		maListViewPerso.startLayoutAnimation();
+		
+		if(animation) {
+			//if(maListViewPerso.getLayoutAnimation() == null)
+			maListViewPerso.setLayoutAnimation(AnimationUtils.loadLayoutAnimation(this, R.anim.list_layout_controller));
+			maListViewPerso.startLayoutAnimation();
+		}
+			
 		//convertView.setBackgroundColor((position & 1) == 1 ? Color.WHITE : Color.LTGRAY);
 		//((View)maListViewPerso.getSelectedItem()).setBackgroundColor(Color.BLUE);
 	}
@@ -396,8 +350,6 @@ public class GestionnaireTaches extends Activity {
 			return true;
 		case R.id.menu_afficher_tags:
 			
-			
-			
 			CharSequence[] itemsTagsAAfficher = new CharSequence[modele.getListeTags().size()+1];
 			final boolean[] tagsVisiblesAAfficher = new boolean[modele.getListeTags().size()+1];
 			final boolean[] tagsChoisisAAfficher = new boolean[tagsVisiblesAAfficher.length];
@@ -447,7 +399,7 @@ public class GestionnaireTaches extends Activity {
 					
 					modele.setTagsVisibles(listeTagsAffiches);
 					
-					updateList();
+					updateList(true);
 				}
 			});
 			builderAfficheTag.setMultiChoiceItems(itemsTagsAAfficher, tagsVisiblesAAfficher, new DialogInterface.OnMultiChoiceClickListener() {
@@ -581,27 +533,27 @@ public class GestionnaireTaches extends Activity {
 		case R.id.sous_menu_tri_date:
 			item.setChecked(true);
 			modele.setTri(Tri.DATE);
-			updateList();
+			updateList(true);
 			return true;
 		case R.id.sous_menu_tri_nom:
 			item.setChecked(true);
 			modele.setTri(Tri.NOM);
-			updateList();
+			updateList(true);
 			return true;
 		case R.id.sous_menu_tri_ordre_creation:
 			item.setChecked(true);
 			modele.setTri(Tri.ORDRE_CREATION);
-			updateList();
+			updateList(true);
 			return true;
 		case R.id.sous_menu_tri_etat:
 			item.setChecked(true);
 			modele.setTri(Tri.ETAT);
-			updateList();
+			updateList(true);
 			return true;
 		case R.id.sous_menu_tri_priorite:
 			item.setChecked(true);
 			modele.setTri(Tri.PRIORITE);
-			updateList();
+			updateList(true);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -633,7 +585,7 @@ public class GestionnaireTaches extends Activity {
 
 		if (Intent.ACTION_SEARCH.equals(newIntent.getAction())) {
 			modele.setRechercheCourante(newIntent.getStringExtra(SearchManager.QUERY));
-			updateList();
+			updateList(true);
 		}
 	}
 	
@@ -651,5 +603,43 @@ public class GestionnaireTaches extends Activity {
 		AlertDialog alert = builder.create();
 		alert.show();
 	}
+	
+    @Override
+    public void onClick(View v) {
+    	
+    	long identifiantTache = -1;
+    	
+    	if(v.getId() == R.id.img_fils) {
+    		
+    		identifiantTache = (Long) ((ImageView) v).getTag();
+    		modele.getArborescenceCourante().add(modele.getTacheById(identifiantTache));
+			updateList(true);
+    		
+    	}
+    	else if(v.getId() == R.id.img) {
+    		
+    		if(!modele.isEnCoursSynchro()) {
+    		
+    			identifiantTache = (Long) ((ImageView) v).getTag();
+    			
+				Tache t = modele.getTacheById(identifiantTache);
+				if(t.getEtat() != 4) {
+					t.setEtat(4);
+					((ImageView)v).setImageResource(R.drawable.btn_check_buttonless_on);
+				}
+				else {
+					t.setEtat(3);
+					((ImageView)v).setImageResource(R.drawable.btn_check_buttonless_off);
+				}
+				t.setVersion(t.getVersion() + 1);
+				modele.getBdd().modifTache(t);
+								
+    		}
+    		else
+    			attenteSynchronisation();
+    			
+    	}
+
+    }
 
 }

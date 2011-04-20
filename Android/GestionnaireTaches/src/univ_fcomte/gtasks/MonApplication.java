@@ -12,10 +12,12 @@ public class MonApplication extends Application{
 	private Modele modele;
 	private GestionnaireTaches gt;
 	private String rechercheCourante;
+	private boolean premierLancement;
 	
 	public MonApplication() {
 		modele=new Modele(this);
 		rechercheCourante = "";
+		premierLancement = true;
 	}
 
 	public String getRechercheCourante() {
@@ -99,6 +101,14 @@ public class MonApplication extends Application{
 		editor.putInt("version_appli", getVersionAppli());
 		editor.commit();
 		
+	}
+	
+	public boolean isPremierLancement() {
+		return premierLancement;
+	}
+
+	public void setPremierLancement() {
+		this.premierLancement = false;
 	}
 	
 }

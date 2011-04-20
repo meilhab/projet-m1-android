@@ -3,10 +3,10 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#FFFF6B">
+    android:background="@drawable/background_details">
     <LinearLayout android:id="@+id/linearLayout1" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
         <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="@string/label_nom" android:id="@+id/label_nom" android:paddingLeft="10dp"></TextView>
-        <EditText android:text="@string/label_nom" android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/edit_nom" android:singleLine="true"></EditText>
+        <EditText android:text="@string/label_nom" android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/edit_nom" android:lines="1" android:maxLines="1" android:inputType="text"></EditText>
         <LinearLayout android:layout_height="wrap_content" android:id="@+id/linearLayout3" android:layout_width="match_parent" android:gravity="center_vertical" android:paddingLeft="10dp" android:paddingRight="10dp">
             <TextView android:layout_height="wrap_content" android:id="@+id/label_tags" android:layout_width="wrap_content" android:text="@string/label_tag"></TextView>
             <Button android:id="@+id/bouton_ajout_tag" android:layout_height="wrap_content" android:layout_width="wrap_content" android:background="@android:drawable/ic_menu_agenda"></Button>
@@ -20,6 +20,6 @@
             <Spinner android:id="@+id/edit_priorite" android:prompt="@string/label_priorite" android:layout_width="wrap_content" android:layout_height="wrap_content"></Spinner>
         </LinearLayout>
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/label_description" android:id="@+id/label_description" android:paddingLeft="10dp"></TextView>
-        <EditText android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/label_description" android:id="@+id/edit_description" android:gravity="top" android:singleLine="false" android:lines="10"></EditText>
+        <EditText android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/label_description" android:id="@+id/edit_description" android:gravity="top" android:lines="10" android:inputType="textMultiLine" android:minLines="8"></EditText>
     </LinearLayout>
 </LinearLayout>

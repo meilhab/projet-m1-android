@@ -130,7 +130,7 @@ public class ThreadSynchronisation extends Thread {
 				@Override
 				public void run() {
 					Log.i("update", "mise a jour liste, nb tache : " + modele.getListeTaches().size());
-					gt.updateList();
+					gt.updateList(true);
 				}
 			});
 			
@@ -185,7 +185,7 @@ public class ThreadSynchronisation extends Thread {
 				@Override
 				public void run() {
 					Log.i("update", "mise a jour liste, nb tache : " + modele.getListeTaches().size());
-					gt.updateList();
+					gt.updateList(false);
 				}
 			});
 			
@@ -237,7 +237,7 @@ public class ThreadSynchronisation extends Thread {
 		gt.runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				gt.updateList();
+				gt.updateList(false);
 			}
 		});
 		
