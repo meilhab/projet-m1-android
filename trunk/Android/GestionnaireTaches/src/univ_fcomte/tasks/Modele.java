@@ -1,13 +1,8 @@
 package univ_fcomte.tasks;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-
+import java.util.*;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
-
 import univ_fcomte.bdd.MaBaseSQLite;
 
 public class Modele {
@@ -111,10 +106,6 @@ public class Modele {
 	public String getServeur() {
 		return serveur;
 	}
-
-	public void setServeur(String serveur) {
-		this.serveur = serveur;
-	}
 	
 	public long getParentCourant() {
 		return parentCourant;
@@ -214,8 +205,6 @@ public class Modele {
 	
 	public void supprimerTache2(Tache t, ArrayList<Long> listeTachesSuppr) {
 		
-		Log.i("suppr2", t.getIdentifiant() + "");
-		
 		listeTachesSuppr.add(t.getIdentifiant());
 		for(int i = 0; i<t.getListeTachesFille().size(); i++)
 			supprimerTache2(getTacheById(t.getListeTachesFille().get(i)), listeTachesSuppr);
@@ -260,15 +249,6 @@ public class Modele {
 			Collections.sort(listeTaches,compar);
 		else
 			Collections.sort(listeTaches,Collections.reverseOrder(compar));
-		/*
-		for(Tache t:listeTaches)
-			if(t!=null) {
-				if(ascendant)
-					Collections.sort(t.getFils(),compar);
-				else
-					Collections.sort(t.getFils(),Collections.reverseOrder(compar));
-				trierTachesFils(t, ascendant, compar);
-			}
-		*/
+		
 	}
 }

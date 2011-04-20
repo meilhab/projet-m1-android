@@ -1,14 +1,11 @@
 package univ_fcomte.gtasks;
 
 import univ_fcomte.tasks.Modele;
-import android.app.AlertDialog;
-import android.app.Application;
-import android.content.DialogInterface;
-import android.content.SharedPreferences;
+import android.app.*;
+import android.content.*;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 public class MonApplication extends Application{
 

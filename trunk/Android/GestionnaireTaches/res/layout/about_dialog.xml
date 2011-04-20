@@ -8,7 +8,6 @@
 				<ImageView android:layout_marginRight="10dp" android:layout_height="wrap_content" android:layout_width="wrap_content" android:src="@drawable/todo"></ImageView>
 				<ImageView android:layout_marginRight="10dp" android:layout_height="wrap_content" android:layout_width="wrap_content" android:src="@drawable/logo_ufc" android:layout_marginTop="15dp"></ImageView>
 			</LinearLayout>
-			<!-- <WebView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/about_description"></WebView> -->
 			<TextView android:textColor="#FFF" android:text="@string/a_propos_description" android:layout_weight="1" android:layout_gravity="fill_horizontal" android:layout_width="match_parent" android:layout_height="wrap_content"></TextView>
 		</TableRow>
 	</TableLayout>

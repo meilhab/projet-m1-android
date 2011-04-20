@@ -4,11 +4,8 @@ import java.util.*;
 
 import univ_fcomte.synchronisation.ThreadSynchronisation;
 import univ_fcomte.tasks.*;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.DatePickerDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
+import android.app.*;
+import android.content.*;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.view.*;
@@ -46,13 +43,12 @@ public class DetailsTaches extends Activity {
         	identifiant = -1;
         
         gt = ((MonApplication)getApplication()).getGt();
-        
-        //Log.i("","id : "+identifiant);
+
         nom = ((EditText)findViewById(R.id.edit_nom));
         description = ((EditText)findViewById(R.id.edit_description));
         
         spinnerPriorite = (Spinner) findViewById(R.id.edit_priorite);
-        ArrayAdapter adapter = ArrayAdapter.createFromResource(this, R.array.priorite, android.R.layout.simple_spinner_item);
+        ArrayAdapter<?> adapter = ArrayAdapter.createFromResource(this, R.array.priorite, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerPriorite.setAdapter(adapter);
         
@@ -160,9 +156,7 @@ public class DetailsTaches extends Activity {
         
         builderTags.setMultiChoiceItems(items, tagsAffiches, new DialogInterface.OnMultiChoiceClickListener() {
 			@Override
-			public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-				//tagsChoisis[which] = isChecked;
-			}
+			public void onClick(DialogInterface dialog, int which, boolean isChecked) {}
 		});
     	
     }
@@ -229,7 +223,6 @@ public class DetailsTaches extends Activity {
 
 		switch(requestCode){
 			case CODE_ACTIVITE_PREFERENCES:
-				
 				break;
 			default :
 				break;
@@ -240,9 +233,6 @@ public class DetailsTaches extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu){
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.menu_details, menu);
-		//menu.getItem(3).getSubMenu().setHeaderIcon(R.drawable.icon);
-		//menu.getItem(0).getSubMenu().setHeaderIcon(R.drawable.);
-		
 		return true;
 	}
 	
@@ -256,7 +246,7 @@ public class DetailsTaches extends Activity {
 			modele.supprimerTache(modele.getTacheById(identifiant));
 			modele.getBdd().supprimerTache(identifiant, true);
 			ArrayList<Long> listeTachesSuppr = new ArrayList<Long>();
-			listeTachesSuppr.add((long) /*new Long(*/identifiant/*)*/);
+			listeTachesSuppr.add(identifiant);
 			ThreadSynchronisation tsSupprTache = new ThreadSynchronisation(modele, gt, gt.getSw());
 			tsSupprTache.selectionModeSynchronisation(ThreadSynchronisation.SUPPRESSION_TACHES);
 			tsSupprTache.setListeTachesSuppr(listeTachesSuppr);
@@ -272,10 +262,7 @@ public class DetailsTaches extends Activity {
 			builderAjoutTag.setView(etNomTag);
 			builderAjoutTag.setNegativeButton("Annuler", new OnClickListener(){
 				@Override
-				public void onClick(DialogInterface arg0, int arg1) {
-
-				}
-
+				public void onClick(DialogInterface arg0, int arg1) {}
 			});
 			builderAjoutTag.setPositiveButton("OK", new OnClickListener() {
 				@Override

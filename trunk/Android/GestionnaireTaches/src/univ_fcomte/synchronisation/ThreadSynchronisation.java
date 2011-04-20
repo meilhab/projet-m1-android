@@ -1,22 +1,15 @@
 package univ_fcomte.synchronisation;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 
-import android.content.ContentValues;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
-import univ_fcomte.gtasks.AjoutUtilisateur;
-import univ_fcomte.gtasks.GestionnaireTaches;
-import univ_fcomte.gtasks.R;
+import univ_fcomte.gtasks.*;
 import univ_fcomte.synchronisation.Synchronisation.ApiException;
 import univ_fcomte.tasks.Modele;
 

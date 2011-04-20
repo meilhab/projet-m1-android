@@ -1,12 +1,10 @@
 package univ_fcomte.gtasks;
 
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.SimpleAdapter;
 
 public class AdapterListView extends SimpleAdapter {

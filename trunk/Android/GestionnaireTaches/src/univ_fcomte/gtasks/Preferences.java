@@ -1,15 +1,10 @@
 package univ_fcomte.gtasks;
 
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
-import android.os.SystemClock;
-import android.preference.Preference;
-import android.preference.PreferenceActivity;
-import android.preference.PreferenceManager;
+import android.preference.*;
 import android.preference.Preference.OnPreferenceClickListener;
-import android.widget.Toast;
 
 public class Preferences extends PreferenceActivity implements OnSharedPreferenceChangeListener, OnPreferenceClickListener {
     /** Called when the activity is first created. */

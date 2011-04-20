@@ -1,21 +1,17 @@
 package univ_fcomte.gtasks;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 
 import univ_fcomte.synchronisation.ThreadSynchronisation;
-import univ_fcomte.tasks.Tache;
-import univ_fcomte.tasks.Tag;
+import univ_fcomte.tasks.*;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.SharedPreferences;
+import android.content.*;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
+import android.widget.*;
 
 public class AjoutUtilisateur extends Activity {
 
@@ -90,6 +86,7 @@ public class AjoutUtilisateur extends Activity {
 	}
 	
 	public void ajoutDansPrefNouveauUser() {
+		
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle(R.string.nouveau_user_cree);
 		builder.setMessage(R.string.connecter_avec_nouveau_user);
