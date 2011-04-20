@@ -21,8 +21,8 @@ public class AdapterListView extends SimpleAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
 
     	View view = super.getView(position, convertView, parent);
-    	/*int colorPos = position % colors.length;
-    	view.setBackgroundColor(colors[colorPos]);*/
+    	int colorPos = position % colors.length;
+    	view.setBackgroundColor(colors[colorPos]);
     	
     	view.setBackgroundResource(R.drawable.background_item);
     	
@@ -39,8 +39,15 @@ public class AdapterListView extends SimpleAdapter {
 				return false;
 			}
 		});
-				
-
+    	
+    	view.setOnTouchListener(new View.OnTouchListener() {
+			
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				v.setBackgroundResource(R.drawable.background_item_in);
+				return false;
+			}
+		});
     	
     	return view;
 

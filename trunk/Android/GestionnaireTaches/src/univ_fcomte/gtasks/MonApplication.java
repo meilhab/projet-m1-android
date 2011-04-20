@@ -107,8 +107,8 @@ public class MonApplication extends Application{
 		return premierLancement;
 	}
 
-	public void setPremierLancement() {
-		this.premierLancement = false;
+	public void setPremierLancement(boolean premierLancement) {
+		this.premierLancement = premierLancement;
 	}
 	
 }

@@ -8,6 +8,7 @@ import android.app.*;
 import android.app.AlertDialog.Builder;
 import android.content.*;
 import android.content.DialogInterface.OnClickListener;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -71,14 +72,16 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 		if(application.isPremierLancement()) {
 			updateList(true);
 			Log.i("premier","premier");
-			application.setPremierLancement();
+			application.setPremierLancement(false);
 		}
 		else
 			updateList(false);
-
+		
 		maListViewPerso.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView a, View v, int position, long id) {
+				
+				v.setBackgroundResource(R.drawable.background_item);
 				
 				long identifiantTache = Long.valueOf((String)((HashMap)maListViewPerso.getItemAtPosition(position)).get("id"));
 				
@@ -102,6 +105,8 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 
 			@Override
 			public boolean onItemLongClick(AdapterView a, View v, int position, long id) {
+				
+				v.setBackgroundResource(R.drawable.background_item);
 				
 				if(!modele.isEnCoursSynchro()) {
 				
@@ -168,8 +173,10 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 			modele.getArborescenceCourante().remove(modele.getArborescenceCourante().size() - 1);
 			updateList(true);
 		}
-		else
+		else {
 			super.onBackPressed();
+			application.setPremierLancement(true);
+		}
 	}
 
 	@Override
@@ -603,8 +610,14 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 		AlertDialog alert = builder.create();
 		alert.show();
 	}
-	
-    @Override
+
+	@Override
+	public void onContentChanged() {
+		//changement orientation
+		super.onContentChanged();
+	}
+
+	@Override
     public void onClick(View v) {
     	
     	long identifiantTache = -1;
