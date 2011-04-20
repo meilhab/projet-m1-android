@@ -23,6 +23,7 @@ public class Modele {
 	private ArrayList<Long> tachesRacines;
 	private ArrayList<Tache> arborescenceCourante;
 
+
 	public Modele(Context context) {
 		listeTags = new ArrayList<Tag>();
 		listeTaches = new ArrayList<Tache>();

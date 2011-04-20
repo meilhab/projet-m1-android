@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" android:padding="15dp" android:orientation="vertical" android:background="#0F056B">
+    android:layout_height="fill_parent" android:padding="15dp" android:orientation="vertical" android:background="@drawable/background_new_user">
     <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="@string/label_user_prenom" android:id="@+id/label_user_prenom"></TextView>
-    <EditText android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/edit_user_prenom"></EditText>
+    <EditText android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/edit_user_prenom" android:inputType="text"></EditText>
     <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/label_user_nom" android:text="@string/label_user_nom"></TextView>
-    <EditText android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/edit_user_nom"></EditText>
+    <EditText android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/edit_user_nom" android:inputType="text"></EditText>
     <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="@string/label_user_identifiant" android:id="@+id/label_user_identifiant"></TextView>
-    <EditText android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/edit_user_identifiant"></EditText>
+    <EditText android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/edit_user_identifiant" android:inputType="text"></EditText>
     <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="@string/label_user_md_passe" android:id="@+id/label_user_md_passe"></TextView>
     <EditText android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/edit_user_md_passe" android:inputType="textPassword"></EditText>
     <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="@string/label_user_mail" android:id="@+id/label_user_mail"></TextView>
