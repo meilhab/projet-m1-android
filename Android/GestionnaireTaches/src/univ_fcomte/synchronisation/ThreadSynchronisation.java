@@ -124,7 +124,11 @@ public class ThreadSynchronisation extends Thread {
 				e.printStackTrace();
 			}
 			
+			Log.i("pas erreur", "nb taches ds modele" + modele.getListeTaches().size());
+			
 			modele.getBdd().reinitialiserBDD(modele.getListeTags(), modele.getListeTaches(), json.getListeAPourTag(), json.getListeAPourFils());
+			
+			modele.setTachesRacines(modele.getBdd().getListeTachesRacines());
 			
 			gt.runOnUiThread(new Runnable() {
 				@Override
@@ -180,6 +184,8 @@ public class ThreadSynchronisation extends Thread {
 			}
 			
 			modele.getBdd().reinitialiserBDD(modele.getListeTags(), modele.getListeTaches(), json.getListeAPourTag(), json.getListeAPourFils());
+			
+			modele.setTachesRacines(modele.getBdd().getListeTachesRacines());
 			
 			gt.runOnUiThread(new Runnable() {
 				@Override
