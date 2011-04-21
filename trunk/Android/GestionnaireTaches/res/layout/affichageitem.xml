@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:orientation="horizontal" android:layout_width="fill_parent"
-	android:layout_height="wrap_content" android:descendantFocusability="blocksDescendants">
+	android:layout_height="wrap_content" android:background="@drawable/background_list_item">
 
 	<TextView android:id="@+id/id" android:layout_width="wrap_content"
 		android:layout_height="wrap_content" android:visibility="invisible"
@@ -30,7 +30,7 @@
 			android:layout_gravity="center_vertical" android:onClick="onClick"
 			android:src="@*android:drawable/ic_btn_search_go"
 			android:layout_height="fill_parent" android:padding="5dp"
-			android:background="@drawable/bouton_fils_out" android:clickable="true"
-			android:scaleType="center" />
+			android:background="@drawable/background_bouton_fils" android:clickable="true"
+			android:scaleType="center"/>
 	</FrameLayout>
 </LinearLayout>
