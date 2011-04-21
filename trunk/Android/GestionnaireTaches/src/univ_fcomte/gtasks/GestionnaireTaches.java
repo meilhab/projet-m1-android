@@ -680,6 +680,7 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 	
 	public void attenteSynchronisation() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle(R.string.menu_synchronisation);
 		builder.setMessage(R.string.attente_synchronisation).setCancelable(false)
 		       .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 		           public void onClick(DialogInterface dialog, int id) {
