@@ -294,8 +294,8 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 							else
 								map.put("img", String.valueOf(R.drawable.btn_check_buttonless_off));
 							map.put("id", String.valueOf(t.getIdentifiant()));
+
 							map.put("nb_fils", t.getListeTachesFille().size() + " fils");
-							
 							long jour = (t.getDateLimite().getTime() - Calendar.getInstance().getTime().getTime()) / (24*60*60*1000);
 							if(jour>=0)
 								map.put("jour_restant", jour + " jours\nrestants");

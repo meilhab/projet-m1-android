@@ -24,15 +24,15 @@
 	</LinearLayout>
 	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 		android:orientation="vertical" android:layout_width="wrap_content" 
-		android:layout_height="fill_parent" android:padding="5dp" >
+		android:layout_height="fill_parent" android:padding="5dp" android:layout_gravity="right">
 
-		<TextView android:id="@+id/nb_fils" android:layout_width="fill_parent"
-			android:layout_weight="1" android:layout_height="fill_parent" android:textStyle="bold" android:gravity="right"
+		<TextView android:id="@+id/nb_fils" android:layout_width="wrap_content"
+			android:layout_weight="1" android:layout_height="fill_parent" android:textStyle="bold" android:layout_gravity="right" android:gravity="right"
 			android:maxLines="1" android:lines="1" android:textSize="17sp" />
 
 		<TextView android:id="@+id/jour_restant" android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:textStyle="normal" android:gravity="right"
-			android:textSize="11sp" android:maxLines="2" android:lines="2" android:text="5 jours\nrestants"/>
+			android:layout_height="wrap_content" android:textStyle="normal" android:gravity="right" android:layout_gravity="right"
+			android:textSize="11sp" android:maxLines="2" android:lines="2" />
 	</LinearLayout>
 	<FrameLayout android:layout_height="fill_parent"
 		android:layout_width="wrap_content" android:background="#CECECE">

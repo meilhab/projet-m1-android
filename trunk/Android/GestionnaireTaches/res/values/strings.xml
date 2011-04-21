@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hello">Hello World, GestionnaireTaches!</string>
-    <string name="app_name">Gestionnaire de Tâches</string>
+    <string name="app_name">Todo List</string>
     <string-array name="version_news">
         <item>Erreur, la version de l\'application que vous utiliser ne possède pas de description des nouveautés</item>
         <item>Bienvenue dans l\'application Gestionnaire de tâches, Si vous possédez déjà un identifiant, veuillez vous connecter dans réglage, sinon veuillez créer un compte via le menu ajouter un utilisateur.</item>
     	<!-- lorsqu'on ajoute une version à l'application la description des nouveautés doit se faire ici, il suffit d'ajouter un item ci-dessus -->
     </string-array>
-    <string name="tache">tâche</string>
+    <string name="tache">task</string>
     <string name="label_priorite">Priorité</string>
     <string name="label_etat">Etat</string>
     <string name="label_tag">Tags</string>
     <string name="label_date">Date</string>
     <string name="label_description">Description</string>
-    <string name="label_nom">Nom</string>
+    <string name="label_nom">Name</string>
     <string-array name="priorite">
         <item>Sans</item>
         <item>Faible</item>
@@ -51,7 +51,7 @@
 	<string name="label_menu_supprimer_tag">Suppression de tags</string>
 	<string name="label_menu_ajout_utilisateur">Ajout d\'un utilisateur</string>
 	<string name="tri_date">Date</string>
-	<string name="tri_nom">Tâche</string>
+	<string name="tri_nom">Task</string>
 	<string name="tri_etat">Etat</string>
 	<string name="tri_priorite">Priorité</string>
 	<string name="tri_ordre_creation">Ordre de création</string>
