@@ -30,6 +30,7 @@ public class AdapterListView extends SimpleAdapter {
     	identifiant = Long.valueOf(((TextView) view.findViewById(R.id.id)).getText().toString());
     	((ImageView) view.findViewById(R.id.img)).setTag(identifiant);
     	((ImageView) view.findViewById(R.id.img_fils)).setTag(identifiant);
+
     	if(((TextView) view.findViewById(R.id.jour_restant)).getText().toString().indexOf("pass") != -1)
     		((TextView) view.findViewById(R.id.jour_restant)).setTextColor(Color.RED);
     	/*
