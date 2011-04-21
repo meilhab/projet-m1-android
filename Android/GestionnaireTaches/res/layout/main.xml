@@ -1,20 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="@drawable/background_main"
-    >
-    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/linearLayout1" android:orientation="horizontal">
-        <Button android:layout_width="wrap_content" android:background="@*android:drawable/ic_menu_back" android:layout_height="wrap_content" android:id="@+id/bouton_precedent"></Button>
-        <Button android:layout_width="wrap_content" android:background="@*android:drawable/ic_menu_home" android:layout_height="wrap_content" android:id="@+id/bouton_accueil"></Button>
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/arborecence" android:text="TextView"></TextView>
-    </LinearLayout>
- 
-    <ListView
-        android:id="@+id/listviewperso"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:background="@android:color/transparent" />
- 
+	android:orientation="vertical" android:layout_width="fill_parent"
+	android:layout_height="fill_parent" android:background="@drawable/background_main">
+	<LinearLayout android:layout_height="wrap_content"
+		android:id="@+id/linearLayout1" android:orientation="horizontal"
+		android:layout_width="fill_parent">
+		<Button android:layout_width="wrap_content" android:background="@drawable/background_bouton_back"
+			android:layout_height="wrap_content" android:id="@+id/bouton_precedent" android:layout_gravity="center_vertical"></Button>
+		<Button android:layout_width="wrap_content" android:background="@drawable/background_bouton_accueil"
+			android:layout_height="wrap_content" android:id="@+id/bouton_accueil" android:layout_gravity="center_vertical"></Button>
+		<TextView android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:id="@+id/arborecence"
+			android:text="TextView" android:layout_gravity="center_vertical" android:textSize="17sp" android:maxLines="1" android:layout_weight="1" android:shadowColor="#FFF48D" android:shadowRadius="2.5" android:shadowDx="2" android:shadowDy="2" android:scrollbars="horizontal" android:scrollHorizontally="true" android:inputType="text" android:ellipsize="marquee"></TextView>
+		<Button android:layout_width="wrap_content" android:background="@drawable/background_bouton_new_tache"
+			android:layout_height="wrap_content" android:id="@+id/bouton_ajouter" android:layout_gravity="center_vertical" android:layout_margin="5dp"></Button>
+	</LinearLayout>
+
+	<ListView android:id="@+id/listviewperso"
+		android:layout_width="fill_parent" android:layout_height="fill_parent"
+		android:background="@android:color/transparent" />
+
 </LinearLayout>

@@ -8,7 +8,6 @@ import android.app.*;
 import android.app.AlertDialog.Builder;
 import android.content.*;
 import android.content.DialogInterface.OnClickListener;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -31,6 +30,8 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 	private final int CODE_ACTIVITE_PREFERENCES = 2;
 	private final int CODE_ACTIVITE_AJOUT_UTILISATEUR = 3;
 	
+	private View ancienItemSelectionne;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -52,6 +53,39 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 		maListViewPerso = (ListView) findViewById(R.id.listviewperso);
 		arborescence = (TextView) findViewById(R.id.arborecence);
 		
+		
+		maListViewPerso.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+			
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				Log.i("focus","focus"+ hasFocus);
+				if(hasFocus) {
+					if(maListViewPerso.getSelectedView() != null) {
+						maListViewPerso.getSelectedView().setBackgroundResource(R.drawable.background_item_in);
+						ancienItemSelectionne = maListViewPerso.getSelectedView();
+					}
+				}
+				else if(ancienItemSelectionne != null) {
+					ancienItemSelectionne.setBackgroundResource(R.drawable.background_item_out);
+				}
+			}
+		});
+		
+		maListViewPerso.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> arg0, View v, int arg2, long arg3) {
+				Log.i("selection","selection");
+				if(ancienItemSelectionne != null)
+					ancienItemSelectionne.setBackgroundResource(R.drawable.background_item_out);
+				v.setBackgroundResource(R.drawable.background_item_in);
+				ancienItemSelectionne = v;
+			}
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {}
+		});
+		
+		
+		
 		back = (Button) findViewById(R.id.bouton_precedent);
 		back.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -69,19 +103,26 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 			}
 		});
 		
-		if(application.isPremierLancement()) {
-			updateList(true);
-			Log.i("premier","premier");
-			application.setPremierLancement(false);
-		}
-		else
-			updateList(false);
+		Button nouvelleTache = (Button) findViewById(R.id.bouton_ajouter);
+		nouvelleTache.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if(!modele.isEnCoursSynchro()) {
+					Intent intent = new Intent(application.getGt(), DetailsTaches.class);
+					startActivityForResult(intent, CODE_DE_MON_ACTIVITE);
+					transitionActivity();
+				}
+				else
+					attenteSynchronisation();
+			}
+		});		
 		
 		maListViewPerso.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView a, View v, int position, long id) {
 				
-				v.setBackgroundResource(R.drawable.background_item);
+				if(ancienItemSelectionne != null && ancienItemSelectionne != v)
+					ancienItemSelectionne.setBackgroundResource(R.drawable.background_item_out);
 				
 				long identifiantTache = Long.valueOf((String)((HashMap)maListViewPerso.getItemAtPosition(position)).get("id"));
 				
@@ -105,8 +146,9 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 
 			@Override
 			public boolean onItemLongClick(AdapterView a, View v, int position, long id) {
-				
-				v.setBackgroundResource(R.drawable.background_item);
+					
+				if(ancienItemSelectionne != null && ancienItemSelectionne != v)
+					ancienItemSelectionne.setBackgroundResource(R.drawable.background_item_out);
 				
 				if(!modele.isEnCoursSynchro()) {
 				
@@ -161,17 +203,25 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 			}
 		});
 		
+		if(application.isPremierLancement()) {
+			updateList(true);
+			Log.i("premier","premier");
+			application.setPremierLancement(false);
+		}
+		else
+			updateList(false);
+		
 	}
 
 	@Override
 	public void onBackPressed() {
 		if(!modele.getRechercheCourante().equals("")) {
 			modele.setRechercheCourante("");
-			updateList(true);
+			updateList(false);
 		}
 		else if(modele.getTachePereCourant() != null) {
 			modele.getArborescenceCourante().remove(modele.getArborescenceCourante().size() - 1);
-			updateList(true);
+			updateList(false);
 		}
 		else {
 			super.onBackPressed();
@@ -187,7 +237,7 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 				updateList(false);
 				break;
 			case CODE_ACTIVITE_PREFERENCES:
-				updateList(true);
+				updateList(false);
 				break;
 			case CODE_ACTIVITE_AJOUT_UTILISATEUR:
 				//TODO
@@ -200,8 +250,9 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 
 
 	public void updateList(boolean animation) {
-		
+
 		updateArborecence();
+		
 		//Création de la ArrayList qui nous permettra de remplire la listView
 		ArrayList<HashMap<String, String>> listItem = new ArrayList<HashMap<String, String>>();
 		//On déclare la HashMap qui contiendra les informations pour un item
@@ -262,7 +313,6 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 		*/
 		
 		if(animation) {
-			//if(maListViewPerso.getLayoutAnimation() == null)
 			maListViewPerso.setLayoutAnimation(AnimationUtils.loadLayoutAnimation(this, R.anim.list_layout_controller));
 			maListViewPerso.startLayoutAnimation();
 		}
