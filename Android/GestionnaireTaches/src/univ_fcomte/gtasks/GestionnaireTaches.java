@@ -21,6 +21,7 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 	private Modele modele;
 	private ListView maListViewPerso;
 	private TextView arborescence;
+	private HorizontalScrollView arborecence_scrollbar;
 	private Button back;
 
 	private Synchronisation sw;
@@ -52,13 +53,13 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 		
 		maListViewPerso = (ListView) findViewById(R.id.listviewperso);
 		arborescence = (TextView) findViewById(R.id.arborecence);
-		
+		arborecence_scrollbar = (HorizontalScrollView) findViewById(R.id.arborecence_scrollbar);
 		
 		maListViewPerso.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 			
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
-				Log.i("focus","focus"+ hasFocus);
+				
 				if(hasFocus) {
 					if(maListViewPerso.getSelectedView() != null) {
 						maListViewPerso.getSelectedView().setBackgroundResource(R.drawable.background_item_in);
@@ -99,7 +100,7 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 			@Override
 			public void onClick(View v) {
 				modele.getArborescenceCourante().clear();
-				updateList(true);
+				updateList(true, -1);
 			}
 		});
 		
@@ -204,12 +205,11 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 		});
 		
 		if(application.isPremierLancement()) {
-			updateList(true);
-			Log.i("premier","premier");
+			updateList(true, -1);
 			application.setPremierLancement(false);
 		}
 		else
-			updateList(false);
+			updateList(false, -1);
 		
 	}
 
@@ -217,11 +217,12 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 	public void onBackPressed() {
 		if(!modele.getRechercheCourante().equals("")) {
 			modele.setRechercheCourante("");
-			updateList(false);
+			updateList(false, -1);
 		}
 		else if(modele.getTachePereCourant() != null) {
+			long id = modele.getArborescenceCourante().get(modele.getArborescenceCourante().size() - 1).getIdentifiant();
 			modele.getArborescenceCourante().remove(modele.getArborescenceCourante().size() - 1);
-			updateList(false);
+			updateList(false, id);
 		}
 		else {
 			super.onBackPressed();
@@ -234,10 +235,10 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 
 		switch(requestCode){
 			case CODE_DE_MON_ACTIVITE:
-				updateList(false);
+				updateList(false, resultCode);
 				break;
 			case CODE_ACTIVITE_PREFERENCES:
-				updateList(false);
+				updateList(false, -1);
 				break;
 			case CODE_ACTIVITE_AJOUT_UTILISATEUR:
 				//TODO
@@ -249,8 +250,14 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 	}
 
 
-	public void updateList(boolean animation) {
+	public void updateList(boolean animation, long idTacheSelectionnee) {
 
+		String title = getResources().getString(R.string.app_name) + " ( "+ modele.getListeTaches().size() + " " + getResources().getString(R.string.tache);
+		if(modele.getListeTaches().size()>1)
+			title += "s";
+		title +=  ")";
+		this.setTitle(title);
+		
 		updateArborecence();
 		
 		//Création de la ArrayList qui nous permettra de remplire la listView
@@ -259,6 +266,8 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 		HashMap<String, String> map;
 		
 		modele.trierTaches(true);
+		
+		int positionTacheSelectionnee = -1;
 		
 		for(Tache t:modele.getListeTaches()) {
 			if(t.getEtat() != 1 || PreferenceManager.getDefaultSharedPreferences(this).getBoolean("afficher_taches_annulees", false)) {
@@ -285,16 +294,26 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 							else
 								map.put("img", String.valueOf(R.drawable.btn_check_buttonless_off));
 							map.put("id", String.valueOf(t.getIdentifiant()));
+							map.put("nb_fils", t.getListeTachesFille().size() + " fils");
+							
+							long jour = (t.getDateLimite().getTime() - Calendar.getInstance().getTime().getTime()) / (24*60*60*1000);
+							if(jour>=0)
+								map.put("jour_restant", jour + " jours\nrestants");
+							else
+								map.put("jour_restant", (0-jour) + " jours\npassés");
+							
 							listItem.add(map);
+							
+							if(t.getIdentifiant() == idTacheSelectionnee)
+								positionTacheSelectionnee = listItem.size()-1;
 						}
 					}
-				}
-					
+				}	
 			}
 		}
 
 		AdapterListView mSchedule = new AdapterListView (this.getBaseContext(), listItem, R.layout.affichageitem,
-				new String[] { "img", "titre", "description", "id" }, new int[] {R.id.img, R.id.titre, R.id.description, R.id.id });
+				new String[] { "img", "titre", "description", "id", "nb_fils", "jour_restant" }, new int[] {R.id.img, R.id.titre, R.id.description, R.id.id, R.id.nb_fils, R.id.jour_restant });
 
 		maListViewPerso.setAdapter(mSchedule);
 		
@@ -311,14 +330,15 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 		LayoutAnimationController controller = new LayoutAnimationController(set, 0.25f);
 		maListViewPerso.setLayoutAnimation(controller);
 		*/
-		
+		maListViewPerso.setLayoutAnimation(null);
 		if(animation) {
 			maListViewPerso.setLayoutAnimation(AnimationUtils.loadLayoutAnimation(this, R.anim.list_layout_controller));
 			maListViewPerso.startLayoutAnimation();
-		}
 			
-		//convertView.setBackgroundColor((position & 1) == 1 ? Color.WHITE : Color.LTGRAY);
-		//((View)maListViewPerso.getSelectedItem()).setBackgroundColor(Color.BLUE);
+		}
+		
+		if(idTacheSelectionnee > 0 && positionTacheSelectionnee >=0)
+			maListViewPerso.setSelection(positionTacheSelectionnee);
 	}
 
 	public void updateArborecence() {
@@ -328,6 +348,14 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 			titre += t.getNom() + "/";
 		
 		arborescence.setText(titre);
+		arborescence.requestLayout();
+		
+		arborecence_scrollbar.postDelayed(new Runnable() {
+			public void run() {
+				arborecence_scrollbar.refreshDrawableState();
+				arborecence_scrollbar.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
+			}
+		}, 50);
 		
 		if(modele.getArborescenceCourante().size() == 0)
 			back.setVisibility(View.INVISIBLE);
@@ -456,7 +484,7 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 					
 					modele.setTagsVisibles(listeTagsAffiches);
 					
-					updateList(true);
+					updateList(true, -1);
 				}
 			});
 			builderAfficheTag.setMultiChoiceItems(itemsTagsAAfficher, tagsVisiblesAAfficher, new DialogInterface.OnMultiChoiceClickListener() {
@@ -590,27 +618,27 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 		case R.id.sous_menu_tri_date:
 			item.setChecked(true);
 			modele.setTri(Tri.DATE);
-			updateList(true);
+			updateList(true, -1);
 			return true;
 		case R.id.sous_menu_tri_nom:
 			item.setChecked(true);
 			modele.setTri(Tri.NOM);
-			updateList(true);
+			updateList(true, -1);
 			return true;
 		case R.id.sous_menu_tri_ordre_creation:
 			item.setChecked(true);
 			modele.setTri(Tri.ORDRE_CREATION);
-			updateList(true);
+			updateList(true, -1);
 			return true;
 		case R.id.sous_menu_tri_etat:
 			item.setChecked(true);
 			modele.setTri(Tri.ETAT);
-			updateList(true);
+			updateList(true, -1);
 			return true;
 		case R.id.sous_menu_tri_priorite:
 			item.setChecked(true);
 			modele.setTri(Tri.PRIORITE);
-			updateList(true);
+			updateList(true, -1);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -642,7 +670,7 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 
 		if (Intent.ACTION_SEARCH.equals(newIntent.getAction())) {
 			modele.setRechercheCourante(newIntent.getStringExtra(SearchManager.QUERY));
-			updateList(true);
+			updateList(true, -1);
 		}
 	}
 	
@@ -676,7 +704,7 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
     		
     		identifiantTache = (Long) ((ImageView) v).getTag();
     		modele.getArborescenceCourante().add(modele.getTacheById(identifiantTache));
-			updateList(true);
+			updateList(true, -1);
     		
     	}
     	else if(v.getId() == R.id.img) {

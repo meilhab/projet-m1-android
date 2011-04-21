@@ -7,6 +7,7 @@
         <item>Bienvenue dans l\'application Gestionnaire de tâches, Si vous possédez déjà un identifiant, veuillez vous connecter dans réglage, sinon veuillez créer un compte via le menu ajouter un utilisateur.</item>
     	<!-- lorsqu'on ajoute une version à l'application la description des nouveautés doit se faire ici, il suffit d'ajouter un item ci-dessus -->
     </string-array>
+    <string name="tache">tâche</string>
     <string name="label_priorite">Priorité</string>
     <string name="label_etat">Etat</string>
     <string name="label_tag">Tags</string>

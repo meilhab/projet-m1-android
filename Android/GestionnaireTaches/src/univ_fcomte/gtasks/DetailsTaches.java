@@ -204,6 +204,8 @@ public class DetailsTaches extends Activity {
     		modele.getBdd().modifTache(tache);
     	}
     	
+    	setResult((int) tache.getIdentifiant());
+    	
     }
     
     public String ajouterZeroDate(String date) {

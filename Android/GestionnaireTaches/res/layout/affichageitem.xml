@@ -13,16 +13,26 @@
 
 	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 		android:orientation="vertical" android:layout_width="fill_parent"
-		android:layout_height="wrap_content" android:layout_gravity="center_vertical"
+		android:layout_height="fill_parent"
 		android:layout_weight="1" android:padding="5dp">
-
 		<TextView android:id="@+id/titre" android:layout_width="fill_parent"
 			android:layout_height="fill_parent" android:textStyle="bold"
+			android:layout_weight="1" android:maxLines="1" android:lines="1" android:textSize="17sp" />
+		<TextView android:id="@+id/description" android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:textStyle="normal"
+			android:textSize="11sp" android:lines="2" android:maxLines="2" />
+	</LinearLayout>
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:orientation="vertical" android:layout_width="wrap_content" 
+		android:layout_height="fill_parent" android:padding="5dp" >
+
+		<TextView android:id="@+id/nb_fils" android:layout_width="fill_parent"
+			android:layout_weight="1" android:layout_height="fill_parent" android:textStyle="bold" android:gravity="right"
 			android:maxLines="1" android:lines="1" android:textSize="17sp" />
 
-		<TextView android:id="@+id/description" android:layout_width="fill_parent"
-			android:layout_height="fill_parent" android:textStyle="normal"
-			android:textSize="11sp" android:maxLines="2" />
+		<TextView android:id="@+id/jour_restant" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:textStyle="normal" android:gravity="right"
+			android:textSize="11sp" android:maxLines="2" android:lines="2" android:text="5 jours\nrestants"/>
 	</LinearLayout>
 	<FrameLayout android:layout_height="fill_parent"
 		android:layout_width="wrap_content" android:background="#CECECE">

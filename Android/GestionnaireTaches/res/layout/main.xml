@@ -6,18 +6,30 @@
 		android:id="@+id/linearLayout1" android:orientation="horizontal"
 		android:layout_width="fill_parent">
 		<Button android:layout_width="wrap_content" android:background="@drawable/background_bouton_back"
-			android:layout_height="wrap_content" android:id="@+id/bouton_precedent" android:layout_gravity="center_vertical"></Button>
-		<Button android:layout_width="wrap_content" android:background="@drawable/background_bouton_accueil"
-			android:layout_height="wrap_content" android:id="@+id/bouton_accueil" android:layout_gravity="center_vertical"></Button>
-		<TextView android:layout_width="fill_parent"
-			android:layout_height="wrap_content" android:id="@+id/arborecence"
-			android:text="TextView" android:layout_gravity="center_vertical" android:textSize="17sp" android:maxLines="1" android:layout_weight="1" android:shadowColor="#FFF48D" android:shadowRadius="2.5" android:shadowDx="2" android:shadowDy="2" android:scrollbars="horizontal" android:scrollHorizontally="true" android:inputType="text" android:ellipsize="marquee"></TextView>
-		<Button android:layout_width="wrap_content" android:background="@drawable/background_bouton_new_tache"
-			android:layout_height="wrap_content" android:id="@+id/bouton_ajouter" android:layout_gravity="center_vertical" android:layout_margin="5dp"></Button>
+			android:layout_height="wrap_content" android:id="@+id/bouton_precedent"
+			android:layout_gravity="center_vertical"></Button>
+		<Button android:layout_width="wrap_content"
+			android:background="@drawable/background_bouton_accueil"
+			android:layout_height="wrap_content" android:id="@+id/bouton_accueil"
+			android:layout_gravity="center_vertical"></Button>
+		<HorizontalScrollView android:layout_width="fill_parent" android:id="@+id/arborecence_scrollbar"
+			android:layout_height="wrap_content" android:layout_weight="1"
+			android:layout_gravity="center_vertical" android:scrollbars="none">
+
+			<TextView android:layout_width="fill_parent"
+				android:layout_height="wrap_content" android:id="@+id/arborecence"
+				android:textSize="17sp" android:maxLines="1" android:shadowColor="#FFFF6B"
+				android:textColor="#318CEF" android:shadowRadius="2.5"
+				android:shadowDx="2" android:shadowDy="2"></TextView>
+		</HorizontalScrollView>
+		<Button android:layout_width="wrap_content"
+			android:background="@drawable/background_bouton_new_tache"
+			android:layout_height="wrap_content" android:id="@+id/bouton_ajouter"
+			android:layout_gravity="center_vertical" android:layout_margin="5dp"></Button>
 	</LinearLayout>
 
 	<ListView android:id="@+id/listviewperso"
 		android:layout_width="fill_parent" android:layout_height="fill_parent"
-		android:background="@android:color/transparent" />
+		android:background="@android:color/transparent" /> <!-- android:scrollbarThumbVertical="@*android:drawable/scrollbar_handle_accelerated_anim2" -->
 
 </LinearLayout>

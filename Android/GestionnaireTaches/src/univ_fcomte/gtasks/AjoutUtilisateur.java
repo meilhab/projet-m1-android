@@ -103,7 +103,7 @@ public class AjoutUtilisateur extends Activity {
 				((MonApplication)getApplication()).getModele().reinitialiserModele();
 				((MonApplication)getApplication()).getModele().getBdd().reinitialiserBDD(new ArrayList<Tag>(), new ArrayList<Tache>(), new HashMap<Long, Long>(), new HashMap<Long, Long>());
 				
-				((MonApplication)getApplication()).getGt().updateList(true);
+				((MonApplication)getApplication()).getGt().updateList(true, -1);
 				
 				finish();
 			}
