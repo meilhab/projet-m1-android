@@ -20,11 +20,15 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+/**
+ * @author Guillaume MONTAVON & Benoit MEILHAC (Master 1 Informatique)
+ * Permet de faire des requêtes HTTP pour obtenir le contenu d'une page web
+ */
 public class Synchronisation {
 
 	private static final int HTTP_STATUS_OK = 200;
 	private static String sUserAgent = null;
-	private String serveur;
+	private String serveur; //adresse du serveur
 	private Context context;
 	
 	public Synchronisation(Context context, String serveur) {
@@ -33,6 +37,10 @@ public class Synchronisation {
 		prepareUserAgent();
 	}
 	
+	/**
+	 * @author Guillaume MONTAVON & Benoit MEILHAC (Master 1 Informatique)
+	 * Erreur lors de la requête HTTP
+	 */
 	public static class ApiException extends Exception {
 		private static final long serialVersionUID = 1L;
 		public ApiException(String detailMessage, Throwable throwable) {
@@ -43,6 +51,10 @@ public class Synchronisation {
 		}
 	}
 
+	/**
+	 * @author Guillaume MONTAVON & Benoit MEILHAC (Master 1 Informatique)
+	 * Adresse du serveur invalide
+	 */
 	public static class ParseException extends Exception {
 		private static final long serialVersionUID = 1L;
 		public ParseException(String detailMessage, Throwable throwable) {
@@ -50,6 +62,9 @@ public class Synchronisation {
 		}
 	}
 	
+	/**
+	 * Configure l'user agent (pas utilisé dans l'application)
+	 */
 	public void prepareUserAgent() {
 		try {
 			PackageManager manager = context.getPackageManager();
@@ -60,15 +75,20 @@ public class Synchronisation {
 		}
 	}
 	
-	//=======================================================
-	// Recupère une page Web
-	//=======================================================
+	/**
+	 * Récupère une page Web depuis un serveur
+	 * @param nvps paramètre lorsque l'on fait une requête HTTP en POST
+	 * @return page Web sous forme de chaîne de caractères
+	 * @throws ApiException
+	 */
 	public synchronized String GetHTML(List <NameValuePair> nvps) throws ApiException {
 		
 		if (sUserAgent == null)
 			throw new ApiException("User-Agent string must be prepared");
 		
 		DefaultHttpClient httpClient = new DefaultHttpClient();
+		
+		//configuration du proxy
 		HttpHost proxy = new HttpHost(PreferenceManager.getDefaultSharedPreferences(context).getString("adresse_proxy", ""), PreferenceManager.getDefaultSharedPreferences(context).getInt("port", 0000));
 		if(PreferenceManager.getDefaultSharedPreferences(context).getBoolean("utilise_proxy", false))
 			httpClient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
@@ -118,10 +138,12 @@ public class Synchronisation {
 		return "";
 	}
 	
-	//=======================================================
-	// GenerateString 
-	//=======================================================
-	static public String stream2String(InputStream stream) {
+	/**
+	 * Génère une chaîne de caractères à partir d'un InputStream
+	 * @param stream InputStream à convertir en String
+	 * @return chaîne de caractères générée
+	 */
+	public String stream2String(InputStream stream) {
 		
 		InputStreamReader reader = new InputStreamReader(stream);
 		BufferedReader buffer = new BufferedReader(reader);
@@ -142,6 +164,11 @@ public class Synchronisation {
 		return sb.toString(); 
 	}
 	
+	/**
+	 * Permet d'encoder une chaine de caractère en MD5
+	 * @param s chaine de caractère à encoder en MD5
+	 * @return chaine de caractère encodé en MD5
+	 */
 	public String md5(String s) {
 		
 		try {

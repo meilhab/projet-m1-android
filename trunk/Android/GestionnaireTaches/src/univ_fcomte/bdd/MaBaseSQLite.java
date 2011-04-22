@@ -14,9 +14,9 @@ import android.database.sqlite.SQLiteDatabase.CursorFactory;
  */
 public class MaBaseSQLite extends SQLiteOpenHelper {
 
-	protected SQLiteDatabase db = null;
+	protected SQLiteDatabase db = null; //lien vers la BdD
 	
-	private ArrayList<Long> listeTachesRacines;
+	private ArrayList<Long> listeTachesRacines; //liste des tâches qui n'ont pas de père
 
 	public static String TABLE_TAG = "tag";
 	public static String TABLE_PRIORITE = "priorite";
@@ -35,12 +35,12 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 	private static String CREATE_TABLE_PRIORITE = "create table " + TABLE_PRIORITE + " ("
 		+ "idPriorite INTEGER PRIMARY KEY AUTOINCREMENT,"
 		+ "libellePriorite varchar(64) not null"
-		+ ")";
+		+ ")"; //n'est pas utilisée
 	
 	private static String CREATE_TABLE_ETAT = "create table " + TABLE_ETAT + " ("
 		+ "idEtat INTEGER PRIMARY KEY AUTOINCREMENT,"
 		+ "libelleEtat varchar(64) not null"
-		+ ")";
+		+ ")"; //n'est pas utilisée
 	
 	private static String CREATE_TABLE_TACHE = "create table " + TABLE_TACHE + " ("
 		+ "idTache INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -73,6 +73,9 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 		listeTachesRacines = new ArrayList<Long>();
 	}
 
+	/* (non-Javadoc)
+	 * @see android.database.sqlite.SQLiteOpenHelper#onCreate(android.database.sqlite.SQLiteDatabase)
+	 */
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		//open();
@@ -85,6 +88,9 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 		//close();
 	}
 
+	/* (non-Javadoc)
+	 * @see android.database.sqlite.SQLiteOpenHelper#onUpgrade(android.database.sqlite.SQLiteDatabase, int, int)
+	 */
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		//open();
@@ -111,6 +117,11 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 		return db;
 	}
 	
+	/**
+	 * Permet d'obtenir une tâche en donnant son identifiant
+	 * @param idTache identifiant de la tâche demandée
+	 * @return tache demandée
+	 */
 	public Tache getTache(long idTache) {
 		
 		open();
@@ -170,6 +181,11 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 		
 	}
 	
+	/**
+	 * Permet d'obtenir un tag en donnant son identifiant
+	 * @param idTag identifiant du tag demandé
+	 * @return tag demandé
+	 */
 	public Tag getTag(long idTag) {
 		
 		open();
@@ -195,6 +211,10 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 		
 	}
 	
+	/**
+	 * Permet d'obtenir la liste de toutes les tâches de la base de données
+	 * @return liste des tâches
+	 */
 	public ArrayList<Tache> getListeTache() {
 		
 		open();
@@ -271,6 +291,10 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 		
 	}
 	
+	/**
+	 * Permet d'obtenir la liste de tous les tags de la base de données
+	 * @return liste des tags
+	 */
 	public ArrayList<Tag> getListeTag() {
 		
 		open();
@@ -300,6 +324,13 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 	}
 	
 	
+	/**
+	 * Ajoute une tâche dans la BdD
+	 * @param tache tâche à ajouter
+	 * @param pere identifiant du père, si pas de père : -1
+	 * @param plusieurs true si on a déjà une connexion à la BdD ouverte sinon false
+	 * @return identifiant de la tâche ajoutée, -1 si erreur
+	 */
 	public long ajouterTache(Tache tache, long pere, boolean plusieurs) {
 		
 		if(!plusieurs)
@@ -334,7 +365,14 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 				if(db.insert(TABLE_APOURTAG, null, TagsToInsert) == -1)
 					nouveauId = -1;
 			}
-				
+			ContentValues FilsToInsert;
+			for(Long l : tache.getListeTachesFille()) {
+				FilsToInsert = new ContentValues();
+				FilsToInsert.put("idPere", tache.getIdentifiant());
+				FilsToInsert.put("idFils", l);
+				if(db.insert(TABLE_APOURFILS, null, FilsToInsert) == -1)
+					nouveauId = -1;
+			}	
 		}
 		
 		if(!plusieurs)
@@ -343,6 +381,12 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 		return nouveauId;
 	}
 	
+	/**
+	 * Ajoute un tag dans la BdD
+	 * @param tag tag à ajouter
+	 * @param plusieurs true si on a déjà une connexion à la BdD ouverte sinon false
+	 * @return identifiant du tag ajouté, -1 si erreur
+	 */
 	public long ajouterTag(Tag tag, boolean plusieurs) {
 		
 		if(!plusieurs)
@@ -362,6 +406,11 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 	
 	}	
 	
+	/**
+	 * Permet d'ajouter une liste de tags dans la BdD
+	 * @param listeTag liste des tags à ajouter
+	 * @return true si l'opération a réussi
+	 */
 	public boolean ajouterListeTag(ArrayList<Tag> listeTag) {
 		
 		open();
@@ -378,6 +427,11 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 		
 	}
 	
+	/**
+	 * Permet d'ajouter une liste de tâches dans la BdD
+	 * @param listeTache liste des tâches à ajouter
+	 * @return true si l'opération a réussi
+	 */
 	public boolean ajouterListeTache(ArrayList<Tache> listeTache) {
 		
 		open();
@@ -394,6 +448,11 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 		
 	}
 	
+	/**
+	 * Permet d'ajouter une liste de couples père, fils dans la BdD
+	 * @param listeAPourFils liste de couples <Fils, Père>
+	 * @return true si l'opération a réussi
+	 */
 	public boolean ajouterlisteAPourFils(HashMap<Long, Long> listeAPourFils) {
 		
 		boolean reussi=true;
@@ -418,6 +477,11 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 		
 	}
 	
+	/**
+	 * Permet d'ajouter une liste de couples tache, tag dans la BdD
+	 * @param listeAPourFils liste de couples <Tâche, Tag>
+	 * @return true si l'opération a réussi
+	 */
 	public boolean ajouterlisteAPourTag(HashMap<Long, Long> listeAPourTag) {
 		
 		boolean reussi=true;
@@ -455,11 +519,16 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 		
 		close();
 		
-		return ajouterListeTag(listeTag) && ajouterListeTache(listeTache) && /*ajouterlisteAPourTag(listeAPourTag) && */ajouterlisteAPourFils(listeAPourFils);
+		return ajouterListeTag(listeTag) && ajouterListeTache(listeTache)/* && ajouterlisteAPourTag(listeAPourTag) && ajouterlisteAPourFils(listeAPourFils)*/;
 		
 		
 	}
 	
+	/**
+	 * Modifie une tâche
+	 * @param tache tâche à modifier
+	 * @return nombre d'éléments modifiers (normalement 1)
+	 */
 	public int modifTache(Tache tache) {
 		
 		open();
@@ -480,6 +549,11 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 		
 	}
 	
+	/**
+	 * Modifie un tag
+	 * @param tag tag à modifier
+	 * @return nombre d'éléments modifiers (normalement 1)
+	 */
 	public long modifTag(Tag tag) {
 		
 		open();
@@ -496,6 +570,12 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 		
 	}
 	
+	/**
+	 * Supprime une tâche dans la BdD
+	 * @param idTache identifiant de la tâche à supprimer
+	 * @param ouvrirBase true si il faut ouvrir la BdD
+	 * @return true si l'opération a réussi
+	 */
 	public boolean supprimerTache(long idTache, boolean ouvrirBase) {
 		
 		if(ouvrirBase)
@@ -530,6 +610,11 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 		return reussi;
 	}
 	
+	/**
+	 * Supprime un tag dans la BdD
+	 * @param idTag identifiant du tag à supprimer
+	 * @return true si l'opération a réussi
+	 */
 	public boolean supprimerTag(long idTag) {
 		
 		boolean reussi=true;
@@ -545,12 +630,19 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 		
 	}
 	
+	/**
+	 * Vide toutes les tables de la BdD
+	 */
 	public void viderToutesTables() {
 		
 		onUpgrade(db, 1, 1);
 		
 	}
 	
+	/**
+	 * Permet d'obtenir la liste des tâches qui n'ont pas de père (pas utilisé)
+	 * @return liste des tâches qui n'ont pas de père
+	 */
 	public ArrayList<Long> getListeTachesRacines() {
 		return listeTachesRacines;
 	}

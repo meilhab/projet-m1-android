@@ -13,6 +13,10 @@ import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.*;
 
+/**
+ * @author Guillaume MONTAVON & Benoit MEILHAC (Master 1 Informatique)
+ * Activity permettant d'ajouter un compte utilisateur
+ */
 public class AjoutUtilisateur extends Activity {
 
 	private EditText identifiant;
@@ -21,6 +25,9 @@ public class AjoutUtilisateur extends Activity {
 	private EditText mail;
 	private EditText mdPasse;
 	
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
@@ -52,6 +59,9 @@ public class AjoutUtilisateur extends Activity {
 		
 	}
 	
+	/**
+	 * Permet d'envoyer une requete afin d'ajouter un compte utilisateur sur le serveur
+	 */
 	public void enregistrerUtilisateur() {
 		
 		if(nom.getText().toString().length() > 0 && prenom.getText().toString().length() > 0 && identifiant.getText().toString().length() > 0 && mail.getText().toString().length() > 0 && mdPasse.getText().toString().length() >= 6) {
@@ -78,6 +88,10 @@ public class AjoutUtilisateur extends Activity {
 		new ErreurDialog(R.string.erreur, R.string.erreur_ajout_user, this);
 	}
 	
+	/**
+	 * Ajoute l'identifiant et le mot de passe dans les règlages de l'application
+	 * pour pouvoir synchroniser directement ses tâches sans être obligé d'ajouter son identifiant dans les préférences
+	 */
 	public void ajoutDansPrefNouveauUser() {
 		
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
