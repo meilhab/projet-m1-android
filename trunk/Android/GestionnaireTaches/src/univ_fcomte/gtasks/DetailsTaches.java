@@ -8,6 +8,7 @@ import android.app.*;
 import android.content.*;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.*;
 import android.widget.*;
 
@@ -247,12 +248,15 @@ public class DetailsTaches extends Activity {
 		case R.id.menu_supprimer_tache:
 			modele.supprimerTache(modele.getTacheById(identifiant));
 			modele.getBdd().supprimerTache(identifiant, true);
-			ArrayList<Long> listeTachesSuppr = new ArrayList<Long>();
-			listeTachesSuppr.add(identifiant);
-			ThreadSynchronisation tsSupprTache = new ThreadSynchronisation(modele, gt, gt.getSw());
-			tsSupprTache.selectionModeSynchronisation(ThreadSynchronisation.SUPPRESSION_TACHES);
-			tsSupprTache.setListeTachesSuppr(listeTachesSuppr);
-			tsSupprTache.start();
+			
+			if(PreferenceManager.getDefaultSharedPreferences(gt).getBoolean("utilise_compte", false) && PreferenceManager.getDefaultSharedPreferences(gt).getBoolean("synchro_auto", false)) {
+				ArrayList<Long> listeTachesSuppr = new ArrayList<Long>();
+				listeTachesSuppr.add(identifiant);
+				ThreadSynchronisation tsSupprTache = new ThreadSynchronisation(modele, gt, gt.getSw());
+				tsSupprTache.selectionModeSynchronisation(ThreadSynchronisation.SUPPRESSION_TACHES);
+				tsSupprTache.setListeTachesSuppr(listeTachesSuppr);
+				tsSupprTache.start();
+			}
 			
 			finish();
 			return true;

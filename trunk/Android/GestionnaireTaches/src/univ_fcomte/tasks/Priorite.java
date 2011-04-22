@@ -1,5 +1,9 @@
 package univ_fcomte.tasks;
 
+/**
+ * @author Guillaume MONTAVON & Benoit MEILHAC (Master 1 Informatique)
+ * Représente la priorité d'une tâche (sans, faible, ...), n'est pas utilisée dans notre modèle
+ */
 public class Priorite {
 	public static final int SANS = 0;
 	public static final int FAIBLE = 1;

@@ -8,6 +8,7 @@ import android.app.*;
 import android.app.AlertDialog.Builder;
 import android.content.*;
 import android.content.DialogInterface.OnClickListener;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -190,6 +191,8 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 										tsSupprTache.setListeTachesSuppr(listeTachesSuppr);
 										tsSupprTache.start();
 									}
+									else
+										updateList(false, -1);
 									
 									break;
 								default:
@@ -297,6 +300,24 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 								map.put("img", String.valueOf(R.drawable.btn_check_buttonless_off));
 							map.put("id", String.valueOf(t.getIdentifiant()));
 
+							switch (t.getEtat() -1) {
+								case Etat.ANNULER:
+									map.put("etat_couleur", Color.RED + "");
+									break;
+								case Etat.A_PREVOIR:
+									map.put("etat_couleur", Color.YELLOW + "");
+									break;
+								case Etat.EN_COURS:
+									map.put("etat_couleur", Color.BLUE + "");
+									break;
+								case Etat.TERMINER:
+									map.put("etat_couleur", Color.GREEN + "");
+									break;
+								default:
+									map.put("etat_couleur", Color.WHITE + "");
+									break;
+							}
+							
 							map.put("nb_fils", t.getListeTachesFille().size() + " " + getResources().getString(R.string.nb_fils));
 							long jour = (long) Math.ceil((t.getDateLimite().getTime() - Calendar.getInstance().getTime().getTime()) / (24*60*60*1000.0));
 							

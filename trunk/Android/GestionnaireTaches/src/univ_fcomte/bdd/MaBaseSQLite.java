@@ -8,6 +8,10 @@ import android.database.Cursor;
 import android.database.sqlite.*;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 
+/**
+ * @author Guillaume MONTAVON & Benoit MEILHAC (Master 1 Informatique)
+ * Gestion de la base de données SQLite sur le téléphone avec toutes les opérations possibles (ajout de tâches, modification, ...)
+ */
 public class MaBaseSQLite extends SQLiteOpenHelper {
 
 	protected SQLiteDatabase db = null;

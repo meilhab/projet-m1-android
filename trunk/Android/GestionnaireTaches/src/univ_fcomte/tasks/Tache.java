@@ -10,6 +10,10 @@ import java.util.GregorianCalendar;
 
 import android.text.format.DateFormat;
 
+/**
+ * @author Guillaume MONTAVON & Benoit MEILHAC (Master 1 Informatique)
+ * Représente une tâche avec ses propriétés : nom, description, état, ..., une liste de tag et une liste de tâches filles
+ */
 public class Tache {
 	private long identifiant;
 	private String nom;
@@ -193,13 +197,20 @@ public class Tache {
 	
 }
 
-
+/**
+ * @author Guillaume MONTAVON & Benoit MEILHAC (Master 1 Informatique)
+ * Compare les tâches selon leurs nom
+ */
 class ComparateurTache implements Comparator<Tache> {
 	public int compare(Tache t1, Tache t2){
 		return t1.getNom().compareToIgnoreCase(t2.getNom());
 	}      
 }
 
+/**
+ * @author Guillaume MONTAVON & Benoit MEILHAC (Master 1 Informatique)
+ * Compare les tâches selon leurs priorités
+ */
 class ComparateurTachePriorite implements Comparator<Tache> {
 	public int compare(Tache t1, Tache t2){
 		if(t1.getPriorite() > t2.getPriorite())
@@ -211,6 +222,10 @@ class ComparateurTachePriorite implements Comparator<Tache> {
 	}      
 }
 
+/**
+ * @author Guillaume MONTAVON & Benoit MEILHAC (Master 1 Informatique)
+ * Compare les tâches selon leurs états
+ */
 class ComparateurTacheEtat implements Comparator<Tache> {
 	public int compare(Tache t1, Tache t2){
 		if(t1.getEtat() > t2.getEtat())
@@ -222,6 +237,10 @@ class ComparateurTacheEtat implements Comparator<Tache> {
 	}      
 }
 
+/**
+ * @author Guillaume MONTAVON & Benoit MEILHAC (Master 1 Informatique)
+ * Compare les tâches selon leurs identifiants
+ */
 class ComparateurTacheIdentifiant implements Comparator<Tache> {
 	public int compare(Tache t1, Tache t2){
 		if(t1.getIdentifiant() > t2.getIdentifiant())
@@ -233,6 +252,10 @@ class ComparateurTacheIdentifiant implements Comparator<Tache> {
 	}      
 }
 
+/**
+ * @author Guillaume MONTAVON & Benoit MEILHAC (Master 1 Informatique)
+ * Compare les tâches selon leurs dates
+ */
 class ComparateurTacheDate implements Comparator<Tache> {
 	public int compare(Tache t1, Tache t2){
 		return t1.getDateLimiteToString().compareToIgnoreCase(t2.getDateLimiteToString());
