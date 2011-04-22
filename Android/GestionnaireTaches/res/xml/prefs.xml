@@ -19,6 +19,12 @@
 	        		android:key="afficher_taches_annulees"
 	                android:title="@string/label_affiche_taches_annulees"
 	                android:summary="@string/label_desc_affiche_taches_annulees" />
+	        
+	        <CheckBoxPreference
+	        		android:key="synchro_auto"
+	        		android:defaultValue="true"
+	                android:title="@string/label_synchro_auto"
+	                android:summary="@string/label_synchro_auto_desc" />
 	                
 		</PreferenceCategory>
 		

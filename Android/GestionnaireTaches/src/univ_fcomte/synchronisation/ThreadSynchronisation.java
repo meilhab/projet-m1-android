@@ -8,7 +8,6 @@ import org.json.JSONException;
 
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.widget.Toast;
 import univ_fcomte.gtasks.*;
 import univ_fcomte.synchronisation.Synchronisation.ApiException;
 import univ_fcomte.tasks.Modele;
@@ -85,9 +84,9 @@ public class ThreadSynchronisation extends Thread {
 			@Override
 			public void run() {
 				if(reponseServeur.equals(""))
-					Toast.makeText(gt.getApplicationContext(), gt.getResources().getString(R.string.erreur_pas_connexion), 4000).show();
+					new ErreurDialog(R.string.erreur, R.string.erreur_pas_connexion, gt);
 				else if(reponseServeur.startsWith("Erreur de connexion"))
-					Toast.makeText(gt.getApplicationContext(), gt.getResources().getString(R.string.erreur_login), 4000).show();
+					new ErreurDialog(R.string.erreur, R.string.erreur_login, gt);
 				gt.setProgressBarIndeterminateVisibility(false);
 				modele.setEnCoursSynchro(false);
 			}
