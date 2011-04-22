@@ -1,27 +1,32 @@
 package univ_fcomte.tasks;
 
 import java.util.*;
+
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import univ_fcomte.bdd.MaBaseSQLite;
 
+/**
+ * @author Guillaume MONTAVON & Benoit MEILHAC (Master 1 Informatique)
+ * Représente le modèle avec toutes les données nécessaires au bon fonctionnement de l'application : liste de tâches, adresse du serveur distant, ...
+ */
 public class Modele {
 
 	static public enum Tri { NOM, DATE, PRIORITE, ETAT, ORDRE_CREATION };
 	
-	private ArrayList<Tag> listeTags;
-	private ArrayList<Tache> listeTaches;
-	private MaBaseSQLite bdd;
-	private SQLiteDatabase db;
-	private String rechercheCourante;
-	private ArrayList<Long> tagsVisibles;
+	private ArrayList<Tag> listeTags; //liste de tous les tags de l'application
+	private ArrayList<Tache> listeTaches; //liste de toutes les tâches de l'application
+	private MaBaseSQLite bdd; //Permet de modifier la BdD
+	private SQLiteDatabase db; //lien vers la base SQLite
+	private String rechercheCourante; //recherche actuel, vide par défaut
+	private ArrayList<Long> tagsVisibles; //tags que l'utilisateur a décidé d'afficher
 	private boolean afficherToutesTaches;
-	private Tri tri;
-	private boolean enCoursSynchro;
-	private String serveur;
-	private long parentCourant;
-	private ArrayList<Long> tachesRacines;
-	private ArrayList<Tache> arborescenceCourante;
+	private Tri tri; //ordre dans lequel les tâches doivent être triées
+	private boolean enCoursSynchro; //true si on est train de synchroniser
+	private String serveur; //adresse du serveur distant pour la synchronisation
+	private long parentCourant; //identifiant de la tâche racine
+	private ArrayList<Long> tachesRacines; // liste de toutes les tâches qui n'ont pas de père
+	private ArrayList<Tache> arborescenceCourante; //arborescence courante : liste des tâches qu'il faut traverser pour aller de la racine à la tâche courante
 
 
 	public Modele(Context context) {
@@ -151,6 +156,11 @@ public class Modele {
 		return arborescenceCourante;
 	}
 	
+	/**
+	 * Permet d'obtenir une tâche en connaissant son identifiant
+	 * @param id identifiant de la tâche souhaitée
+	 * @return tâche possèdant l'identifiant donné en paramètre
+	 */
 	public Tache getTacheById(long id) {
 		
 		Tache tache = null;
@@ -161,6 +171,11 @@ public class Modele {
 		return tache;
 	}
 	
+	/**
+	 * Permet d'obtenir un tag en connaissant son identifiant
+	 * @param id identifiant du tag souhaité
+	 * @return tag possèdant l'identifiant donné en paramètre
+	 */
 	public Tag getTagById(long id) {
 		
 		Tag tag = null;
@@ -170,7 +185,11 @@ public class Modele {
 		
 		return tag;
 	}
-
+	
+	/**
+	 * Permet d'obtenir l'identifiant maximum de toutes les tâches
+	 * @return identifiant maximum de toutes les tâches
+	 */
 	public long getIdMaxTache() {
 		
 		long max = 0;
@@ -182,6 +201,10 @@ public class Modele {
 		
 	}
 	
+	/**
+	 * Permet d'obtenir l'identifiant maximum de tous les tags
+	 * @return identifiant maximum de tous les tags
+	 */
 	public long getIdMaxTag(){
 		long max = 0;
 		for(Tag t : listeTags)
@@ -191,6 +214,10 @@ public class Modele {
 		return max;
 	}
 	
+	/**
+	 * Supprime une tâches dans le modèle ainsi que toutes ses sous-tâches
+	 * @param t tâche à supprimer
+	 */
 	public void supprimerTache(Tache t) {
 		
 		ArrayList<Long> listeTachesSuppr = new ArrayList<Long>();
@@ -204,6 +231,11 @@ public class Modele {
 
 	}
 	
+	/**
+	 * Supprime toutes les sous tâches d'une tâche
+	 * @param t tâche racine
+	 * @param listeTachesSuppr liste des tâches à supprimer
+	 */
 	public void supprimerTache2(Tache t, ArrayList<Long> listeTachesSuppr) {
 		
 		listeTachesSuppr.add(t.getIdentifiant());
@@ -223,8 +255,9 @@ public class Modele {
 	public void initialiserModele() {
 		listeTags = bdd.getListeTag();
 		listeTaches = bdd.getListeTache();
-		tachesRacines = bdd.getListeTachesRacines();
-
+		//tachesRacines = bdd.getListeTachesRacines();
+		refreshTachesRacines();
+		
 		if(tagsVisibles == null) {
 			tagsVisibles = new ArrayList<Long>();
 			for(Tag t : listeTags)
@@ -232,6 +265,10 @@ public class Modele {
 		}
 	}
 	
+	/**
+	 * Tri les tâches suivant le tri courant (par ordre alphabéthique, date, ...)
+	 * @param ascendant ordre ascendant si true
+	 */
 	public void trierTaches(boolean ascendant) {
 
 		Comparator<Tache> compar;
@@ -250,6 +287,26 @@ public class Modele {
 			Collections.sort(listeTaches,compar);
 		else
 			Collections.sort(listeTaches,Collections.reverseOrder(compar));
+		
+	}
+	
+	
+	/**
+	 * Recherche et enregistre toutes les tâches qui n'ont pas de père
+	 */
+	public void refreshTachesRacines() {
+		
+		tachesRacines.clear();
+		ArrayList<Long> listeTachesFilles = new ArrayList<Long>();
+		
+		for(Tache t : listeTaches)
+			for(long l : t.getListeTachesFille())
+				if(!listeTachesFilles.contains(l))
+					listeTachesFilles.add(l);
+		
+		for(Tache t : listeTaches)
+			if(!listeTachesFilles.contains(t.getIdentifiant()))
+				tachesRacines.add(t.getIdentifiant());
 		
 	}
 }

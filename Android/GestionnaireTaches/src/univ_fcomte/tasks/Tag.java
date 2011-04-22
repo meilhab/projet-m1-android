@@ -1,5 +1,9 @@
 package univ_fcomte.tasks;
 
+/**
+ * @author Guillaume MONTAVON & Benoit MEILHAC (Master 1 Informatique)
+ * Représente un tag (attribut d'un tâche, ex : professionnel, personnel, ...), chaque tâche en possède une liste
+ */
 public class Tag {
 	private long identifiant;
 	private String nom;

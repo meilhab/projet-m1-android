@@ -20,4 +20,18 @@ public class ErreurDialog {
 
 	}
 	
+	public ErreurDialog(String titre, String message, Context context) {
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(context);
+		builder.setTitle(titre);
+		builder.setMessage(message);
+		builder.setCancelable(false);
+		builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {}
+		});
+		AlertDialog alert = builder.create();
+		alert.show();
+
+	}
+	
 }

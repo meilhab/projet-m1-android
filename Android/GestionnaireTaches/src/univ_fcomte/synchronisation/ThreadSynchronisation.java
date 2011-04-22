@@ -126,8 +126,9 @@ public class ThreadSynchronisation extends Thread {
 			Log.i("pas erreur", "nb taches ds modele" + modele.getListeTaches().size());
 			
 			modele.getBdd().reinitialiserBDD(modele.getListeTags(), modele.getListeTaches(), json.getListeAPourTag(), json.getListeAPourFils());
-			
-			modele.setTachesRacines(modele.getBdd().getListeTachesRacines());
+						
+			//modele.setTachesRacines(modele.getBdd().getListeTachesRacines());
+			modele.refreshTachesRacines();
 			
 			gt.runOnUiThread(new Runnable() {
 				@Override
@@ -173,6 +174,14 @@ public class ThreadSynchronisation extends Thread {
 			e.printStackTrace();
 		}
 		
+		gt.runOnUiThread(new Runnable() {	
+			@Override
+			public void run() {
+				new ErreurDialog("reponse", reponseServeur, gt);
+			}
+		});
+		
+		
 		if(!reponseServeur.equals("") && !reponseServeur.startsWith("Erreur de connexion")) {
 			
 			JsonParser json = new JsonParser(modele);
@@ -183,8 +192,9 @@ public class ThreadSynchronisation extends Thread {
 			}
 			
 			modele.getBdd().reinitialiserBDD(modele.getListeTags(), modele.getListeTaches(), json.getListeAPourTag(), json.getListeAPourFils());
-			
-			modele.setTachesRacines(modele.getBdd().getListeTachesRacines());
+						
+			//modele.setTachesRacines(modele.getBdd().getListeTachesRacines());
+			modele.refreshTachesRacines();
 			
 			gt.runOnUiThread(new Runnable() {
 				@Override

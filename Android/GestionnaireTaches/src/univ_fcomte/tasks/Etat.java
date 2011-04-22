@@ -1,5 +1,9 @@
 package univ_fcomte.tasks;
 
+/**
+ * @author Guillaume MONTAVON & Benoit MEILHAC (Master 1 Informatique)
+ * Représente un l'état d'une tâche (annuler, en cours, ...), n'est pas utilisée dans notre modèle
+ */
 public class Etat {
 	public static final int ANNULER = 0;
 	public static final int A_PREVOIR = 1;
