@@ -51,7 +51,7 @@
 	<string name="label_menu_supprimer_tag">Suppression de tags</string>
 	<string name="label_menu_ajout_utilisateur">Ajout d\'un utilisateur</string>
 	<string name="tri_date">Date</string>
-	<string name="tri_nom">Tâche</string>
+	<string name="tri_nom">Ordre alphabétique</string>
 	<string name="tri_etat">Etat</string>
 	<string name="tri_priorite">Priorité</string>
 	<string name="tri_ordre_creation">Ordre de création</string>
@@ -68,7 +68,7 @@
 	<string name="label_desc_affiche_taches_annulees">Sélectionner si vous souhaitez afficher les taches annulées</string>
 	<string name="label_utiliser_compte">Utiliser un compte utilisateur</string>
 	<string name="label_desc_utiliser_compte">Sélectionner si vous souhaitez utiliser un compte</string>
-	<string name="label_generale">Générale</string>
+	<string name="label_generale">Général</string>
 	<string name="label_login">Nom d\'utilisateur</string>
 	<string name="label_desc_login">Entrez votre nom d\'utilisateur</string>
 	<string name="label_password">Mot de passe</string>
@@ -87,7 +87,7 @@
 	<string name="label_user_mail">Adresse mail</string>
 	<string name="label_enregistrer">Enregistrer</string>
 	<string name="label_annuler">Annuler</string>
-	
+	<string name="erreur">Erreur</string>
 	<string name="erreur_pas_connexion">Erreur : Pas de connexion internet disponible</string>
 	<string name="erreur_login">Erreur : Identifiant ou mot de passe incorrect</string>
 	<string name="search_hint">Rechercher une tâche</string>
@@ -98,5 +98,9 @@
 	<string name="nouveau_user_cree">Nouvelle utilisateur créé</string>
 	<string name="connecter_avec_nouveau_user">Utilisateur créé.\nSouhaitez-vous vous connecter avec ce nouveau compte (vous perdrez les taches enregistrées sur le téléphone) ?</string>
 	<string name="erreur_ajout_user">Veuillez correctement remplir les champs nom, prénom, identifiant, mot de passe et adresse mail</string>
-
+	<string name="jours_restants">jours\nrestants</string>
+	<string name="jours_passes">jours\npassés</string>
+	<string name="nb_fils">fils</string>
+	<string name="label_synchro_auto">Synchronisation automatique</string>
+	<string name="label_synchro_auto_desc">Synchronise automatiquement la suppression de tâches</string>
 </resources>

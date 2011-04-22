@@ -75,14 +75,7 @@ public class AjoutUtilisateur extends Activity {
 	}
 	
 	public void afficherMessageErreur() {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage(R.string.erreur_ajout_user).setCancelable(false)
-		       .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-		           public void onClick(DialogInterface dialog, int id) {
-		           }
-		       });
-		AlertDialog alert = builder.create();
-		alert.show();
+		new ErreurDialog(R.string.erreur, R.string.erreur_ajout_user, this);
 	}
 	
 	public void ajoutDansPrefNouveauUser() {

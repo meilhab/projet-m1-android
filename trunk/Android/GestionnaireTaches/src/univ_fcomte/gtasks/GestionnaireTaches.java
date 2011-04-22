@@ -75,7 +75,6 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 		maListViewPerso.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> arg0, View v, int arg2, long arg3) {
-				Log.i("selection","selection");
 				if(ancienItemSelectionne != null)
 					ancienItemSelectionne.setBackgroundResource(R.drawable.background_item_out);
 				v.setBackgroundResource(R.drawable.background_item_in);
@@ -183,12 +182,15 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 								case 2:
 									modele.supprimerTache(modele.getTacheById(identifiant));
 									modele.getBdd().supprimerTache(identifiant, true);
-									ArrayList<Long> listeTachesSuppr = new ArrayList<Long>();
-									listeTachesSuppr.add(identifiant);
-									ThreadSynchronisation tsSupprTache = new ThreadSynchronisation(modele, GestionnaireTaches.this, sw);
-									tsSupprTache.selectionModeSynchronisation(ThreadSynchronisation.SUPPRESSION_TACHES);
-									tsSupprTache.setListeTachesSuppr(listeTachesSuppr);
-									tsSupprTache.start();
+									if(PreferenceManager.getDefaultSharedPreferences(application.getGt()).getBoolean("utilise_compte", false) && PreferenceManager.getDefaultSharedPreferences(application.getGt()).getBoolean("synchro_auto", false)) {
+										ArrayList<Long> listeTachesSuppr = new ArrayList<Long>();
+										listeTachesSuppr.add(identifiant);
+										ThreadSynchronisation tsSupprTache = new ThreadSynchronisation(modele, GestionnaireTaches.this, sw);
+										tsSupprTache.selectionModeSynchronisation(ThreadSynchronisation.SUPPRESSION_TACHES);
+										tsSupprTache.setListeTachesSuppr(listeTachesSuppr);
+										tsSupprTache.start();
+									}
+									
 									break;
 								default:
 									break;
@@ -295,12 +297,13 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 								map.put("img", String.valueOf(R.drawable.btn_check_buttonless_off));
 							map.put("id", String.valueOf(t.getIdentifiant()));
 
-							map.put("nb_fils", t.getListeTachesFille().size() + " fils");
-							long jour = (t.getDateLimite().getTime() - Calendar.getInstance().getTime().getTime()) / (24*60*60*1000);
+							map.put("nb_fils", t.getListeTachesFille().size() + " " + getResources().getString(R.string.nb_fils));
+							long jour = (long) Math.ceil((t.getDateLimite().getTime() - Calendar.getInstance().getTime().getTime()) / (24*60*60*1000.0));
+							
 							if(jour>=0)
-								map.put("jour_restant", jour + " jours\nrestants");
+								map.put("jour_restant", jour + " " + getResources().getString(R.string.jours_restants));
 							else
-								map.put("jour_restant", (0-jour) + " jours\npassés");
+								map.put("jour_restant", (0-jour) + " " + getResources().getString(R.string.jours_passes));
 							
 							listItem.add(map);
 							
@@ -316,25 +319,11 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 				new String[] { "img", "titre", "description", "id", "nb_fils", "jour_restant" }, new int[] {R.id.img, R.id.titre, R.id.description, R.id.id, R.id.nb_fils, R.id.jour_restant });
 
 		maListViewPerso.setAdapter(mSchedule);
-		
-		/*
-		AnimationSet set = new AnimationSet(true);
-		Animation animation = new AlphaAnimation(0.0f, 1.0f);
-		animation.setDuration(400);
-		set.addAnimation(animation);
-		animation = new TranslateAnimation(
-		Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f,
-		Animation.RELATIVE_TO_SELF, -1.0f, Animation.RELATIVE_TO_SELF, 0.0f
-		);          animation.setDuration(400);
-		set.addAnimation(animation);
-		LayoutAnimationController controller = new LayoutAnimationController(set, 0.25f);
-		maListViewPerso.setLayoutAnimation(controller);
-		*/
+
 		maListViewPerso.setLayoutAnimation(null);
 		if(animation) {
 			maListViewPerso.setLayoutAnimation(AnimationUtils.loadLayoutAnimation(this, R.anim.list_layout_controller));
 			maListViewPerso.startLayoutAnimation();
-			
 		}
 		
 		if(idTacheSelectionnee > 0 && positionTacheSelectionnee >=0)
@@ -679,15 +668,7 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 	}
 	
 	public void attenteSynchronisation() {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle(R.string.menu_synchronisation);
-		builder.setMessage(R.string.attente_synchronisation).setCancelable(false)
-		       .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-		           public void onClick(DialogInterface dialog, int id) {
-		           }
-		       });
-		AlertDialog alert = builder.create();
-		alert.show();
+		new ErreurDialog(R.string.menu_synchronisation, R.string.attente_synchronisation, this);
 	}
 
 	@Override
