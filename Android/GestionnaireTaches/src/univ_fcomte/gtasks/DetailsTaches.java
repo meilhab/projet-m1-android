@@ -12,11 +12,15 @@ import android.preference.PreferenceManager;
 import android.view.*;
 import android.widget.*;
 
+/**
+ * @author Guillaume MONTAVON & Benoit MEILHAC (Master 1 Informatique)
+ * Activity qui gère la modification ou l'ajout d'un tâche
+ */
 public class DetailsTaches extends Activity {
     
-	private Modele modele;
-	private GestionnaireTaches gt;
-	private long identifiant;
+	private Modele modele; //modèle de l'application
+	private GestionnaireTaches gt; //activity principale
+	private long identifiant; //identifiant de la tâche à modifier si modification
 	private EditText description;
 	private EditText nom;
 	private Spinner spinnerEtat;
@@ -30,11 +34,14 @@ public class DetailsTaches extends Activity {
 	private int jourDateLimite;
 	private Button boutonDateLimite;
 	
-	/** Called when the activity is first created. */
+    /* (non-Javadoc)
+     * @see android.app.Activity#onCreate(android.os.Bundle)
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.details_taches);
+        
         modele=((MonApplication)getApplication()).getModele();
         Bundle objetbunble  = this.getIntent().getExtras();
         
@@ -44,7 +51,6 @@ public class DetailsTaches extends Activity {
         	identifiant = -1;
         
         gt = ((MonApplication)getApplication()).getGt();
-
         nom = ((EditText)findViewById(R.id.edit_nom));
         description = ((EditText)findViewById(R.id.edit_description));
         
@@ -60,18 +66,15 @@ public class DetailsTaches extends Activity {
         spinnerEtat.setSelection(2);
 
         boutonDateLimite = (Button) findViewById(R.id.bouton_date_limite);
-        // get the current date
 		final Calendar c = GregorianCalendar.getInstance();
 		annneeDateLimite = c.get(Calendar.YEAR);
 		moisDateLimite = c.get(Calendar.MONTH) + 1;
 		jourDateLimite = c.get(Calendar.DAY_OF_MONTH);
-		
 		boutonDateLimite.setText(ajouterZeroDate(jourDateLimite) + "/" + ajouterZeroDate(moisDateLimite) + "/" + String.valueOf(annneeDateLimite));
 		
         boutonDateLimite.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				
 			    DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {
 			    	public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 			    		annneeDateLimite = year;
@@ -81,7 +84,6 @@ public class DetailsTaches extends Activity {
 					}
 			    };
 				new DatePickerDialog(DetailsTaches.this, mDateSetListener, annneeDateLimite, moisDateLimite - 1, jourDateLimite).show();
-				
 			}
 		});
         
@@ -100,6 +102,9 @@ public class DetailsTaches extends Activity {
         
     }
    
+    /**
+     * Remplir les champs de l'activity avec le propriétés de la tâche si modification
+     */
     public void remplirChamps() {
     	
     	if(identifiant!=-1) {
@@ -125,6 +130,9 @@ public class DetailsTaches extends Activity {
     	
     }
     
+    /**
+     * Permet d'afficher la boite de dialogue pour modifier les tags
+     */
     public void creerBoiteDialogTags() {
     	
         CharSequence[] items = new CharSequence[modele.getListeTags().size()];
@@ -162,13 +170,18 @@ public class DetailsTaches extends Activity {
     	
     }
     
+    /* (non-Javadoc)
+     * @see android.app.Activity#onBackPressed()
+     */
+    @Override
     public void onBackPressed() {
-    	
     	enregistrerTache();
-    		
     	super.onBackPressed();
     }
     
+    /**
+     * Enregistre la tâche modifiée ou la nouvelle tâche dans le modèle et la BdD
+     */
     public void enregistrerTache() {
     	
     	ArrayList<Long> listeTag = new ArrayList<Long>();
@@ -209,12 +222,11 @@ public class DetailsTaches extends Activity {
     	
     }
     
-    public String ajouterZeroDate(String date) {
-    	if(date.length() == 1)
-    		date = "0" + date;
-    	return date;
-    }
-    
+    /**
+     * Ajoute un zéro à un mois si il est inférieur à 10
+     * @param date mois
+     * @return mois avec un zéro en plus
+     */
     public String ajouterZeroDate(int date) {
     	String dateTemp = String.valueOf(date);
     	if(dateTemp.length() == 1)
@@ -222,6 +234,10 @@ public class DetailsTaches extends Activity {
     	return dateTemp;
     }
     
+    /* (non-Javadoc)
+     * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
+     */
+    @Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data){
 
 		switch(requestCode){
@@ -233,12 +249,20 @@ public class DetailsTaches extends Activity {
 
 	}
     
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+	 */
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu){
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.menu_details, menu);
 		return true;
 	}
 	
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onOptionsItemSelected(android.view.MenuItem)
+	 */
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.menu_enregistrer_tache:
@@ -248,8 +272,9 @@ public class DetailsTaches extends Activity {
 		case R.id.menu_supprimer_tache:
 			modele.supprimerTache(modele.getTacheById(identifiant));
 			modele.getBdd().supprimerTache(identifiant, true);
-			
-			if(PreferenceManager.getDefaultSharedPreferences(gt).getBoolean("utilise_compte", false) && PreferenceManager.getDefaultSharedPreferences(gt).getBoolean("synchro_auto", false)) {
+
+			if (PreferenceManager.getDefaultSharedPreferences(gt).getBoolean("utilise_compte", false)
+					&& PreferenceManager.getDefaultSharedPreferences(gt).getBoolean("synchro_auto", false)) {
 				ArrayList<Long> listeTachesSuppr = new ArrayList<Long>();
 				listeTachesSuppr.add(identifiant);
 				ThreadSynchronisation tsSupprTache = new ThreadSynchronisation(modele, gt, gt.getSw());
@@ -257,7 +282,7 @@ public class DetailsTaches extends Activity {
 				tsSupprTache.setListeTachesSuppr(listeTachesSuppr);
 				tsSupprTache.start();
 			}
-			
+
 			finish();
 			return true;
 		case R.id.menu_ajout_tag:
@@ -266,30 +291,30 @@ public class DetailsTaches extends Activity {
 			builderAjoutTag.setMessage(getResources().getText(R.string.label_nom_tag));
 			final EditText etNomTag = new EditText(this);
 			builderAjoutTag.setView(etNomTag);
-			builderAjoutTag.setNegativeButton("Annuler", new OnClickListener(){
+			builderAjoutTag.setNegativeButton("Annuler", new OnClickListener() {
 				@Override
 				public void onClick(DialogInterface arg0, int arg1) {}
 			});
 			builderAjoutTag.setPositiveButton("OK", new OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					if(!etNomTag.getText().toString().equals("")){
-						Tag t = new Tag(modele.getIdMaxTag()+1, etNomTag.getText().toString(), 1);
+					if (!etNomTag.getText().toString().equals("")) {
+						Tag t = new Tag(modele.getIdMaxTag() + 1, etNomTag
+								.getText().toString(), 1);
 						modele.ajoutTag(t);
 						modele.getBdd().ajouterTag(t, false);
 						creerBoiteDialogTags();
 						remplirChamps();
 						Toast.makeText(DetailsTaches.this, "Nouveau tag ajouté", Toast.LENGTH_SHORT).show();
-					}
-					else{
+					} else {
 						Toast.makeText(DetailsTaches.this, "Champ vide", Toast.LENGTH_SHORT).show();
 					}
 				}
 			});
 			builderAjoutTag.show();
-			
+
 			return true;
-			
+
 		default:
 			return super.onOptionsItemSelected(item);
 		}

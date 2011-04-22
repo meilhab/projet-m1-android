@@ -11,22 +11,25 @@ import android.content.DialogInterface.OnClickListener;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.*;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView.*;
 import android.widget.*;
 
+/**
+ * @author Guillaume MONTAVON & Benoit MEILHAC (Master 1 Informatique)
+ * Activity principale qui se lance au démarrage de l'application, elle contient la liste de tâches
+ */
 public class GestionnaireTaches extends Activity implements View.OnClickListener {
 
-	private Modele modele;
-	private ListView maListViewPerso;
-	private TextView arborescence;
+	private Modele modele; //modèle de l'application
+	private ListView maListViewPerso; //liste qui contient les tâches
+	private TextView arborescence; //arborescence des tâches pères
 	private HorizontalScrollView arborecence_scrollbar;
 	private Button back;
 
 	private Synchronisation sw;
-	private MonApplication application;
+	private MonApplication application; //application
 
 	private final int CODE_DE_MON_ACTIVITE = 1;
 	private final int CODE_ACTIVITE_PREFERENCES = 2;
@@ -34,20 +37,19 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 	
 	private View ancienItemSelectionne;
 	
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-		
 		setContentView(R.layout.main);
 
 		application = (MonApplication)getApplication();
 		modele = application.getModele();
 		application.setGt(this);
-		
 		modele.initialiserModele();
-		
 		sw=new Synchronisation(this, modele.getServeur());
         
 		application.afficherMessageBienvenu();
@@ -56,11 +58,10 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 		arborescence = (TextView) findViewById(R.id.arborecence);
 		arborecence_scrollbar = (HorizontalScrollView) findViewById(R.id.arborecence_scrollbar);
 		
+		//si la liste a le focus on sélectionne le premier item
 		maListViewPerso.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-			
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
-				
 				if(hasFocus) {
 					if(maListViewPerso.getSelectedView() != null) {
 						maListViewPerso.getSelectedView().setBackgroundResource(R.drawable.background_item_in);
@@ -73,6 +74,7 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 			}
 		});
 		
+		//on modifie le fond de l'item sélectionné
 		maListViewPerso.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> arg0, View v, int arg2, long arg3) {
@@ -84,7 +86,6 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 			@Override
 			public void onNothingSelected(AdapterView<?> arg0) {}
 		});
-		
 		
 		
 		back = (Button) findViewById(R.id.bouton_precedent);
@@ -118,6 +119,7 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 			}
 		});		
 		
+		//lorsqu'on clique sur un item on le modifie
 		maListViewPerso.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView a, View v, int position, long id) {
@@ -143,6 +145,7 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 				
 		});
 
+		//lorsqu'on appui longtemps sur un item on peut choisir une action a effectuer
 		maListViewPerso.setOnItemLongClickListener(new OnItemLongClickListener() {
 
 			@Override
@@ -209,6 +212,7 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 			}
 		});
 		
+		//on affiche la liste
 		if(application.isPremierLancement()) {
 			updateList(true, -1);
 			application.setPremierLancement(false);
@@ -218,13 +222,18 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onBackPressed()
+	 */
 	@Override
 	public void onBackPressed() {
+		
 		if(!modele.getRechercheCourante().equals("")) {
 			modele.setRechercheCourante("");
 			updateList(false, -1);
 		}
 		else if(modele.getTachePereCourant() != null) {
+			//on retourne à la tâche père
 			long id = modele.getArborescenceCourante().get(modele.getArborescenceCourante().size() - 1).getIdentifiant();
 			modele.getArborescenceCourante().remove(modele.getArborescenceCourante().size() - 1);
 			updateList(false, id);
@@ -235,6 +244,9 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
+	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data){
 
@@ -254,15 +266,22 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 
 	}
 
-
+	
+	/**
+	 * Mise à jour de la liste de tâche
+	 * @param animation true si on veut une animation
+	 * @param idTacheSelectionnee identifiant de la tâche qui sera automatiquement sélectionnée, -1 si aucune tâche sélectionnée
+	 */
 	public void updateList(boolean animation, long idTacheSelectionnee) {
 
+		//on modifie le titre de l'activity avec le nombre de tâches
 		String title = getResources().getString(R.string.app_name) + " ( "+ modele.getListeTaches().size() + " " + getResources().getString(R.string.tache);
 		if(modele.getListeTaches().size()>1)
 			title += "s";
 		title +=  ")";
 		this.setTitle(title);
 		
+		//on met à jour l'arborescence
 		updateArborecence();
 		
 		//Création de la ArrayList qui nous permettra de remplire la listView
@@ -270,6 +289,7 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 		//On déclare la HashMap qui contiendra les informations pour un item
 		HashMap<String, String> map;
 		
+		//on trie les tâches
 		modele.trierTaches(true);
 		
 		int positionTacheSelectionnee = -1;
@@ -305,7 +325,7 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 									map.put("etat_couleur", Color.RED + "");
 									break;
 								case Etat.A_PREVOIR:
-									map.put("etat_couleur", Color.YELLOW + "");
+									map.put("etat_couleur", Color.rgb(237, 127, 16) + ""); //orange
 									break;
 								case Etat.EN_COURS:
 									map.put("etat_couleur", Color.BLUE + "");
@@ -341,6 +361,7 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 
 		maListViewPerso.setAdapter(mSchedule);
 
+		//on anime ou pas l'affichage de la liste
 		maListViewPerso.setLayoutAnimation(null);
 		if(animation) {
 			maListViewPerso.setLayoutAnimation(AnimationUtils.loadLayoutAnimation(this, R.anim.list_layout_controller));
@@ -351,6 +372,9 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 			maListViewPerso.setSelection(positionTacheSelectionnee);
 	}
 
+	/**
+	 * Met à jour l'arborescence des tâches pères en haut de la liste de tâches
+	 */
 	public void updateArborecence() {
 		
 		String titre = "/";
@@ -374,6 +398,10 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 		
 	}
 	
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+	 */
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu){
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.menu, menu);
@@ -389,6 +417,9 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onMenuOpened(int, android.view.Menu)
+	 */
 	@Override
 	public boolean onMenuOpened(int featureId, Menu menu) {
 
@@ -401,9 +432,13 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 		
 	}
 	
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onOptionsItemSelected(android.view.MenuItem)
+	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+		//on ajoute un tâche
 		case R.id.menu_ajout_tache:
 			if(!modele.isEnCoursSynchro()) {
 				Intent intent = new Intent(this.getApplicationContext(), DetailsTaches.class);
@@ -413,6 +448,7 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 			else
 				attenteSynchronisation();
 			return true;
+		//on ajoute des tags
 		case R.id.menu_ajout_tag:
 			if(!modele.isEnCoursSynchro()) {
 				AlertDialog.Builder builderAjoutTag = new AlertDialog.Builder(this);
@@ -443,6 +479,7 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 			else
 				attenteSynchronisation();
 			return true;
+		//on choisit d'afficher certains tags
 		case R.id.menu_afficher_tags:
 			
 			CharSequence[] itemsTagsAAfficher = new CharSequence[modele.getListeTags().size()+1];
@@ -473,7 +510,6 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 					for(int i=0; i<tagsVisiblesAAfficher.length; i++)
 						tagsVisiblesAAfficher[i] = tagsChoisisAAfficher[i];
 				}
-
 			});
 			builderAfficheTag.setPositiveButton("OK", new OnClickListener() {
 				@Override
@@ -507,7 +543,6 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 								tagsVisiblesAAfficher[i] = true;
 							}
 						}
-						
 					}
 				}
 			});
@@ -517,6 +552,7 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 			afficheTags.show();
 			
 			return true;
+		//on choisit de supprimer des tags
 		case R.id.menu_supprimer_tag:
 			
 			if(!modele.isEnCoursSynchro()) {
@@ -556,17 +592,14 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 				    				if(modele.getListeTaches().get(j).getListeTags().contains(indice))
 				    					modele.getListeTaches().get(j).getListeTags().remove(indice);
 				    			}
-				    			
 				    			modele.getBdd().supprimerTag(indice);
 				    		}
-				    		
 						}
 						
 						ThreadSynchronisation tsSupprTag = new ThreadSynchronisation(modele, GestionnaireTaches.this, sw);
 						tsSupprTag.selectionModeSynchronisation(ThreadSynchronisation.SUPPRESSION_TAGS);
 						tsSupprTag.setListeTagsSuppr(listeTagsSuppr);
 						tsSupprTag.start();
-						
 					}
 				});
 				builderSuppressionTag.setMultiChoiceItems(itemsTags, tagsAffiches, new DialogInterface.OnMultiChoiceClickListener() {
@@ -601,6 +634,8 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 			about.setTitle(R.string.menu_a_propos);
 			about.show();
 			return true;
+			
+		//on choisit de synchroniser
 		case R.id.menu_synchronisation:
 			item.getSubMenu().setGroupVisible(R.id.groupe_synchronisation, true);
 			if(modele.isEnCoursSynchro()) {
@@ -625,6 +660,8 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 	    	ts_combiner_serveur_mobile.selectionModeSynchronisation(ThreadSynchronisation.COMBINER_SERVEUR_MOBILE);
 	    	ts_combiner_serveur_mobile.start();	    	
 			return true;
+			
+		//on choisit de trier
 		case R.id.sous_menu_tri_date:
 			item.setChecked(true);
 			modele.setTri(Tri.DATE);
@@ -659,6 +696,9 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 		return sw;
 	}
 	
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onSearchRequested()
+	 */
 	@Override
 	public boolean onSearchRequested() {
 		
@@ -674,6 +714,9 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 		return super.onSearchRequested();
 	}
 	
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onNewIntent(android.content.Intent)
+	 */
 	@Override
 	public void onNewIntent(final Intent newIntent) {
 		super.onNewIntent(newIntent);
@@ -684,25 +727,38 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
 		}
 	}
 	
+	/**
+	 * Permet de générer une transition lorsqu'on lance une nouvelle activity
+	 */
 	public void transitionActivity() {
 		overridePendingTransition(R.anim.zoom_enter,R.anim.zoom_exit);  
 	}
 	
+	/**
+	 * Affiche une boite de dialogue pour dire qu'il faut attendre la fin de la synchronisation
+	 */
 	public void attenteSynchronisation() {
 		new ErreurDialog(R.string.menu_synchronisation, R.string.attente_synchronisation, this);
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onContentChanged()
+	 */
 	@Override
 	public void onContentChanged() {
 		//changement orientation
 		super.onContentChanged();
 	}
 
+	/* (non-Javadoc)
+	 * @see android.view.View.OnClickListener#onClick(android.view.View)
+	 */
 	@Override
     public void onClick(View v) {
     	
     	long identifiantTache = -1;
     	
+    	//si on clique sur le bouton pour afficher les tâches filles
     	if(v.getId() == R.id.img_fils) {
     		
     		identifiantTache = (Long) ((ImageView) v).getTag();
@@ -711,7 +767,7 @@ public class GestionnaireTaches extends Activity implements View.OnClickListener
     		
     	}
     	else if(v.getId() == R.id.img) {
-    		
+    		//si on clique sur le bouton pour modifier l'état de la tâche
     		if(!modele.isEnCoursSynchro()) {
     		
     			identifiantTache = (Long) ((ImageView) v).getTag();

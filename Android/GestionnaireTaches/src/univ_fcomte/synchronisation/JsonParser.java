@@ -4,12 +4,17 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import org.json.*;
+
 import univ_fcomte.tasks.*;
 
+/**
+ * @author Guillaume MONTAVON & Benoit MEILHAC (Master 1 Informatique)
+ * Permet d'importer des données (tâches, tags) encodées dans un format JSON dans le modèle de l'application
+ */
 public class JsonParser {
 
 	private JSONObject ob;
-	private Modele modele;
+	private Modele modele; //modèle de l'application
 	private HashMap<Long, Long> listeAPourTag;
 	private HashMap<Long, Long> listeAPourFils;
 	
@@ -21,6 +26,11 @@ public class JsonParser {
 		parse(stream2String(is));
 	}
 	
+	/**
+	 * importer les données encodées dans un format JSON, dans le modèle de l'application
+	 * @param contenu données encodées en JSON
+	 * @throws JSONException
+	 */
 	public void parse(String contenu) throws JSONException	{
 		
 		if (!contenu.equals("")) {
@@ -54,18 +64,14 @@ public class JsonParser {
 					JSONArray listeTags = tache.getJSONArray("apourtag");
 					for (int j = 0; j< listeTags.length();j++)
 						listeTag.add(listeTags.getLong(j));
-				}catch (Exception e) {
-					// TODO: handle exception
-				}
+				}catch (Exception e) {}
 				
 				ArrayList<Long> listeTachesFilles= new ArrayList<Long>();
 				try {
 					JSONArray listeFils = tache.getJSONArray("apourfils");
 					for (int j = 0; j< listeFils.length();j++)
 						listeTachesFilles.add(listeFils.getLong(j));
-				}catch (Exception e) {
-					// TODO: handle exception
-				}
+				}catch (Exception e) {}
 				
 				modele.ajoutTache(new Tache(tache.getLong("idTache"),tache.getString("nomTache"),tache.getString("descriptionTache"),tache.getString("dateLimite"),tache.getInt("idPriorite"), tache.getInt("idEtat"), tache.getInt("versionTache"), listeTag, listeTachesFilles));
 			}
@@ -86,7 +92,15 @@ public class JsonParser {
 
 	}
 	
-	public void parseAvecVersion(String contenu) throws JSONException	{
+	/**
+	 * importer les données encodées dans un format JSON, dans le modèle de l'application avec la gestion des version des tâches et tags
+	 * @param contenu données encodées en JSON
+	 * @return true si le JSON ne contient aucune données
+	 * @throws JSONException
+	 */
+	public boolean parseAvecVersion(String contenu) throws JSONException	{
+		
+		boolean vide = true;
 		
 		if (!contenu.equals("")) {
 		
@@ -95,13 +109,14 @@ public class JsonParser {
 			//int nbTaches=ob.getInt("nbTaches");
 			//int nbTags=ob.getInt("nbTags");
 
-			// On charge le tableau de personnes qui
-			// se trouve dans le fichier json
 			JSONArray tags = ob.getJSONArray("tags");
 			JSONArray taches = ob.getJSONArray("taches");
 			JSONArray apourtags = ob.getJSONArray("apourtag");
 			JSONArray apourfils = ob.getJSONArray("apourfils");
 			
+			if(tags.length() != 0 || taches.length() != 0 || apourtags.length() != 0 || apourfils.length() != 0)
+				vide = false;
+				
 			JSONObject tag;
 			JSONObject tache;
 			JSONObject apourtag;
@@ -128,18 +143,14 @@ public class JsonParser {
 					JSONArray listeTags = tache.getJSONArray("apourtag");
 					for (int j = 0; j< listeTags.length();j++)
 						listeTag.add(listeTags.getLong(j));
-				}catch (Exception e) {
-					// TODO: handle exception
-				}
+				}catch (Exception e) {}
 				
 				ArrayList<Long> listeTachesFilles= new ArrayList<Long>();
 				try {
 					JSONArray listeFils = tache.getJSONArray("apourfils");
 					for (int j = 0; j< listeFils.length();j++)
 						listeTachesFilles.add(listeFils.getLong(j));
-				}catch (Exception e) {
-					// TODO: handle exception
-				}
+				}catch (Exception e) {}
 				
 				Tache t = modele.getTacheById(tache.getLong("idTache"));
 				if(t != null && tache.getInt("versionTache") > t.getVersion()) {
@@ -167,10 +178,17 @@ public class JsonParser {
 			for (int i = 0;i < apourfils.length();i++) {
 				apourfille = apourfils.getJSONObject(i);
 				listeAPourFils.put(apourfille.getLong("idFils"), apourfille.getLong("idPere"));
-			}			
+			}	
 		}
+		
+		return vide;
 	}
 	
+	/**
+	 * Génère une chaîne de caractères à partir d'un InputStream
+	 * @param stream InputStream à convertir en String
+	 * @return chaîne de caractères générée
+	 */
 	private String stream2String(InputStream stream) {
 		
 		InputStreamReader reader = new InputStreamReader(stream);
@@ -194,6 +212,10 @@ public class JsonParser {
 	}
 	
 	
+	/**
+	 * Permet d'obtenir la liste des couples père, fils contenues dans le JSON
+	 * @return liste des couples père, fils contenues dans le JSON
+	 */
 	public HashMap<Long, Long> getListeAPourTag() {
 		return listeAPourTag;
 	}

@@ -6,11 +6,17 @@ import android.os.Bundle;
 import android.preference.*;
 import android.preference.Preference.OnPreferenceClickListener;
 
+/**
+ * @author Guillaume MONTAVON & Benoit MEILHAC (Master 1 Informatique)
+ * Gère automatiquement les préférences de l'application : compte utilisateur, proxy, ...
+ */
 public class Preferences extends PreferenceActivity implements OnSharedPreferenceChangeListener, OnPreferenceClickListener {
-    /** Called when the activity is first created. */
 	
 	SharedPreferences pref;
 	
+    /* (non-Javadoc)
+     * @see android.preference.PreferenceActivity#onCreate(android.os.Bundle)
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,31 +27,20 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 
     }
 
+	/* (non-Javadoc)
+	 * @see android.content.SharedPreferences.OnSharedPreferenceChangeListener#onSharedPreferenceChanged(android.content.SharedPreferences, java.lang.String)
+	 */
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-		//Toast.makeText(this,key + ":" + sharedPreferences.getString(key, ""), Toast.LENGTH_SHORT).show();		
+		//lorsqu'une préférence à été modifié
 	}
 
+	/* (non-Javadoc)
+	 * @see android.preference.Preference.OnPreferenceClickListener#onPreferenceClick(android.preference.Preference)
+	 */
 	@Override
 	public boolean onPreferenceClick(Preference preference) {
-		/*
-		if(preference.getKey().equals("read")){
-				        
-	        SharedPreferences mgr = PreferenceManager.getDefaultSharedPreferences(this);
-	        String value = mgr.getString("edit", "default");
-	        Toast.makeText(this, value, Toast.LENGTH_LONG).show();
-			
-		}else if(preference.getKey().equals("write")){
-			
-	        SharedPreferences mgr = PreferenceManager.getDefaultSharedPreferences(this);
-	        Editor editor = mgr.edit();
-	        editor.putString("edit", ""+SystemClock.currentThreadTimeMillis());
-	        editor.commit();
-			
-		}else{		
-			Toast.makeText(this, preference.getKey()+preference.getTitle(), Toast.LENGTH_LONG).show();
-		}
-		*/
+
 		return true;
 	}
 }

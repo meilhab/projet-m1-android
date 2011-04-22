@@ -1,41 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello">Hello World, GestionnaireTaches!</string>
+    <string name="hello">Hello World, Todo List!</string>
     <string name="app_name">Todo List</string>
     <string-array name="version_news">
-        <item>Erreur, la version de l\'application que vous utiliser ne possède pas de description des nouveautés</item>
-        <item>Bienvenue dans l\'application Gestionnaire de tâches, Si vous possédez déjà un identifiant, veuillez vous connecter dans réglage, sinon veuillez créer un compte via le menu ajouter un utilisateur.</item>
+        <item>Error, the version of the application you use doesn\'t have a description of news</item>
+        <item>Welcome to the Todo List Application, if you already have a username, please log in Settings, otherwise please register using the menu to add a user.</item>
     	<!-- lorsqu'on ajoute une version à l'application la description des nouveautés doit se faire ici, il suffit d'ajouter un item ci-dessus -->
     </string-array>
     <string name="tache">task</string>
-    <string name="label_priorite">Priorité</string>
-    <string name="label_etat">Etat</string>
+    <string name="label_priorite">Priority</string>
+    <string name="label_etat">State</string>
     <string name="label_tag">Tags</string>
     <string name="label_date">Date</string>
     <string name="label_description">Description</string>
     <string name="label_nom">Name</string>
     <string-array name="priorite">
-        <item>Sans</item>
-        <item>Faible</item>
+        <item>Without</item>
+        <item>Low</item>
         <item>Urgent</item>
         <item>Ultra urgent</item>
     </string-array>
     <string-array name="etat">
-        <item>Annulée</item>
-        <item>A prévoir</item>
-        <item>En cours</item>
-        <item>Terminé</item>
+        <item>Cancelled</item>
+        <item>Expected</item>
+        <item>In progress</item>
+        <item>Completed</item>
     </string-array>
-    <string name="ajout_tag">Ajouter un Tag</string>
-    <string name="menu_ajout_tache">Ajout tâche</string>
-    <string name="menu_enregistrer_tache">Enregistrer tâche</string>
-    <string name="menu_supprimer_tache">Supprimer tâche</string>
-    <string name="menu_ajout_tag">Ajout tag</string>
-    <string name="menu_tri">Trier</string>
-    <string name="menu_tri_par">Trier par</string>
-    <string name="menu_synchronisation">Synchronisation</string>
-    <string name="menu_reglage">Réglages</string>
-    <string name="menu_a_propos">A propos de Gestionnaire de Tâches</string>
+    <string name="ajout_tag">Add a Tag</string>
+    <string name="menu_ajout_tache">Adding task</string>
+    <string name="menu_enregistrer_tache">Save task</string>
+    <string name="menu_supprimer_tache">Delete task</string>
+    <string name="menu_ajout_tag">Adding tag</string>
+    <string name="menu_tri">Sort</string>
+    <string name="menu_tri_par">Sort by</string>
+    <string name="menu_synchronisation">Synchronization</string>
+    <string name="menu_reglage">Settings</string>
+    <string name="menu_a_propos">About Todo List</string>
    
     <string-array name="prefentries">
     	<item>Item 1</item>
@@ -45,62 +45,63 @@
 		<item>Item 1</item>
 		<item>Item 2</item>
 	</string-array>
-	<string name="label_nom_tag">Nom du tag</string>
-	<string name="label_ajout_tag">Ajout d\'un tag</string>
-	<string name="label_menu_afficher_tag">Afficher tags</string>
-	<string name="label_menu_supprimer_tag">Suppression de tags</string>
-	<string name="label_menu_ajout_utilisateur">Ajout d\'un utilisateur</string>
+	<string name="label_nom_tag">Name of tag</string>
+	<string name="label_ajout_tag">Adding a tag</string>
+	<string name="label_menu_afficher_tag">Show tags</string>
+	<string name="label_menu_supprimer_tag">Remove tags</string>
+	<string name="label_menu_ajout_utilisateur">Adding an user</string>
 	<string name="tri_date">Date</string>
-	<string name="tri_nom">Ordre alphabétique</string>
-	<string name="tri_etat">Etat</string>
-	<string name="tri_priorite">Priorité</string>
-	<string name="tri_ordre_creation">Ordre de création</string>
-	<string name="methode_synchronisation_ecrasement_serveur">Ecrasement serveur</string>
-	<string name="methode_synchronisation_ecrasement_mobile">Ecrasement mobile</string>
-	<string name="methode_synchronisation_combiner_serveur_mobile">Combiner serveur-mobile</string>
+	<string name="tri_nom">Alphabetically</string>
+	<string name="tri_etat">State</string>
+	<string name="tri_priorite">Priority</string>
+	<string name="tri_ordre_creation">Creation Order</string>
+	<string name="methode_synchronisation_ecrasement_serveur">Server crash</string>
+	<string name="methode_synchronisation_ecrasement_mobile">Mobile crushing</string>
+	<string name="methode_synchronisation_combiner_serveur_mobile">Combine server-mobile</string>
 	<string-array name="methode_synchronisation">
 		<item>@string/methode_synchronisation_ecrasement_serveur</item>
 		<item>@string/methode_synchronisation_ecrasement_mobile</item>
 		<item>@string/methode_synchronisation_combiner_serveur_mobile</item>
 	</string-array>
-	<string name="label_methode_synchronisation">Méthode de synchronisation</string>
-	<string name="label_affiche_taches_annulees">Afficher les taches annulées</string>
-	<string name="label_desc_affiche_taches_annulees">Sélectionner si vous souhaitez afficher les taches annulées</string>
-	<string name="label_utiliser_compte">Utiliser un compte utilisateur</string>
-	<string name="label_desc_utiliser_compte">Sélectionner si vous souhaitez utiliser un compte</string>
-	<string name="label_generale">Général</string>
-	<string name="label_login">Nom d\'utilisateur</string>
-	<string name="label_desc_login">Entrez votre nom d\'utilisateur</string>
-	<string name="label_password">Mot de passe</string>
-	<string name="label_desc_password">Entrez votre mot de passe</string>
+	<string name="label_methode_synchronisation">Synchronization method</string>
+	<string name="label_affiche_taches_annulees">Show tasks canceled</string>
+	<string name="label_desc_affiche_taches_annulees">Select if you want to show canceled tasks</string>
+	<string name="label_utiliser_compte">Use an user account</string>
+	<string name="label_desc_utiliser_compte">Select if you want to use an account</string>
+	<string name="label_generale">General</string>
+	<string name="label_login">User name</string>
+	<string name="label_desc_login">Enter your user name</string>
+	<string name="label_password">Password</string>
+	<string name="label_desc_password">Enter your password</string>
 	<string name="label_proxy">Proxy</string>
-	<string name="label_utiliser_proxy">Utiliser un Proxy</string>
-	<string name="label_desc_utiliser_proxy">Sélectionner si vous souhaitez utiliser un proxy</string>
-	<string name="label_adresse_proxy">Adresse du proxy</string>
-	<string name="label_desc_adresse_proxy">Entrez l\'adresse du proxy</string>
+	<string name="label_utiliser_proxy">Use a Proxy</string>
+	<string name="label_desc_utiliser_proxy">Select if you want to use a proxy</string>
+	<string name="label_adresse_proxy">Address of proxy</string>
+	<string name="label_desc_adresse_proxy">Enter address of proxy</string>
 	<string name="label_port_proxy">Port</string>
-	<string name="label_desc_port_proxy">Entrez le port du proxy</string>
-	<string name="label_user_nom">Nom</string>
-	<string name="label_user_prenom">Prénom</string>
-	<string name="label_user_identifiant">Identifiant</string>
-	<string name="label_user_md_passe">Mot de passe (>= 6 caractères)</string>
-	<string name="label_user_mail">Adresse mail</string>
-	<string name="label_enregistrer">Enregistrer</string>
-	<string name="label_annuler">Annuler</string>
-	<string name="erreur">Erreur</string>
-	<string name="erreur_pas_connexion">Erreur : Pas de connexion internet disponible</string>
-	<string name="erreur_login">Erreur : Identifiant ou mot de passe incorrect</string>
-	<string name="search_hint">Rechercher une tâche</string>
-	<string name="attente_synchronisation">Veuillez attendre que les tâches soient synchronisées pour les modifier</string>
+	<string name="label_desc_port_proxy">Enter the port of proxy</string>
+	<string name="label_user_nom">Name</string>
+	<string name="label_user_prenom">Firstname</string>
+	<string name="label_user_identifiant">Login</string>
+	<string name="label_user_md_passe">Password (>= 6 caractères)</string>
+	<string name="label_user_mail">Email address</string>
+	<string name="label_enregistrer">Save</string>
+	<string name="label_annuler">Cancel</string>
+	<string name="erreur">Error</string>
+	<string name="erreur_pas_connexion">Error : No internet connection available</string>
+	<string name="erreur_login">Error: Username or password incorrect</string>
+	<string name="search_hint">Search a task</string>
+	<string name="attente_synchronisation">Please wait for tasks to be synchronized for edit</string>
 	<string name="ok">OK</string>
-	<string name="afficher_toutes_taches">Peu importe les tags</string>
-	<string name="a_propos_description">Application réalisée par Guillaume MONTAVON et Benoît MEILHAC dans le cadre du projet de Master 1 Informatique. \nProjet encadré par Bruno TATIBOUET et François PIAT.</string>
-	<string name="nouveau_user_cree">Nouvelle utilisateur créé</string>
+	<string name="afficher_toutes_taches">Whatever tags</string>
+	<string name="a_propos_description">Application made ​​by Guillaume MONTAVON and Benoît MEILHAC in the context of project of Master 1 Informatique. \nProject supervised by Bruno TATIBOUET and François PIAT.</string>
+	<string name="nouveau_user_cree">New user created</string>
 	<string name="connecter_avec_nouveau_user">Utilisateur créé.\nSouhaitez-vous vous connecter avec ce nouveau compte (vous perdrez les taches enregistrées sur le téléphone) ?</string>
-	<string name="erreur_ajout_user">Veuillez correctement remplir les champs nom, prénom, identifiant, mot de passe et adresse mail</string>
-	<string name="jours_restants">jours\nrestants</string>
-	<string name="jours_passes">jours\npassés</string>
-	<string name="nb_fils">fils</string>
-	<string name="label_synchro_auto">Synchronisation automatique</string>
-	<string name="label_synchro_auto_desc">Synchronise automatiquement la suppression de tâches</string>
+	<string name="erreur_ajout_user">Please correctly complete in name, username, password and email address</string>
+	<string name="erreur_user_existe">The username requested already exists or the email address is invalid</string>
+	<string name="jours_restants">days\nremaining</string>
+	<string name="jours_passes">days\nspent</string>
+	<string name="nb_fils">s-t</string>
+	<string name="label_synchro_auto">Automatic synchronization</string>
+	<string name="label_synchro_auto_desc">Automatically synchronizes deleting task</string>
 </resources>

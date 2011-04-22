@@ -12,13 +12,18 @@ import univ_fcomte.gtasks.*;
 import univ_fcomte.synchronisation.Synchronisation.ApiException;
 import univ_fcomte.tasks.Modele;
 
+/**
+ * @author Guillaume MONTAVON & Benoit MEILHAC (Master 1 Informatique)
+ * Permet de synchroniser les données du téléphones avec les données du serveur distant (dans un nouveau thread)
+ */
 public class ThreadSynchronisation extends Thread {
 
 	private Synchronisation sw;
-	private Modele modele;
-	private GestionnaireTaches gt;
-	private int modeSynchronisation;
+	private Modele modele; //modèle de l'application
+	private GestionnaireTaches gt; //activity principale
+	private int modeSynchronisation; //mode de synchronisation choisit (voir ci-dessous)
 	
+	//modes de synchronisation
 	public static final int ECRASEMENT_SERVEUR = 0;
 	public static final int ECRASEMENT_MOBILE = 1;
 	public static final int COMBINER_SERVEUR_MOBILE = 2;
@@ -26,13 +31,13 @@ public class ThreadSynchronisation extends Thread {
 	public static final int SUPPRESSION_TAGS = 4;
 	public static final int AJOUT_UTILISATEUR = 5;
 
-	private String reponseServeur;
+	private String reponseServeur; //réponse que le serveur a renvoyé
 	private String identifiant;
 	private String mdPasse;
 	private ArrayList<Long> listeTachesSuppr;
 	private ArrayList<Long> listeTagsSuppr;
 	private HashMap<String,String> profilUtilisateur;
-	private AjoutUtilisateur au;
+	private AjoutUtilisateur au; //activity d'ajout de compte utilisateur
 
 	public ThreadSynchronisation(Modele modele, GestionnaireTaches gt, Synchronisation sw){
 		this.gt = gt;
@@ -47,6 +52,10 @@ public class ThreadSynchronisation extends Thread {
 		mdPasse = PreferenceManager.getDefaultSharedPreferences(gt).getString("password", "");
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.lang.Thread#run()
+	 */
+	@Override
 	public void run(){
 
 		gt.runOnUiThread(new Runnable() {	
@@ -93,10 +102,17 @@ public class ThreadSynchronisation extends Thread {
 		});
 	}
 
+	/**
+	 * Choisir le mode de synchronisation
+	 * @param mode mode de synchronisation choisi
+	 */
 	public void selectionModeSynchronisation(int mode){
 		modeSynchronisation = mode;
 	}
 	
+	/**
+	 * Télécharge les données du seveur distant, vide le téléphone et importe les données dans le téléphone
+	 */
 	public void ecraserMobile(){
 		
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();  
@@ -142,6 +158,9 @@ public class ThreadSynchronisation extends Thread {
 
 	}
 	
+	/**
+	 * Envoie les données du téléphone au serveur distant, le vide puis importe les données reçues
+	 */
 	public void ecraserServeur(){
 		
 		List<NameValuePair> nvp = new ArrayList<NameValuePair>();  
@@ -159,6 +178,12 @@ public class ThreadSynchronisation extends Thread {
 		
 	}
 	
+	/**
+	 * Synchronise les données en prenant en compte la version de chaque tâche
+	 * Le téléphone envoie ses données, le serveur les analyses et importe les tâches modifiées
+	 * Puis il renvoie les tâches que le téléphone ne possède pas ou qui sont trop anciennes
+	 * Le téléphone reçoi ensuite ces tâches puis les importe
+	 */
 	public void combinerServeurMobile(){
 		
 		List<NameValuePair> nvp = new ArrayList<NameValuePair>();  
@@ -174,41 +199,40 @@ public class ThreadSynchronisation extends Thread {
 			e.printStackTrace();
 		}
 		
-		gt.runOnUiThread(new Runnable() {	
-			@Override
-			public void run() {
-				new ErreurDialog("reponse", reponseServeur, gt);
-			}
-		});
-		
 		
 		if(!reponseServeur.equals("") && !reponseServeur.startsWith("Erreur de connexion")) {
 			
+			boolean vide = true;
 			JsonParser json = new JsonParser(modele);
 			try {
-				json.parseAvecVersion(reponseServeur);
+				vide = json.parseAvecVersion(reponseServeur);
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
-			
-			modele.getBdd().reinitialiserBDD(modele.getListeTags(), modele.getListeTaches(), json.getListeAPourTag(), json.getListeAPourFils());
 						
-			//modele.setTachesRacines(modele.getBdd().getListeTachesRacines());
-			modele.refreshTachesRacines();
+			if(!vide) {
 			
-			gt.runOnUiThread(new Runnable() {
-				@Override
-				public void run() {
-					Log.i("update", "mise a jour liste, nb tache : " + modele.getListeTaches().size());
-					gt.updateList(false, -1);
-				}
-			});
+				modele.getBdd().reinitialiserBDD(modele.getListeTags(), modele.getListeTaches(), json.getListeAPourTag(), json.getListeAPourFils());
+							
+				//modele.setTachesRacines(modele.getBdd().getListeTachesRacines());
+				modele.refreshTachesRacines();
+				
+				gt.runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						gt.updateList(false, -1);
+					}
+				});
+			
+			}
 			
 		}
 		
-		
 	}
 	
+	/**
+	 * Supprime des tags dans le serveur distant
+	 */
 	public void supprimerTags() {
 		
 		for(long l : listeTagsSuppr) {
@@ -230,6 +254,9 @@ public class ThreadSynchronisation extends Thread {
 		
 	}
 
+	/**
+	 * Supprime des taches dans le serveur distant
+	 */
 	public void supprimerTaches() {
 		
 		for(long l : listeTachesSuppr) {
@@ -277,6 +304,9 @@ public class ThreadSynchronisation extends Thread {
 		
 	}
 	
+	/**
+	 * Ajoute un compte utilisateur dans le serveur distant
+	 */
 	private void ajoutUtilisateur() {
 		
 		List<NameValuePair> nvp = new ArrayList<NameValuePair>();  
@@ -305,6 +335,13 @@ public class ThreadSynchronisation extends Thread {
 					au.ajoutDansPrefNouveauUser();
 				}
 			});
+		else if(reponseServeur.startsWith("echec"))
+			au.runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					new ErreurDialog(R.string.erreur, R.string.erreur_user_existe, au);
+				}
+			});			
 		
 	}
 	

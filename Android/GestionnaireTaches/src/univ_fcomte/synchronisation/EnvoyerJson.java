@@ -3,6 +3,10 @@ package univ_fcomte.synchronisation;
 import org.json.*;
 import univ_fcomte.tasks.*;
 
+/**
+ * @author Guillaume MONTAVON & Benoit MEILHAC (Master 1 Informatique)
+ * Permet de générer un objet JSON qui contient toutes les données du modèle (liste de tâches et tags), qui pourra facilement être convertit en String
+ */
 public class EnvoyerJson {
 
 	private Modele modele;
@@ -13,6 +17,10 @@ public class EnvoyerJson {
 		ob = new JSONObject();
 	}
 	
+	/**
+	 * Génère automatiquement un objet JSON qui contient toutes les tâches et tags
+	 * @return objet JSON qui contient toutes les tâches et tags
+	 */
 	public JSONObject genererJson() {
 		
 		JSONArray arrayTags = new JSONArray();

@@ -98,9 +98,10 @@
 	<string name="nouveau_user_cree">Nouvelle utilisateur créé</string>
 	<string name="connecter_avec_nouveau_user">Utilisateur créé.\nSouhaitez-vous vous connecter avec ce nouveau compte (vous perdrez les taches enregistrées sur le téléphone) ?</string>
 	<string name="erreur_ajout_user">Veuillez correctement remplir les champs nom, prénom, identifiant, mot de passe et adresse mail</string>
+	<string name="erreur_user_existe">L\'identifiant demandé existe déjà ou l\'adresse mail est invalide</string>
 	<string name="jours_restants">jours\nrestants</string>
 	<string name="jours_passes">jours\npassés</string>
-	<string name="nb_fils">fils</string>
+	<string name="nb_fils">s-t</string>
 	<string name="label_synchro_auto">Synchronisation automatique</string>
 	<string name="label_synchro_auto_desc">Synchronise automatiquement la suppression de tâches</string>
 </resources>
