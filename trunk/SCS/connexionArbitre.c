@@ -14,10 +14,8 @@ RetourFonction creationConnexion(char *machine, int port, int *sock){
 	fprintf(stdout, "Procedure de connexion a l'arbitre\n");
 
 	(*sock) = socketClient(machine, port);
-	if((*sock) < 0){
-		fprintf(stderr, "Echec de connexion a l'arbitre\n");
+	if((*sock) < 0)
 		return ECHEC_CONNEXION;
-	}
 
 	fprintf(stdout, "Connexion effectuee\n");
 
@@ -32,10 +30,8 @@ RetourFonction deconnexion(int sock){
 	shutdown(sock, 2);
 	err = close(sock);
 	
-	if(err < 0){
-		fprintf(stderr, "Problème de deconnexion a l'arbitre\n");
+	if(err < 0)
 		return ECHEC_DECONNEXION;
-	}
 
 	fprintf(stdout, "Deconnexion effectuee\n");
 
@@ -54,21 +50,15 @@ RetourFonction identification(int sock, int *identifiant){
 	fprintf(stdout, "Procedure d'identification\n");
 
 	err = send(sock, (void*) &req, sizeof(req), 0);
-	if(err < 0){
-		fprintf(stderr, "Echec d'identification sur l'arbitre\n");
+	if(err < 0)
 		return ECHEC_ENVOI_IDENTIFICATION;
-	}
 
 	err = recv(sock, (void*) &rep, sizeof(rep), 0);
-	if(err < 0){
-		fprintf(stderr, "Echec reception identification de l'arbitre\n");
+	if(err < 0)
 		return ECHEC_RECEPTION_IDENTIFICATION;
-	}
 
-	if(rep.err != ERR_OK){
-		fprintf(stderr, "Erreur identification wesson\n");
+	if(rep.err != ERR_OK)
 		return ECHEC_CONFIRMATION_IDENTIFICATION;
-	}
 
 	(*identifiant) = rep.joueur;
 
@@ -88,67 +78,61 @@ RetourFonction demandeNouvellePartie(int sock, int identifiant){
 	fprintf(stdout, "Procedure de demande de nouvelle partie\n");
 
 	err = send(sock, (void*) &req, sizeof(req), 0);
-	if(err < 0){
-		fprintf(stderr, "Echec de demande de nouvelle partie sur l'arbitre\n");
+	if(err < 0)
 		return ECHEC_ENVOI_NOUVELLE_PARTIE;
-	}
 
 	err = recv(sock, (void*) &rep, sizeof(rep), 0);
-	if(err < 0){
-		fprintf(stderr, "Echec reception de la demande de nouvelle partie de l'arbitre\n");
+	if(err < 0)
 		return ECHEC_RECEPTION_NOUVELLE_PARTIE;
-	}
 
-	if(rep.err != ERR_OK){
-		fprintf(stderr, "Erreur de la demande de nouvelle partie\n");
+	if(rep.err != ERR_OK)
 		return ECHEC_RETOUR_NOUVELLE_PARTIE;
-	}
 
 	switch(rep.finTournoi){
 		case VRAI:
-			fprintf(stdout, "Toutes les parties ont deja ete effectuees\n");
 			deconnexion(sock);
-			break;
+			return FIN_DE_JEU;
 		case FAUX:
 			fprintf(stdout, "Demande de nouvelle partie effectuee\n");
 			switch(rep.premier){
 				case VRAI:
-					debutePartie(sock);
-					break;
+                    return debutePartie(sock);
 				case FAUX:
-					attendPremierCoup(sock);
-					break;
+                    return attendPremierCoup(sock);
 				default:
-					fprintf(stderr, "Code de reponse de 'premier' inconnu\n");
 					return ECHEC_CODE_PREMIER_INCONNU; 
 			}
 		default:
-			fprintf(stderr, "Code de reponse de 'finTournoi' inconnu\n");
 			return ECHEC_CODE_FINTOURNOI_INCONNU;
 	}
-
-	fprintf(stdout, "Partie terminee\n");
 
 	return CODE_OK;
 }
 
-void debutePartie(int sock){
+RetourFonction debutePartie(int sock){
     int numeroCoup = 0;
+    RetourFonction retour;
 
-    while(1){
+    do {
+        retour = jouerUnCoup(sock, &numeroCoup);
+        if(retour == CODE_OK)
+            retour = recevoirUnCoup(sock, &numeroCoup);
+    } while(retour == CODE_OK);
 
-        jouerUnCoup(sock, &numeroCoup);
-
-        recevoirUnCoup(sock, &numeroCoup);
-
-    }
-
+    return retour;
 }
 
-void attendPremierCoup(int sock){
-    sock = 0;
+RetourFonction attendPremierCoup(int sock){
+    int numeroCoup = 0;
+    RetourFonction retour;
 
-    return;
+    do {
+        retour = recevoirUnCoup(sock, &numeroCoup);
+        if(retour == CODE_OK)
+            retour = jouerUnCoup(sock, &numeroCoup);
+    } while(retour == CODE_OK);
+
+    return retour;
 }
 
 RetourFonction jouerUnCoup(int sock, int *numeroCoup){
@@ -169,7 +153,7 @@ RetourFonction jouerUnCoup(int sock, int *numeroCoup){
     else //TODO : type coup si pas NULLE
         req.propCoup = POSE;
 
-
+    // traitement en fonction du coup a jouer
     switch(req.propCoup){
         case POSE:
             positionDepart.ligne = retournerTypLigne(-1);
@@ -227,11 +211,9 @@ RetourFonction jouerUnCoup(int sock, int *numeroCoup){
 
             break;
         case NULLE:
-            fprintf(stderr, "50 coups sans prise : partie nulle\n");
             return RETOUR_PARTIE_NULLE;
             break;
         default:
-            fprintf(stderr, "Code de reponse pour 'propCoup' inconnu\n");
             return ECHEC_CODE_PROPCOUP_INCONNU;
 
     }
@@ -239,41 +221,36 @@ RetourFonction jouerUnCoup(int sock, int *numeroCoup){
     (*numeroCoup) ++;
     req.numeroDuCoup  = (*numeroCoup);
 
-
+    // envoi du coup joue par l'ia
 	err = send(sock, (void*) &req, sizeof(req), 0);
 	if(err < 0){
 		fprintf(stderr, "Echec d'envoi du dernier coup\n");
-		return ECHEC_ENVOI_NOUVELLE_PARTIE;
+		return ECHEC_ENVOI_DERNIER_COUP;
 	}
 
+    // reception de l'arbitre concernant la validite du coup
     err = recv(sock, (void*) &rep, sizeof(rep), 0);
-	if(err < 0){
-		fprintf(stderr, "Echec reception de la confirmation du dernier coup\n");
+	if(err < 0)
 		return ECHEC_RECEPTION_DERNIER_COUP;
-	}
 
-    if(rep.err != ERR_OK){
-        fprintf(stderr, "Echec de l'envoi du dernier coup\n");
+    if(rep.err != ERR_OK)
         return ECHEC_CONFIRMATION_DERNIER_COUP;
-    }
 
+    // traitement de la validite du coup
     switch(rep.validCoup){
         case VALID:
             if(req.propCoup == GAGNE)
-                fprintf(stdout, "Victoire de l'IA !!!\n");
+                return RETOUR_VICTOIRE_NOUVELLE_PARTIE;
             else
                 fprintf(stdout, "Coup valide, c'est le tour de l'adversaire\n");
             break;
         case TIMEOUT:
-            fprintf(stderr, "Temps d'attente depasse : fin de partie\n");
             return RETOUR_TIMEOUT_FIN_PARTIE;
             break;
         case TRICHE:
-            fprintf(stderr, "Triche detectee : fin de partie\n");
             return RETOUR_TRICHE_FIN_PARTIE;
             break;
         default:
-            fprintf(stderr, "Code de reponse pour 'validCoup' inconnu\n");
             return ECHEC_CODE_VALIDCOUP_INCONNU;
     }
 
@@ -282,11 +259,43 @@ RetourFonction jouerUnCoup(int sock, int *numeroCoup){
 
 
 RetourFonction recevoirUnCoup(int sock, int *numeroCoup){
-/*   TypCoupReq req;
-   TypCoupRep rep;
-   int err;*/
-   sock = 0;
-   (*numeroCoup) = 0;
+    TypCoupReq req;
+    TypCoupRep rep;
+    int err;
+    (*numeroCoup) = 0;
+
+    // reception de l'arbitre concernant la validite du coup de l'adversaire
+    err = recv(sock, (void*) &rep, sizeof(rep), 0);
+    if(err < 0)
+        return ECHEC_RECEPTION_DERNIER_COUP_ADVERSAIRE;
+
+    if(rep.err != ERR_OK)
+        return ECHEC_CONFIRMATION_DERNIER_COUP_ADVERSAIRE;
+
+    // traitement de la validite du coup
+    switch(rep.validCoup){
+        case VALID:
+            if(req.propCoup == GAGNE)
+                return RETOUR_DEFAITE_NOUVELLE_PARTIE;
+            else
+                fprintf(stdout, "Coup adversaire valide, reception de ce coup\n");
+            break;
+        case TIMEOUT:
+            return RETOUR_TIMEOUT_FIN_PARTIE;
+            break;
+        case TRICHE:
+            return RETOUR_TRICHE_FIN_PARTIE;
+            break;
+        default:
+            return ECHEC_CODE_VALIDCOUP_INCONNU;
+    }
+
+    // reception du coup de l'adversaire
+    err = recv(sock, (void*) &req, sizeof(req), 0);
+    if(err < 0)
+        return ECHEC_RECEPTION_COUP_VALIDE_ADVERSAIRE;
+
+    //TODO : traitement de la reception avec le moteur java
 
 
     return CODE_OK;
@@ -330,6 +339,89 @@ TypColonne retournerTypColonne(int colonne){
     }
 }
 
+void traitementSiErreur(RetourFonction retour){
+    switch(retour){
+    	case ECHEC_CONNEXION :
+		    fprintf(stderr, "Echec de connexion a l'arbitre\n");
+            break;
+	    case ECHEC_DECONNEXION :
+            fprintf(stderr, "Problème de deconnexion a l'arbitre\n");
+            break;
+	    case ECHEC_ENVOI_IDENTIFICATION :
+            fprintf(stderr, "Echec d'identification sur l'arbitre\n");
+            break;
+	    case ECHEC_RECEPTION_IDENTIFICATION :
+            fprintf(stderr, "Echec reception identification de l'arbitre\n");
+            break;
+        case ECHEC_CONFIRMATION_IDENTIFICATION :
+            fprintf(stderr, "Erreur identification wesson\n");
+            break;
+	    case ECHEC_ENVOI_NOUVELLE_PARTIE :
+            fprintf(stderr, "Echec de demande de nouvelle partie sur l'arbitre\n");
+            break;
+	    case ECHEC_RECEPTION_NOUVELLE_PARTIE :
+            fprintf(stderr, "Echec reception de la demande de nouvelle partie de l'arbitre\n");
+            break;
+        case ECHEC_RETOUR_NOUVELLE_PARTIE :
+            fprintf(stderr, "Erreur de la demande de nouvelle partie\n");
+            break;
+	    case ECHEC_CODE_FINTOURNOI_INCONNU :
+			fprintf(stderr, "Code de reponse de 'finTournoi' inconnu\n");
+            break;
+	    case ECHEC_CODE_PREMIER_INCONNU :
+            fprintf(stderr, "Code de reponse de 'premier' inconnu\n");
+            break;
+        case ECHEC_ENVOI_DERNIER_COUP :
+            fprintf(stderr, "Echec d'envoi du dernier coup\n");
+            break;
+        case ECHEC_RECEPTION_DERNIER_COUP :
+            fprintf(stderr, "Echec reception de la confirmation du dernier coup\n");
+            break;
+        case ECHEC_RECEPTION_DERNIER_COUP_ADVERSAIRE :
+            fprintf(stderr, "Echec reception de la confirmation du dernier coup\n");
+            break;
+        case ECHEC_CONFIRMATION_DERNIER_COUP :
+            fprintf(stderr, "Echec de l'envoi du dernier coup\n");
+            break;
+        case ECHEC_CONFIRMATION_DERNIER_COUP_ADVERSAIRE :
+            fprintf(stderr, "Echec de l'envoi du dernier coup\n");
+            break;
+        case ECHEC_RECEPTION_COUP_VALIDE_ADVERSAIRE :
+            fprintf(stderr, "Echec reception du coup de l'adversaire\n");
+            break;
+        case ECHEC_CODE_VALIDCOUP_INCONNU :
+            fprintf(stderr, "Code de reponse pour 'validCoup' inconnu\n");
+            break;
+        case ECHEC_CODE_PROPCOUP_INCONNU :
+            fprintf(stderr, "Code de reponse pour 'propCoup' inconnu\n");
+            break;
+        case RETOUR_PARTIE_NULLE :
+            fprintf(stderr, "50 coups sans prise : partie nulle\n");
+            break;
+        case RETOUR_TIMEOUT_FIN_PARTIE :
+            fprintf(stderr, "Temps d'attente depasse : fin de partie\n");
+            break;
+        case RETOUR_TRICHE_FIN_PARTIE :
+            fprintf(stderr, "Triche detectee : fin de partie\n");
+            break;
+        case RETOUR_VICTOIRE_NOUVELLE_PARTIE :
+            fprintf(stdout, "Victoire de l'IA !!!\n");
+            break;
+        case RETOUR_DEFAITE_NOUVELLE_PARTIE :
+            fprintf(stdout, "defaite de l'IA.\n");
+            break;
+        case FIN_DE_JEU :
+			fprintf(stdout, "Toutes les parties ont deja ete effectuees\n");
+            break;
+        case CODE_OK :
+            break;
+        default:
+            fprintf(stderr, "Code d'erreur inconnu\n");
+    }
+
+    return;
+}
+
 int main(int argc, char **argv){
     if(argc != 3){
         fprintf(stderr, "Usage : ./connexionArbitre machine port\n");
@@ -342,10 +434,22 @@ int main(int argc, char **argv){
 
     int socket;
     int idJoueur;
+    RetourFonction retour;
 
-    creationConnexion(machine, port, &socket);
-    identification(socket, &idJoueur);
-    demandeNouvellePartie(socket, idJoueur);
+    do {
+        retour = creationConnexion(machine, port, &socket);
+        traitementSiErreur(retour);
+    } while(retour != CODE_OK);
+
+    do {
+        retour = identification(socket, &idJoueur);
+        traitementSiErreur(retour);
+    } while(retour != CODE_OK);
+
+    do {
+        retour = demandeNouvellePartie(socket, idJoueur);
+        traitementSiErreur(retour);
+    } while(retour != FIN_DE_JEU);
 
 
     return 0;
