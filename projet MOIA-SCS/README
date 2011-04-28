@@ -1,0 +1,21 @@
+################################################################################################
+a demander :
+---- que faire quand erreur pendant la partie ? quitter ou demander une nouvelle partie ?
+---- Prise entraine forcément l'élimination d'un pion ? si pas d'autre pion adverse ? NULL ?
+################################################################################################
+
+aller dans src_c/ et faire make
+
+revenir dans ./
+
+lancer ./arbitre_v1 2222
+lancer java -jar moteurJava.jar 2201
+lancer java -jar moteurJava.jar 2202
+
+lancer ./src_c/connexionArbitre localhost 2222
+lancer ./src_c/connexionArbitre localhost 2222 2201
+
+################################################################################################
+bug : - quand tous les joueurs pose tous leurs pions sur la plateau, l'arbitre déclare qu'il y a triche
+      - dans la version actuelle au coup 32 l'arbitre envoie une mauvaise requete au joueur
+################################################################################################
