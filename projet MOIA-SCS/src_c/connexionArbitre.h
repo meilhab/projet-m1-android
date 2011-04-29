@@ -57,7 +57,7 @@ TypColonne retournerTypColonne(int colonne);
 TypCoupReq stringToTypCoupReq(char reponse[]);
 void typCoupReqToString(TypCoupReq req, char* reqToString);
 int retournerIntLigne(TypLigne ligne);
-int retournerIntColonne(TypLigne colonne);
+int retournerIntColonne(TypColonne colonne);
 void traitementSiErreur(RetourFonction retour);
 int main(int argc, char **argv);
 

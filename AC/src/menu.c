@@ -231,21 +231,21 @@ void afficherErreur(casErreur erreur) {
 			strcpy(erreur2String, "Graphe non alloue");
 			break;
 		case INSERT_SOMMET_INCORRECT : 
-			strcpy(erreur2String, "Le sommet est incorrect, dépassement de taille");
+			strcpy(erreur2String, "Le sommet est incorrect, dÃ©passement de taille");
 			break;
 		case INSERT_ARETE_SOMMET_INCORRECT : 
 			strcpy(erreur2String, "Un des sommets est incorrect, ");
-			strcat(erreur2String, "dépassement de taille");
+			strcat(erreur2String, "dÃ©passement de taille");
 			break;
 		case INSERT_ARETE_SOMMET_EXISTE_PAS : 
-			strcpy(erreur2String, "Un des sommets n'a pas été ajouté");
+			strcpy(erreur2String, "Un des sommets n'a pas Ã©tÃ© ajoutÃ©");
 			break;
 		case SUPPR_SOMMET_SOMMET_INEXISTANT : 
-			strcpy(erreur2String, "Le sommet est incorrect, dépassement de taille");
+			strcpy(erreur2String, "Le sommet est incorrect, dÃ©passement de taille");
 			break;
 		case SUPPR_ARETE_SOMMET_INEXISTANT : 
 			strcpy(erreur2String, "Un des sommets est incorrect, ");
-			strcat(erreur2String, "dépassement de taille");
+			strcat(erreur2String, "dÃ©passement de taille");
 			break;
 		case ECHEC_OUVERTURE_FICHIER : 
 			strcpy(erreur2String, "Impossible d'ouvrir le fichier");
@@ -258,11 +258,11 @@ void afficherErreur(casErreur erreur) {
 			break;
 		case FICHIER_SOMMET_SUP_MAX : 
 			strcpy(erreur2String, "Un des sommets est superieur ");
-			strcat(erreur2String,  "a la valeur maximale autorisée");
+			strcat(erreur2String,  "a la valeur maximale autorisÃ©e");
 			break;
 		case FICHIER_REF_SOMMET_INEXISTANT : 
 			strcpy(erreur2String, "Une arete fait reference a un sommet ");
-			strcat(erreur2String, "qui n'a pas été créé");
+			strcat(erreur2String, "qui n'a pas Ã©tÃ© crÃ©Ã©");
 			break;
 		default : break;
 
@@ -564,18 +564,45 @@ void quitterMenuGraphe(TypGraphe** grapheCourant){
 	return;
 }
 
+/*
+ * Fonction :    lancerKruskal
+ *
+ * Parametres :  TypGraphe**, graphe courant
+ *
+ * Retour :      rien
+ *
+ * Description : lance le calcul et l'affichage dâ€™un arbre couvrant de poids
+ *               minimal en utilisant l'algorithme de Kruskal
+ *
+ */
 void lancerKruskal(TypGraphe *grapheCourant){
-    casErreur erreur = Kruskal(grapheCourant);
-    if(erreur != PAS_ERREUR)
-        afficherErreur(erreur);
+	
+	casErreur erreur = Kruskal(grapheCourant);
+	if(erreur != PAS_ERREUR)
+		afficherErreur(erreur);
 
-    return;
+	return;
+	
 }
 
+/*
+ * Fonction :    lancerPrim
+ *
+ * Parametres :  TypGraphe**, graphe courant
+ *               int sommetDepart, sommet quelconque du graphe choisi
+ *
+ * Retour :      rien
+ *
+ * Description : lance le calcul et l'affichage dâ€™un arbre couvrant de poids
+ *               minimal en utilisant l'algorithme de Prim
+ *
+ */
 void lancerPrim(TypGraphe *grapheCourant, int sommetDepart){
-    casErreur erreur = Prim(grapheCourant, sommetDepart);
-    if(erreur != PAS_ERREUR)
-        afficherErreur(erreur);
-
-    return;
+	
+	casErreur erreur = Prim(grapheCourant, sommetDepart);
+	if(erreur != PAS_ERREUR)
+		afficherErreur(erreur);
+	
+	return;
+	
 }

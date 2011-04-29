@@ -1,8 +1,32 @@
+/*
+ ******************************************************************************
+ *
+ * Programme : connexionArbitre.c
+ *
+ * ecrit par : Guillaume MONTAVON & Benoit MEILHAC
+ *
+ * resume :    realise la connexion a l'arbitre ainsi que la connexion au
+ *             moteur Java et donc a l'IA
+ *
+ * date :      02/05/2011
+ *
+ ******************************************************************************
+ */
+
 #include "protocolArbitre.h"
 #include "fonctionsSocket.h"
 #include "connexionArbitre.h"
 
-
+/*
+ * Fonction :    clearScanf
+ *
+ * Parametres :  rien
+ *
+ * Retour :      rien
+ *
+ * Description : libere le buffer du scanf
+ *
+ */
 void clearScanf(void){
 	char c;
 	while((c = getchar()) != EOF && c != '\n');
@@ -10,6 +34,19 @@ void clearScanf(void){
 	return;
 }
 
+/*
+ * Fonction :    creationConnexion
+ *
+ * Parametres :  char *machine, nom de la machine distante
+ *               int port, port de la machine distante
+ *               int *sock, socket cree
+ *
+ * Retour :      RetourFonction, code d'erreur de la fonction
+ *
+ * Description : creer une socket avec le port et la machine donnee en
+ *               parametre
+ *
+ */
 RetourFonction creationConnexion(char *machine, int port, int *sock){
 	fprintf(stdout, "Procedure de connexion\n");
 
@@ -22,6 +59,16 @@ RetourFonction creationConnexion(char *machine, int port, int *sock){
 	return CODE_OK;
 }
 
+/*
+ * Fonction :    deconnexion
+ *
+ * Parametres :  int sock, socket a deconnecter
+ *
+ * Retour :      RetourFonction, code d'erreur de la fonction
+ *
+ * Description : ferme la connexion d'une socket
+ *
+ */
 RetourFonction deconnexion(int sock){
 	int err;
 
@@ -38,6 +85,17 @@ RetourFonction deconnexion(int sock){
 	return CODE_OK;
 }
 
+/*
+ * Fonction :    identification
+ *
+ * Parametres :  int sock, socket de l'arbitre
+ *               int *identifiant, identifiant que possedera le nouveau joueur
+ *
+ * Retour :      RetourFonction, code d'erreur de la fonction
+ *
+ * Description : identifie un nouveau joueur aupres de l'arbitre
+ *
+ */
 RetourFonction identification(int sock, int *identifiant){
 	TypIdentificationReq req;
 	TypIdentificationRep rep;
@@ -67,6 +125,18 @@ RetourFonction identification(int sock, int *identifiant){
 	return CODE_OK;
 }
 
+/*
+ * Fonction :    demandeNouvellePartie
+ *
+ * Parametres :  int sock, socket de l'arbitre
+ *               int sockMoteurJava, socket du moteur Java
+ *               int identifiant, identifiant du joueur
+ *
+ * Retour :      RetourFonction, code d'erreur de la fonction
+ *
+ * Description : demande une nouvelle partie a l'arbitre
+ *
+ */
 RetourFonction demandeNouvellePartie(int sock, int sockMoteurJava, int identifiant){
 	TypPartieReq req;
 	TypPartieRep rep;
@@ -109,6 +179,17 @@ RetourFonction demandeNouvellePartie(int sock, int sockMoteurJava, int identifia
 	return CODE_OK;
 }
 
+/*
+ * Fonction :    debutePartie
+ *
+ * Parametres :  int sock, socket de l'arbitre
+ *               int sockMoteurJava, socket du moteur Java
+ *
+ * Retour :      RetourFonction, code d'erreur de la fonction
+ *
+ * Description : debute la partie contre l'adversaire
+ *
+ */
 RetourFonction debutePartie(int sock, int sockMoteurJava){
 	int numeroCoup = 0;
 	RetourFonction retour;
@@ -124,6 +205,17 @@ RetourFonction debutePartie(int sock, int sockMoteurJava){
 	return retour;
 }
 
+/*
+ * Fonction :    attendPremierCoup
+ *
+ * Parametres :  int sock, socket de l'arbitre
+ *               int sockMoteurJava, socket du moteur Java
+ *
+ * Retour :      RetourFonction, code d'erreur de la fonction
+ *
+ * Description : attend un coup de l'adversaire
+ *
+ */
 RetourFonction attendPremierCoup(int sock, int sockMoteurJava){
 	int numeroCoup = 0;
 	RetourFonction retour;
@@ -139,6 +231,18 @@ RetourFonction attendPremierCoup(int sock, int sockMoteurJava){
 	return retour;
 }
 
+/*
+ * Fonction :    jouerUnCoup
+ *
+ * Parametres :  int sock, socket de l'arbitre
+ *               int sockMoteurJava, socket du moteur Java
+ *               int *numeroCoup, numero du coup actuel
+ *
+ * Retour :      RetourFonction, code d'erreur de la fonction
+ *
+ * Description : recoi un coup a jouer du moteur java, puis l'envoi a l'arbitre
+ *
+ */
 RetourFonction jouerUnCoup(int sock, int sockMoteurJava, int *numeroCoup){
 	fprintf(stdout, "L'IA commence a jouer un coup\n");
 
@@ -272,6 +376,18 @@ RetourFonction jouerUnCoup(int sock, int sockMoteurJava, int *numeroCoup){
 	return CODE_OK;
 }
 
+/*
+ * Fonction :    envoiMoteurJavaDebute
+ *
+ * Parametres :  int sock, socket du moteur Java
+ *               int commence, 1 si le joueur commence la partie 
+ *
+ * Retour :      RetourFonction, code d'erreur de la fonction
+ *
+ * Description : envoi au moteur Java une requete qui lui dira si le joueur
+ *               commence a jouer ou attend un coup de l'adversaire
+ *
+ */
 RetourFonction envoiMoteurJavaDebute(int sock, int commence) {
 
 	int err;
@@ -294,6 +410,16 @@ RetourFonction envoiMoteurJavaDebute(int sock, int commence) {
 	
 }
 
+/*
+ * Fonction :    envoiMoteurJavaRestart
+ *
+ * Parametres :  int sock, socket du moteur Java
+ *
+ * Retour :      RetourFonction, code d'erreur de la fonction
+ *
+ * Description : demande au moteur Java de demarrer une nouvelle partie
+ *
+ */
 RetourFonction envoiMoteurJavaRestart(int sock) {
 
 	int err;
@@ -311,6 +437,19 @@ RetourFonction envoiMoteurJavaRestart(int sock) {
 	
 }
 
+/*
+ * Fonction :    recevoirUnCoup
+ *
+ * Parametres :  int sock, socket de l'arbitre
+ *               int sockMoteurJava, socket du moteur Java
+ *               int *numeroCoup, numero du coup actuel
+ *
+ * Retour :      RetourFonction, code d'erreur de la fonction
+ *
+ * Description : recoi un coup de l'adversaire par l'arbitre puis envoi ce
+ *               dernier au moteur Java
+ *
+ */
 RetourFonction recevoirUnCoup(int sock, int sockMoteurJava, int *numeroCoup){
 	TypCoupReq req;
 	TypCoupRep rep;
@@ -356,7 +495,7 @@ RetourFonction recevoirUnCoup(int sock, int sockMoteurJava, int *numeroCoup){
 	char reqToString[TAIL_CHAIN] = "";
 	typCoupReqToString(req, reqToString);
 
-	printf("\nEnvoi au moteur de %s\n", reqToString);
+	fprintf(stdout, "\nEnvoi au moteur de %s\n", reqToString);
 	err = send(sockMoteurJava, (void*) &reqToString, strlen(reqToString), 0);
 	if(err < 0){
 		fprintf(stderr, "Echec d'envoi du dernier coup au moteur Java\n");
@@ -366,6 +505,18 @@ RetourFonction recevoirUnCoup(int sock, int sockMoteurJava, int *numeroCoup){
 	return CODE_OK;
 }
 
+/*
+ * Fonction :    identificationMoteurJava
+ *
+ * Parametres :  int sock, socket du moteur Java
+ *
+ * Retour :      RetourFonction, code d'erreur de la fonction
+ *
+ * Description : envoi un mot de passe au moteur Java afin de se connecter et
+ *               d'etre sur que le joueur est bien celui qui est associe au
+ *               moteur Java
+ *
+ */
 RetourFonction identificationMoteurJava(int sock) {
 	
 	int err;
@@ -384,7 +535,7 @@ RetourFonction identificationMoteurJava(int sock) {
 	if(err < 0)
 		return ECHEC_RECEPTION_MOT_PASSE;
 
-	printf("mot de passe : %s\n", repMotPasse);
+	fprintf(stdout, "mot de passe : %s\n", repMotPasse);
 	
 	if(strcmp(repMotPasse, "OK") != 0)
 		return ECHEC_CONFIRMATION_MOT_PASSE;
@@ -395,6 +546,17 @@ RetourFonction identificationMoteurJava(int sock) {
 
 }
 
+/*
+ * Fonction :    retournerTypLigne
+ *
+ * Parametres :  int ligne, ligne demandee
+ *
+ * Retour :      TypLigne, ligne convertie en TypLigne
+ *
+ * Description : converti une ligne (en entier) en une ligne de type
+ *               TypLigne
+ *
+ */
 TypLigne retournerTypLigne(int ligne){
 	switch(ligne){
 		case 0:
@@ -412,6 +574,17 @@ TypLigne retournerTypLigne(int ligne){
 	}
 }
 
+/*
+ * Fonction :    retournerIntLigne
+ *
+ * Parametres :  int colonne, colonne demandee
+ *
+ * Retour :      TypColonne, colonne convertie en TypColonne
+ *
+ * Description : converti une colonne (en entier) en une colonne de type
+ *               TypColonne
+ *
+ */
 TypColonne retournerTypColonne(int colonne){
 	switch(colonne){
 		case 0:
@@ -431,6 +604,18 @@ TypColonne retournerTypColonne(int colonne){
 	}
 }
 
+/*
+ * Fonction :    stringToTypCoupReq
+ *
+ * Parametres :  char reponse[], requete recue du moteur Java
+ *
+ * Retour :      TypCoupReq, requete qui sera envoyee a l'arbitre
+ *
+ * Description : converti une requete recue du moteur Java (chaine de
+ *               caracteres), en une requete de type TypCoupReq qui sera
+ *               envoyee a l'arbitre
+ *
+ */
 TypCoupReq stringToTypCoupReq(char reponse[]) {
 	
 	TypCoupReq req;
@@ -497,6 +682,17 @@ TypCoupReq stringToTypCoupReq(char reponse[]) {
 	
 }
 
+/*
+ * Fonction :    retournerIntLigne
+ *
+ * Parametres :  TypLigne ligne, ligne demandee
+ *
+ * Retour :      int, numero de ligne en entier
+ *
+ * Description : converti une ligne (TypLigne) en une ligne de type
+ *               entier
+ *
+ */
 int retournerIntLigne(TypLigne ligne){
 	switch(ligne){
 		case LI_ZERO:
@@ -514,7 +710,18 @@ int retournerIntLigne(TypLigne ligne){
 	}
 }
 
-int retournerIntColonne(TypLigne colonne){
+/*
+ * Fonction :    retournerIntColonne
+ *
+ * Parametres :  TypColonne colonne, colonne demandee
+ *
+ * Retour :      int, numero de colonne en entier
+ *
+ * Description : converti une colonne (TypColonne) en une colonne de type
+ *               entier
+ *
+ */
+int retournerIntColonne(TypColonne colonne){
 	switch(colonne){
 		case CO_ZERO:
 			return 0;
@@ -533,6 +740,18 @@ int retournerIntColonne(TypLigne colonne){
 	}
 }
 
+/*
+ * Fonction :    typCoupReqToString
+ *
+ * Parametres :  TypCoupReq req, requete recue de l'arbitre
+ *               char* reqToString, chaine qui sera envoyee au moteur Java
+ *
+ * Retour :      rien
+ *
+ * Description : converti une requete recue de l'arbitre en une chaine de
+ *               caracteres, qui sera envoyee au moteur Java
+ *
+ */
 void typCoupReqToString(TypCoupReq req, char* reqToString) {
 	
 	char charTemp[2];
@@ -590,6 +809,18 @@ void typCoupReqToString(TypCoupReq req, char* reqToString) {
 	
 }
 
+
+/*
+ * Fonction :    traitementSiErreur
+ *
+ * Parametres :  RetourFonction retour, code d'erreur
+ *
+ * Retour :      rien
+ *
+ * Description : affiche un message d'erreur en fonction du code d'erreur
+ *               donne en parametre
+ *
+ */
 void traitementSiErreur(RetourFonction retour){
 	
 	switch(retour){
@@ -687,6 +918,17 @@ void traitementSiErreur(RetourFonction retour){
 	
 }
 
+/*
+ * Fonction :    main
+ *
+ * Parametres :  int argc, arguments du programme
+ *               char **argv, arguments du programme
+ *
+ * Retour :      int
+ *
+ * Description : fonction principale
+ *
+ */
 int main(int argc, char **argv){
 	
 	if(argc != 3 && argc != 4){
