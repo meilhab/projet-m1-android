@@ -3,7 +3,7 @@
 
 #include "libgraphe.h"
 
-int appartientTas(int *tas[], int sommetSuivant, int tailleTas);
+int appartientTab(int *tas[], int sommet, int tailleTas);
 int extraireMinTab(int *tas[], int cle[], int *tailleTas);
 casErreur Prim(TypGraphe *graphe, int sommetDepart);
 
