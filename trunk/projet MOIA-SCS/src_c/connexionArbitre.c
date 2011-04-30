@@ -255,11 +255,13 @@ RetourFonction jouerUnCoup(int sock, int sockMoteurJava, int *numeroCoup){
 		return ECHEC_RECEPTION_DERNIER_COUP;
 	req = stringToTypCoupReq(stringReq);
 	
+	printf("on envoie a l'arbitre : %s\n", stringReq);
+
 	TypCoupRep rep;
-	/*
-	TypPosition positionDepart;
-	TypPosition positionArrivee;
-	*/
+	
+	/*TypPosition positionDepart;
+	TypPosition positionArrivee;*/
+	TypPosition positionPiecePrise2;
 
 	req.idRequest = COUP;
 
@@ -339,7 +341,13 @@ RetourFonction jouerUnCoup(int sock, int sockMoteurJava, int *numeroCoup){
 		(*numeroCoup) ++;
 	
 	req.numeroDuCoup  = (*numeroCoup);
-
+	/*
+	if(req.propCoup == PRISE) {
+		positionPiecePrise2.ligne = retournerTypLigne(0);
+		positionPiecePrise2.colonne = retournerTypColonne(5);
+		req.piecePrise2 = positionPiecePrise2;
+	}
+	*/
 	// envoi du coup joue par l'ia
 	err = send(sock, (void*) &req, sizeof(req), 0);
 	if(err < 0){
@@ -354,7 +362,7 @@ RetourFonction jouerUnCoup(int sock, int sockMoteurJava, int *numeroCoup){
 
 	if(rep.err != ERR_OK)
 		return ECHEC_CONFIRMATION_DERNIER_COUP;
-
+	
 	// traitement de la validite du coup
 	switch(rep.validCoup){
 		case VALID:
@@ -459,10 +467,14 @@ RetourFonction recevoirUnCoup(int sock, int sockMoteurJava, int *numeroCoup){
 	err = recv(sock, (void*) &rep, sizeof(rep), 0);
 	if(err < 0)
 		return ECHEC_RECEPTION_DERNIER_COUP_ADVERSAIRE;
-
+	
+	// reception du coup de l'adversaire
+	err = recv(sock, (void*) &req, sizeof(req), 0);
 	if(rep.err != ERR_OK)
 		return ECHEC_CONFIRMATION_DERNIER_COUP_ADVERSAIRE;
-
+	if(err < 0)
+		return ECHEC_RECEPTION_COUP_VALIDE_ADVERSAIRE;
+	
 	// traitement de la validite du coup
 	switch(rep.validCoup){
 		case VALID:
@@ -480,22 +492,20 @@ RetourFonction recevoirUnCoup(int sock, int sockMoteurJava, int *numeroCoup){
 		default:
 			return ECHEC_CODE_VALIDCOUP_INCONNU;
 	}
-
-	// reception du coup de l'adversaire
-	err = recv(sock, (void*) &req, sizeof(req), 0);
-	if(err < 0)
-		return ECHEC_RECEPTION_COUP_VALIDE_ADVERSAIRE;
+	
 
 	if(req.propCoup == PRISE)
 		(*numeroCoup) = 0;
 	else
 		(*numeroCoup) ++;
 	
+	//printf("taille req recu : %d\n", err);
+
 	//traitement de la reception avec le moteur java
 	char reqToString[TAIL_CHAIN] = "";
 	typCoupReqToString(req, reqToString);
 
-	fprintf(stdout, "\nEnvoi au moteur de %s\n", reqToString);
+	fprintf(stdout, "On recoit %s\n\n", reqToString);
 	err = send(sockMoteurJava, (void*) &reqToString, strlen(reqToString), 0);
 	if(err < 0){
 		fprintf(stderr, "Echec d'envoi du dernier coup au moteur Java\n");
@@ -770,8 +780,11 @@ void typCoupReqToString(TypCoupReq req, char* reqToString) {
 		case GAGNE:
 			entierTemp = 3;
 			break;
+		case NULLE:
+			entierTemp = 4;
+			break;
 		default:
-			entierTemp = -1;
+			fprintf(stdout, "L'arbitre a envoye n'importe quoi\n");
 			break;
 	}
 	sprintf(charTemp, "%d", entierTemp);
@@ -786,7 +799,7 @@ void typCoupReqToString(TypCoupReq req, char* reqToString) {
 	sprintf(charTemp, "%d", retournerIntColonne(req.caseDepart.colonne));
 	strcat(reqToString, charTemp);
 	strcat(reqToString, "]");
-	
+
 	strcat(reqToString, "-");
 	
 	strcat(reqToString, "[");
@@ -796,7 +809,7 @@ void typCoupReqToString(TypCoupReq req, char* reqToString) {
 	sprintf(charTemp, "%d", retournerIntColonne(req.caseArrivee.colonne));
 	strcat(reqToString, charTemp);
 	strcat(reqToString, "]");
-	
+
 	strcat(reqToString, "-");
 	
 	strcat(reqToString, "[");
@@ -806,7 +819,7 @@ void typCoupReqToString(TypCoupReq req, char* reqToString) {
 	sprintf(charTemp, "%d", retournerIntColonne(req.piecePrise2.colonne));
 	strcat(reqToString, charTemp);
 	strcat(reqToString, "]");
-	
+
 }
 
 
