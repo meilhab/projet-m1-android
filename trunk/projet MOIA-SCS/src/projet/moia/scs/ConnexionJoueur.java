@@ -97,10 +97,11 @@ public class ConnexionJoueur {
 						}
 						else if(!messageRecu.equals("fin")) {
 							
+							
+							//TODO a supprimer
 							try {
-								Thread.sleep(4000);
+								Thread.sleep(2500);
 							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 							
@@ -144,6 +145,9 @@ public class ConnexionJoueur {
 			System.out.println("Coup genere invalide : "+ coupsActuel.getReq());
 		
 		System.out.println(modele.plateauToString());
+		
+		if(modele.aGagne(1))
+			coupsActuel.setTypeCoups(Modele.GAGNE);
 		
 		System.out.println("envoie au joueur du coups " + coupsActuel.getReq());
 		

@@ -197,6 +197,51 @@ public class Modele {
 			return anciennePositionDernierPion1;
 	}
 	
+	public ArrayList<Position> getPionsJoueur(int numJoueur) {
+		if(numJoueur == 2)
+			return pionsJoueur2;
+		else
+			return pionsJoueur1;
+	}
+	
+	public boolean aGagne(int numJoueur) {
+		
+		boolean aGagne = false;
+		
+		if(getNbPionMain(adversaire(numJoueur)) <= 0) {
+			if(getPionsJoueur(adversaire(numJoueur)).size() <= 0)
+				aGagne = true;
+			else {
+				aGagne = true;
+				for(Position p : getPionsJoueur(adversaire(numJoueur)))
+					if(pionPeutEtreDeplace(adversaire(numJoueur), p))
+						aGagne = false;
+			}
+		}
+
+		return aGagne;
+		
+	}
+	
+	public boolean pionPeutEtreDeplace(int numJoueur, Position pion) {
+		
+		boolean peutBouger = false;
+		
+		if(caseVideEtExiste(pion.getX()+1, pion.getY()) || caseVideEtExiste(pion.getX()-1, pion.getY()) || caseVideEtExiste(pion.getX(), pion.getY()+1) || caseVideEtExiste(pion.getX(), pion.getY()-1))
+			peutBouger = true;
+		else if(caseVideEtExiste(pion.getX()+2, pion.getY()) && getPositionToJoueur(adversaire(numJoueur), pion.getX()+1, pion.getY()) != null)
+			peutBouger = true;
+		else if(caseVideEtExiste(pion.getX()-2, pion.getY()) && getPositionToJoueur(adversaire(numJoueur), pion.getX()-1, pion.getY()) != null)
+			peutBouger = true;
+		else if(caseVideEtExiste(pion.getX(), pion.getY()+2) && getPositionToJoueur(adversaire(numJoueur), pion.getX(), pion.getY()+1) != null)
+			peutBouger = true;
+		else if(caseVideEtExiste(pion.getX(), pion.getY()-2) && getPositionToJoueur(adversaire(numJoueur), pion.getX(), pion.getY()-1) != null)
+			peutBouger = true;
+		
+		return peutBouger;
+		
+	}
+	
 	public boolean valider(int numJoueur, Coups coups) {
 
 		int diffX = Math.abs(coups.getX1()-coups.getX2());
@@ -294,6 +339,23 @@ public class Modele {
 		else
 			return 2;
 		
+	}
+	
+	public boolean caseVideEtExiste(int x, int y) {
+		
+		if(getPositionToJoueur(1, x, y) == null && getPositionToJoueur(2, x, y) == null && x >= 0 && y >=0 && x < hauteur && y < largeur)
+			return true;
+		else
+			return false;
+		
+	}
+	
+	public void setNbPionsRestantsMain1(int nbPionsRestantsMain1) {
+		this.nbPionsRestantsMain1 = nbPionsRestantsMain1;
+	}
+
+	public void setNbPionsRestantsMain2(int nbPionsRestantsMain2) {
+		this.nbPionsRestantsMain2 = nbPionsRestantsMain2;
 	}
 	
 }
