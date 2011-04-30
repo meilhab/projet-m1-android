@@ -93,6 +93,10 @@ public class Coups {
 		return piecePrise2;
 	}
 	
+	public void setTypeCoups(int typeCoups) {
+		this.typeCoups = typeCoups;
+	}
+	
 	public String getReq() {
 		return typeCoups + "-" + caseDepart.toString() + "-" + caseArrivee.toString() + "-" + piecePrise2.toString();
 	}
