@@ -9,6 +9,14 @@ renverse_liste([],[]).
 renverse_liste([X|L1],L2):-
 	renverse_liste(L1,L3),
 	ajout_fin(X,L3,L2).
+	
+ajoutDebut(X,L,[X|L]).
+supprimer(_,[],[]).
+supprimer(X,[X|L1],L1). 
+supprimer(X,[Y|L1],L2):-
+	X\==Y,
+	ajoutDebut(Y,L3,L2),
+	supprimer(X,L1,L3). 
 
 
 plateau([[0,0], [0,1], [0,2], [0,3], [0,4], [0,5],
@@ -16,6 +24,11 @@ plateau([[0,0], [0,1], [0,2], [0,3], [0,4], [0,5],
         [2,0], [2,1], [2,2], [2,3], [2,4], [2,5],
         [3,0], [3,1], [3,2], [3,3], [3,4], [3,5],
         [4,0], [4,1], [4,2], [4,3], [4,4], [4,5]]).
+
+
+% =============================================================================
+% ===================================== POSE ==================================
+% =============================================================================
 
 poser([0,0]). poser([4,0]). poser([4,5]). poser([0,5]).
 poser([0,1]). poser([0,2]). poser([0,3]). poser([0,4]).
@@ -38,18 +51,30 @@ choisirPoser(Acc, AccReverse, _, _):-
 
 poserPions(ListePionsJ1, ListePionsJ2, NbPionsJ1, CaseJouee):-
     NbPionsJ1 > 1,
-    choisirPoser([], [CaseJouee|ListePionsPossible], ListePionsJ1, ListePionsJ2).
-	% verifier que \+ peutEtrePris(CaseArrivee, ListePionsJ1, ListePionsJ2).
+    choisirPoser([], Liste, ListePionsJ1, ListePionsJ2),
+	poseSansEtrePris(ListePionsJ1, ListePionsJ2, Liste, CaseJouee).
+
+% pose meme si on est pris (a supprimer)
+poserPions(ListePionsJ1, ListePionsJ2, NbPionsJ1, CaseJouee):-
+    NbPionsJ1 > 1,
+    choisirPoser([], [CaseJouee|_], ListePionsJ1, ListePionsJ2).
+	
+poseSansEtrePris(ListePionsJ1, ListePionsJ2, [Pion|_], CaseJouee):-
+	\+ peutEtrePris(Pion, ListePionsJ1, ListePionsJ2),
+	CaseJouee = Pion,!.
+
+poseSansEtrePris(ListePionsJ1, ListePionsJ2, [_|Liste], CaseJouee):-
+	poseSansEtrePris(ListePionsJ1, ListePionsJ2, Liste, CaseJouee).
 
 
-prendrePiece(ListePionsJ1, ListePionsJ2):-
-	5 = 6.
-
-
-prendPionAdversaire([Case|ListePionsJ2], Case).
+prendPionAdversaire([Case|_], Case).
 prendPionAdversaire(_, [5,6]).
 
 
+
+% =============================================================================
+% =============================== PEUT ETRE PRIS ==============================
+% =============================================================================
 peutEtrePrisPremierPossible(ListePionsJ1, ListePionsJ2, Case):-
 	verifierPeutEtrePris(ListePionsJ1, ListePionsJ2, [Case|_]).
 	
@@ -66,9 +91,8 @@ verifierPeutEtrePris([Pion|Acc], ListePionsJ1, ListePionsJ2, AccRes, Res):-
 verifierPeutEtrePris([_|Acc], ListePionsJ1, ListePionsJ2, AccRes, Res):-
 	verifierPeutEtrePris(Acc, ListePionsJ1, ListePionsJ2, AccRes, Res).
 
-verifierPeutEtrePris([Pion|Acc], ListePionsJ1, ListePionsJ2, [Pion|AccRes], Res):-
+verifierPeutEtrePris([Pion|_], ListePionsJ1, ListePionsJ2, [Pion|_], _):-
 	peutEtrePris(Pion, ListePionsJ1, ListePionsJ2).	
-
 
 peutEtrePris([X,Y], ListePionsJ1, ListePionsJ2):-
 	pionACote([X,Y], [X1,Y1]),
@@ -84,6 +108,11 @@ peutEtrePris([X,Y], ListePionsJ1, ListePionsJ2):-
 	\+ member([X2,Y2], ListePionsJ1),
 	\+ member([X2,Y2], ListePionsJ2).
 
+
+
+% =============================================================================
+% ========================== 4 CASES AUTOUR D'UN PION =========================
+% =============================================================================
 pionACote([X,Y], [X1,Y]):-
 	X1 is X-1,
 	X1 >= 0.
@@ -100,14 +129,23 @@ pionACote([X,Y], [X,Y1]):-
 	Y1 < YMax.
 
 
-deplacePremierPossible(ListePionsJ1, ListePionsJ2, DernierDeplacement, CaseDepart, CaseArrivee):-
-	tsDeplacementPossible(ListePionsJ1, ListePionsJ2, DernierDeplacement, [[CaseDepart,CaseArrivee]|_]).	
-	% verifier que \+ peutEtrePris(CaseArrivee, ListePionsJ1, ListePionsJ2).
+% =============================================================================
+% ================================ DEPLACEMENT ================================
+% =============================================================================
 
+deplacePremierPossible(ListePionsJ1, ListePionsJ2, DernierDeplacement, CaseDepart, CaseArrivee):-
+	tsDeplacementPossible(ListePionsJ1, ListePionsJ2, DernierDeplacement, ListePossible),
+	deplaceSansEtrePris(ListePionsJ1, ListePionsJ2, ListePossible, CaseDepart, CaseArrivee).
+	
+% deplace meme si on peut etre pris
+deplacePremierPossible(ListePionsJ1, ListePionsJ2, DernierDeplacement, CaseDepart, CaseArrivee):-
+	tsDeplacementPossible(ListePionsJ1, ListePionsJ2, DernierDeplacement, [[CaseDepart,CaseArrivee]|_]).
+
+	
 tsDeplacementPossible(ListePionsJ1, ListePionsJ2, DernierDeplacement, Res):-
 	tsDeplacementPossible(ListePionsJ1, ListePionsJ1, ListePionsJ2, DernierDeplacement, [], Res).
 
-tsDeplacementPossible([], _, _, DernierDeplacement, Acc, Res):-
+tsDeplacementPossible([], _, _, _, Acc, Res):-
 	renverse_liste(Acc,Res).
 
 tsDeplacementPossible([Pion|Acc], ListePionsJ1, ListePionsJ2, DernierDeplacement, AccRes, Res):-
@@ -117,24 +155,36 @@ tsDeplacementPossible([Pion|Acc], ListePionsJ1, ListePionsJ2, DernierDeplacement
 tsDeplacementPossible([_|Acc], ListePionsJ1, ListePionsJ2, DernierDeplacement, AccRes, Res):-
 	tsDeplacementPossible(Acc, ListePionsJ1, ListePionsJ2, DernierDeplacement, AccRes, Res).
 
-tsDeplacementPossible([Pion|Acc], ListePionsJ1, ListePionsJ2, DernierDeplacement, [[Pion,Case]|AccRes], Res):-
+tsDeplacementPossible([Pion|_], ListePionsJ1, ListePionsJ2, DernierDeplacement, [[Pion,Case]|_], _):-
 	deplacementPossible(Pion, ListePionsJ1, ListePionsJ2, DernierDeplacement, Case).
 
+	
 deplacementPossible(A, ListePionsJ1, ListePionsJ2, DernierDeplacement, B):-
 	pionACote(A, B),
 	member(A, ListePionsJ1),
 	\+ DernierDeplacement = [B,A],
 	\+ member(B, ListePionsJ1),
 	\+ member(B, ListePionsJ2).
-	
-	
+
+
+deplaceSansEtrePris(ListePionsJ1, ListePionsJ2, [[CaseDepart,CaseArrivee]|_], CaseDepartJouee, CaseArriveeJouee):-
+	ajoutDebut(CaseArrivee,ListePionsJ1,ListePionsJ1Ajout),
+	supprimer(CaseDepart,ListePionsJ1Ajout,ListePionsJ1Suppr),
+	\+ peutEtrePris(CaseArrivee, ListePionsJ1Suppr, ListePionsJ2),
+	CaseDepartJouee = CaseDepart,
+	CaseArriveeJouee = CaseArrivee,!.
+
+deplaceSansEtrePris(ListePionsJ1, ListePionsJ2, [_|Liste], CaseDepartJouee, CaseArriveeJouee):-
+	deplaceSansEtrePris(ListePionsJ1, ListePionsJ2, Liste, CaseDepartJouee, CaseArriveeJouee).
 
 	
 
+% =============================================================================
+% =================================== PRISE ===================================
+% =============================================================================
 
-
-prendPremierPossible(ListePionsJ1, ListePionsJ2, CaseDepart, CaseArrivee):-
-	tsPrisePossible(ListePionsJ1, ListePionsJ2, [[CaseDepart,CaseArrivee]|_]).	
+prendPremierPossible(ListePionsJ1, ListePionsJ2, CaseDepart, Pris, CaseArrivee):-
+	tsPrisePossible(ListePionsJ1, ListePionsJ2, [[CaseDepart,Pris,CaseArrivee]|_]).	
 	% verifier que \+ peutEtrePris(CaseArrivee, ListePionsJ1, ListePionsJ2).
 
 tsPrisePossible(ListePionsJ1, ListePionsJ2, Res):-
@@ -144,16 +194,16 @@ tsPrisePossible([], _, _, Acc, Res):-
 	renverse_liste(Acc,Res).
 
 tsPrisePossible([Pion|Acc], ListePionsJ1, ListePionsJ2, AccRes, Res):-
-	prisePossible(Pion, ListePionsJ1, ListePionsJ2, Case),
-	tsPrisePossible(Acc, ListePionsJ1, ListePionsJ2, [[Pion,Case]|AccRes], Res).
+	prisePossible(Pion, ListePionsJ1, ListePionsJ2, Pris, Case),
+	tsPrisePossible(Acc, ListePionsJ1, ListePionsJ2, [[Pion,Pris,Case]|AccRes], Res).
 
 tsPrisePossible([_|Acc], ListePionsJ1, ListePionsJ2, AccRes, Res):-
 	tsPrisePossible(Acc, ListePionsJ1, ListePionsJ2, AccRes, Res).
 
-tsPrisePossible([Pion|Acc], ListePionsJ1, ListePionsJ2, [[Pion,Case]|AccRes], Res):-
-	prisePossible(Pion, ListePionsJ1, ListePionsJ2, Case).
+tsPrisePossible([Pion|_], ListePionsJ1, ListePionsJ2, [[Pion,Pris,Case]|_], _):-
+	prisePossible(Pion, ListePionsJ1, ListePionsJ2, Pris, Case).
 
-prisePossible([AX,AY], ListePionsJ1, ListePionsJ2, [CX,CY]):-
+prisePossible([AX,AY], ListePionsJ1, ListePionsJ2, [BX, BY] ,[CX,CY]):-
 	pionACote([AX,AY], [BX,BY]),
 	member([AX,AY], ListePionsJ1),
 	\+ member([BX,BY], ListePionsJ1),
@@ -172,27 +222,31 @@ prisePossible([AX,AY], ListePionsJ1, ListePionsJ2, [CX,CY]):-
 
 
 
-
-	
-
-
+% =============================================================================
+% =================================== JOUER ===================================
+% =============================================================================
+% essaye de prendre un pion adverse si possible
 jouer(ListePionsJ1, ListePionsJ2, _, _, TypeCoups, CaseDepart, CaseArrivee, Prend2emePion):-
-	prendPremierPossible(ListePionsJ1, ListePionsJ2, CaseDepart, CaseArrivee),
-	prendPionAdversaire(ListePionsJ2, Prend2emePion),
+	prendPremierPossible(ListePionsJ1, ListePionsJ2, CaseDepart, Pris, CaseArrivee),
+	supprimer(Pris,ListePionsJ2,ListePionsJ2Suppr),
+	prendPionAdversaire(ListePionsJ2Suppr, Prend2emePion),
 	TypeCoups = prise.
 
+% se deplace si un pion adverse attaque
 jouer(ListePionsJ1, ListePionsJ2, _, DernierDeplacement, TypeCoups, CaseDepart, CaseArrivee, Prend2emePion):-
 	peutEtrePrisPremierPossible(ListePionsJ1, ListePionsJ2, CaseDepart),
 	deplacementPossible(CaseDepart, ListePionsJ1, ListePionsJ2, DernierDeplacement, CaseArrivee),
 	Prend2emePion = [5,6],
 	TypeCoups = deplace.
 
+% essaye de poser un pion
 jouer(ListePionsJ1, ListePionsJ2, NbPionsJ1, _, TypeCoups, CaseDepart, CaseArrivee, Prend2emePion):-
 	poserPions(ListePionsJ1, ListePionsJ2, NbPionsJ1, CaseArrivee),
 	CaseDepart = [5,6],
 	Prend2emePion = [5,6],
 	TypeCoups = pose.
-	
+
+% se deplace
 jouer(ListePionsJ1, ListePionsJ2, _, DernierDeplacement, TypeCoups, CaseDepart, CaseArrivee, Prend2emePion):-
 	deplacePremierPossible(ListePionsJ1, ListePionsJ2, DernierDeplacement, CaseDepart, CaseArrivee),
 	Prend2emePion = [5,6],
