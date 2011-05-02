@@ -1,0 +1,29 @@
+le .txt est spécialement pour toi, adepte windowsien :p
+
+je pensais reprendre ce que j'ai fait pour mon stage de l'année dernière.
+si tu vois des trucs à reprendre n'hésite pas.
+
+bref :
+
+
+remerciements (oui, il en faut)
+sommaire (optionnel ?)
+1. introduction
+2. présentation android
+3. présentation du sujet
+4. cahier des charges
+5. mise en oeuvre
+6. bilan
+7. conclusion
+glossaire (voir si pas mieux de le placer au niveau du sommaire)
+bibliographie
+annexes
+liste des tableaux (si on en met)
+table des figures (images)
+table des matières (même remarque que pour le sommaire)
+
+
+chaque point sera édité dans un fichier .tex différent, comme ça, pas d'emmerdes au niveau des commit
+ou encore des trifouillages sur un même fichier.
+le fichier principal sera nommé : rapport.tex ! tadaaa
+pour la bibliographie : bibliographie.tex (celui qui en aura besoin le crééra)
