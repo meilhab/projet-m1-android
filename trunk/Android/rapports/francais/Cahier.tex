@@ -2,9 +2,69 @@
 
 \section{Conception de l'application}
 
-\noindent Les objectifs gÃ©nÃ©raux de l'application sont :
+On peut décomposer l'application en différentes grandes parties.\\
+Une partie générale qui reprend les objectifs du logiciel de type RCP.\\
+Une partie concernant le stockage des informations sur le smartphone.\\
+Une dernière partie permettant de gérer le serveur distant.
+
+\noindent Les objectifs généraux de l'application sont :
 \begin{itemize}
+    \item une interface graphique fluide et agréable d'utilisation tout en restant complète et performante;
+    \item la gestion des tags (ajout et suppression);
+    \item la gestion des tâches (ajout, modification et suppression);
+    \item la gestion des tâches filles avec les tâches mère;
+    \item les différents tris possibles des tâches;
+    \item l'internationalisation de l'application en anglais;
+    \item la gestion des préférences de l'application.
+
+\end{itemize}
+
+\vspace{0.25cm}
+
+\noindent Concernant la base de donnée :
+\begin{itemize}
+    \item la création d'une base cohérente permettant de gérer les différentes données de l'application;
+    \item le stockage, la modification et la suppression de données dans l'application.
+
+\end{itemize}
+
+\vspace{0.25cm}
+
+\noindent Concernant la synchronisation avec un serveur distant :
+\begin{itemize}
+    \item la création d'une base plus évoluée que celle du smartphone;
+    \item l'envoi et la réception des données avec leur stockage, modification et suppression;
+    \item la gestion des utilisateurs;
+    \item la mise en place de différentes méthodes de synchronisation :
+    \begin{itemize}
+        \renewcommand{\labelitemii}{$\rightarrow$}
+        \item écrasement des données du smartphone et remplacement par celles du serveur;
+        \item écrasement des données du serveur et remplacement par celles du smartphone;
+        \item combiner les données du serveur et du smartphone.
+
+    \end{itemize}
+    \item la gestion d'un serveur proxy.
 
 \end{itemize}
 
 
+\section{Contraintes techniques}
+
+Le développement d'une application Android est soumis à quelques contraintes pour arriver à un résultat.
+
+\subsection{Les outils de développement}
+
+Pour pouvoir facilement développer avec Android, il a fallu installer 
+
+\subsection{Le smartphone de test}
+
+\subsection{Le serveur web}
+
+\subsection{Divers}
+
+
+\section{Contraintes temporelles}
+
+
+
+\clearpage
