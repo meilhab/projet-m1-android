@@ -2,12 +2,12 @@
  *
  * Programme : protocolArbitre.h
  *
- * Synopsis : entete du protocole d'acces Ã  l'arbitre
+ * Synopsis : entete du protocole d'acces à l'arbitre
  *            pour Yote
  *
  * Ecrit par : LP, 15 / 02 / 11
  * 
-***************************************/
+/***************************************/
 
 #ifndef _protocolArbitre_h
 #define _protocolArbitre_h
