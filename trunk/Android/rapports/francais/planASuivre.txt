@@ -21,6 +21,7 @@ annexes
 liste des tableaux (si on en met)
 table des figures (images)
 table des matières (même remarque que pour le sommaire)
+4ème de couverture
 
 
 chaque point sera édité dans un fichier .tex différent, comme ça, pas d'emmerdes au niveau des commit

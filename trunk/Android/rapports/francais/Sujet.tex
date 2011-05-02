@@ -23,7 +23,9 @@ Utiliser un maximum de fonctionnalités dans une application afin d'avoir une vue
 
 \subsection{Présentation de l'existant}
 
-Le gestionnaire de tâche réalisé dans le cadre de l'UV\protect\footnote{Unité de Valeur} MICA\protect\footnote{Modélisation, Interface utilsateur, Conception Avancée} est un logiciel de gestion des tâches quotidiennes que chacun doit effectuer.
+Le gestionnaire de tâche réalisé dans le cadre de l'UV\protect\footnote{Unité de Valeur} MICA\protect\footnote{Modélisation, Interface utilsateur, Conception Avancée} est un logiciel de gestion des tâches quotidiennes que chacun doit effectuer. C'est un aide mémoire utilisable par tout le monde.
+
+\subsubsection{Fonctionnalités existantes}
 
 Ce logiciel initialement de type RCP\protect\footnote{Rich Client Platform} pour l'IDE\protect\footnote{Integrated Development Environment, Environnement de Développement Intégré} Eclipse permet de réaliser les actions suivantes :
 \begin{itemize}
@@ -37,16 +39,31 @@ Ce logiciel initialement de type RCP\protect\footnote{Rich Client Platform} pour
 \end{itemize}
 
 
-\subsection{Fonctionnement de l'application pour smartphone}
+\subsubsection{Vue sur l'existant}
 
-Reprenant les fonctionnalités du logiciel existant, le gestionnaire de tâche devra s'adapter à un smartphone et inclure de nouvelles possibilités.
+\begin{figure}[!th]
+    \begin{center}
+        \includegraphics[width=17cm,height=12cm]{htc.jpg}     
+        %{gestionnaireTacheExistantGuillaume.png}
+        \caption{Exemple de capture d'écran du gestionnaire de tâche existant de type RCP}
 
-Le gestionnaire de tâche a pour but de gérer ses tâches au quotidien, c'est un aide mémoire utilisable par tout le monde.
-\noident Comme vu précédemment, il permet de :
+    \end{center}
+
+\end{figure}
+
+
+\subsection{Présentation du logiciel pour smartphone}
+
+Reprenant les fonctionnalités du logiciel existant, le gestionnaire de tâche doit s'adapter à un smartphone, c'est-à-dire s'adapter à la taille de l'écran, posséder une interface simple et non surchargée tout en restant complet.
+Il doit aussi inclure de nouvelles possibilités existantes avec Android.
+
+\noindent En reprenant certains des points vus précédemment, le gestionnaire de tâche permet de :
 \begin{itemize}
-    \item 
-    \item
-    \item
-    \item
+    \item gérer les tags (ajout/suppression);
+    \item gérer les tâches (ajout/modification/suppression);
+    \item gérer les sous-tâches des tâches mères;
+    \item utiliser la base de donnée SQLite disponible sur le smartphone Android;
+    \item se synchroniser avec un serveur distant;
+    \item utiliser diverses fonctionnalités inclues avec Android.
 
 \end{itemize}
