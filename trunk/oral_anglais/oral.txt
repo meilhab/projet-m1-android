@@ -1,0 +1,38 @@
+------------------------------------------
+Introduction
+
+Présentation des réseaux sans fils
+
+Risques sur les réseaux
+
+Solutions pour sécuriser ces réseaux
+
+Conclusion
+
+//Questions ?
+------------------------------------------
+
+Introduction
+->on se présente
+->on lance une phrase d'intro du sujet -> réseau se développe de plus en plus + introduction sur la sécurité
+->on annonce le plan
+
+
+Présentation des réseaux sans fils
+->définition des réseaux sans fils
+->différents types de réseaux sans fils
+
+
+Risques sur les réseaux
+->plus vulnérable que les réseaux filiaires -> interception des données
+->différentes attaques : dénis de service/interception des informations/utilisation non autorisé
+
+
+Solutions pour sécuriser ces réseaux
+->important de mettre au point un protocole de sécurité concernant le/les réseaux sans fils
+->WPA/WEP/mot de passe développé (azty+454152+$ù*)/filtrage d'adresse MAC
+
+Conclusion
+->annonce qu'on conclu !
+->réseau de plus en plus en cours de développement
+->sécuriser ces réseaux pour suivre ce développement et se protéger DES AUTRES
