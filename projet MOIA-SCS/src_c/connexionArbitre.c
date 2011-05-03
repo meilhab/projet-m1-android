@@ -255,7 +255,7 @@ RetourFonction jouerUnCoup(int sock, int sockMoteurJava, int *numeroCoup){
 		return ECHEC_RECEPTION_DERNIER_COUP;
 	req = stringToTypCoupReq(stringReq);
 	
-	printf("on envoie a l'arbitre : %s\n", stringReq);
+	fprintf(stdout, "on envoie a l'arbitre : %s\n", stringReq);
 
 	TypCoupRep rep;
 	
@@ -381,6 +381,8 @@ RetourFonction jouerUnCoup(int sock, int sockMoteurJava, int *numeroCoup){
 			return ECHEC_CODE_VALIDCOUP_INCONNU;
 	}
 
+	fprintf(stdout, "Nombre de coups joues : %d\n", (*numeroCoup));
+
 	return CODE_OK;
 }
 
@@ -499,7 +501,7 @@ RetourFonction recevoirUnCoup(int sock, int sockMoteurJava, int *numeroCoup){
 	else
 		(*numeroCoup) ++;
 	
-	//printf("taille req recu : %d\n", err);
+	//fprintf(stdout, "taille req recu : %d\n", err);
 
 	//traitement de la reception avec le moteur java
 	char reqToString[TAIL_CHAIN] = "";
@@ -511,6 +513,8 @@ RetourFonction recevoirUnCoup(int sock, int sockMoteurJava, int *numeroCoup){
 		fprintf(stderr, "Echec d'envoi du dernier coup au moteur Java\n");
 		return ECHEC_ENVOI_DERNIER_COUP;
 	}
+
+	fprintf(stdout, "Nombre de coups joues : %d\n", (*numeroCoup));
 
 	return CODE_OK;
 }
