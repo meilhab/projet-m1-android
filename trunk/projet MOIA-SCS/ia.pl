@@ -50,13 +50,13 @@ choisirPoser(Acc, AccReverse, _, _):-
 	renverse_liste(Acc,AccReverse).
 
 poserPions(ListePionsJ1, ListePionsJ2, NbPionsJ1, CaseJouee):-
-    NbPionsJ1 > 1,
+    NbPionsJ1 > 0,
     choisirPoser([], Liste, ListePionsJ1, ListePionsJ2),
 	poseSansEtrePris(ListePionsJ1, ListePionsJ2, Liste, CaseJouee).
 
 % pose meme si on est pris (a supprimer)
 poserPions(ListePionsJ1, ListePionsJ2, NbPionsJ1, CaseJouee):-
-    NbPionsJ1 > 1,
+    NbPionsJ1 > 0,
     choisirPoser([], [CaseJouee|_], ListePionsJ1, ListePionsJ2).
 	
 poseSansEtrePris(ListePionsJ1, ListePionsJ2, [Pion|_], CaseJouee):-
@@ -111,7 +111,7 @@ peutEtrePris([X,Y], ListePionsJ1, ListePionsJ2):-
 
 
 % =============================================================================
-% ========================== 4 CASES AUTOUR D'UN PION =========================
+% ========================== 4 CASES AUTOUR D UN PION =========================
 % =============================================================================
 pionACote([X,Y], [X1,Y]):-
 	X1 is X-1,

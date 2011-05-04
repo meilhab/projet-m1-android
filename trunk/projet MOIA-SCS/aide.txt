@@ -1,0 +1,25 @@
+L'IA permet de retourner un coup à jouer.
+
+Exemple d'utilisation du prédicat jouer
+
+Pour une prise de pion adverse
+jouer([[0,0]], [[0,1], [0,3]], 11, [], TypeDuCoupJoue, CaseOrigine, CaseArrivee, Deuxiemeprise).
+ici on a l'exemple d'un pion adverse pouvant être pris.
+prendPremierPossible([[0,0]], [[0,1], [0,3]], CaseDepart, Pris, CaseArrivee). permet de retourner les positions d'un pion après avoir pris un pion adverse.
+prendPionAdversaire([[0,3]], Prend2emePion). permet de prendre un pion restant après la première prise s'il y en a un disponible.
+Il prend le premier de la liste.
+
+Pour un déplacement du pion sous la menace
+jouer([[0,3]], [[0,2], [0,1]], 11, [], TypeDuCoupJoue, CaseOrigine, CaseArrivee, Deuxiemeprise).
+ici on a l'exemple d'un pion menacé par un autre.
+De ce fait, il va être déplacé.
+peutEtrePrisPremierPossible([[0,3]], [[0,2], [0,1]], 11, CaseDepart). retournera la case du pion menacé.
+deplacementPossible([0,3], [[0,3]], [[0,2], [0,1]], 11, CaseArrivee). retournera une case de déplacement sécurisé pour le pion.
+Si pas de case sécurisé trouvée, le pion est laissé à son triste sort.
+
+Pour une pose
+jouer([[0,0]], [[0,2], [0,1]], 11, [], TypeDuCoupJoue, CaseOrigine, CaseArrivee, Deuxiemeprise).
+ici le prédicat poserPions permettra de retourner une case possible pour poser un pion en sécurité
+on peut l'appeler via :
+poserPion([[0,0]], [[0,2], [0,1]], 11, CaseArrivee).
+
