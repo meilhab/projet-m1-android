@@ -1,0 +1,18 @@
+Hello everybody, thanks to be here.
+My name is Benoit and with Guillaume, we will talk about the wireless network security.
+As you know, wireless network has grown more and more since several years, and it's very important now, with smartphones.
+No more wire, it's a big advantage but if you can't secure this network, you can become vulnerable to other people.
+First of all, we will make a short presentation about wireless network.
+After that, why it can be dangerous to have a not protected wireless network. 
+And finally, the solutions we can bring to protect the network.
+
+To begin with a presentation of wireless network, wireless network refer to any type of computer network that is not connected by cable of any kind.
+This method use radio waves to do this.
+It exists four types of wireless connections :
+    ->Wireless Personal Area Networks : it's used in a small area for example bluetooth or infrared light;
+    ->Wireless Local Area Networks : it cover several meters for example WiFi;
+    ->Wireless Metropolitan Area Networks : it cover several kilometers for example WiMAX;
+    ->Wireless Wide Area Networks : it cover large outdoor areas for example GPRS, GSM for smartphones.
+
+However, this can be dangerous to use network without protection. There is many people, like me, who will be happy to find a network without any security.
+Now, I will defer to Guillaume to continue.
