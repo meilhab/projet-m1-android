@@ -1,8 +1,8 @@
 So now I would like to talk you about risks of wireless networks.
 Wireless networks are much more vulnerable than wired networks because they haven't physical limitations.
 Anyone can connect to networks and intercept data with a laptop without going into a room and connect a cable.
-Moreover, Wi-Fi often misses security.
-There are many possible attacks: for example denial of service, man in the middle and unauthorized use.
+Moreover, Wi-Fi, who is the main wireless network, often misses security.
+There are many possible attacks again wifi: for example denial of service, man in the middle and unauthorized use.
 Therefore, it is important to develop a security protocol.
 
 Finally, let me present you some solutions to better protect/secure wireless networks.
@@ -14,6 +14,6 @@ WEP is a technology that consumes more and is more easily crackable.
 WPA or WPA 2 is the best solution because it consumes less power and is very difficult crackable.
 And finally the most basic solution is to avoid letting the default password and choose the most complex possible.
 
-In conclusion, we can say that wireless networks including Wi-Fi are growing because they are more and more used in many hardware: laptop, Smartphone, printer, game console.
+In conclusion, we can say that wireless networks including Wi-Fi are growing because they are more and more used in many hardwares: laptop, Smartphone, printer, game console.
 But Wi-Fi is a technology that is not very safe because anyone with a computer can access to transmitted data.
 Therefore, It becomes necessary to secure infrastructure to protect data, including using the most secure encryption currently WPA.
