@@ -1,13 +1,14 @@
-% ============================================================================
+% =============================================================================
 %                            Projet : Le jeu de Yote
 %                     Guillaume MONTAVON & Benoit MEILHAC
 %                           (Master 1 Informatique)
-% ============================================================================
-
+% =============================================================================
 
 
 % =============================================================================
+% =============================================================================
 % ============ Predicats vus en TP qui serviront pour la suite ================
+% =============================================================================
 % =============================================================================
 
 % Ajoute un element a la fin d'une liste 
@@ -32,21 +33,27 @@ supprimer(X,[Y|L1],L2):-
 	ajoutDebut(Y,L3,L2),
 	supprimer(X,L1,L3).
 
-
-
-
+% =============================================================================
+% =============================================================================
+% ============================= Utile pour le jeu =============================
+% =============================================================================
+% =============================================================================
+% hauteur du jeu (coordonnees en X)
 hauteur(5).
+% largeur du jeu (coordonnees en Y)
 largeur(6).
 
+% ne nous sert pas
 plateau([[0,0], [0,1], [0,2], [0,3], [0,4], [0,5],
         [1,0], [1,1], [1,2], [1,3], [1,4], [1,5],
         [2,0], [2,1], [2,2], [2,3], [2,4], [2,5],
         [3,0], [3,1], [3,2], [3,3], [3,4], [3,5],
         [4,0], [4,1], [4,2], [4,3], [4,4], [4,5]]).
 
-
+% =============================================================================
 % =============================================================================
 % ===================================== Pose ==================================
+% =============================================================================
 % =============================================================================
 
 % pose dans les coins
@@ -62,7 +69,9 @@ poser([3,1]). poser([3,2]). poser([3,3]). poser([3,4]).
 poser([2,1]). poser([2,4]).
 poser([2,2]). poser([2,3]).
 
-
+% == Predicat choisirPoser(Acc, ListePionsPossible, ListePionsJ1, ListePionsJ2) ==
+% retourne une liste de case ou il est possible de se poser (case vide)
+% =============================================================================
 choisirPoser(Acc, ListePionsPossible, ListePionsJ1, ListePionsJ2):-
     poser([X,Y]),
     \+ member([X,Y], Acc),
@@ -72,16 +81,23 @@ choisirPoser(Acc, ListePionsPossible, ListePionsJ1, ListePionsJ2):-
 choisirPoser(Acc, AccReverse, _, _):-
 	renverse_liste(Acc,AccReverse).
 
+% === Predicat poserPions(ListePionsJ1, ListePionsJ2, NbPionsJ1, CaseJouee) ===
+% retourne une case ou on posera un pion si on possede encore des pions dans la
+% main
+% =============================================================================
 poserPions(ListePionsJ1, ListePionsJ2, NbPionsJ1, CaseJouee):-
-    NbPionsJ1 > 0,
-    choisirPoser([], Liste, ListePionsJ1, ListePionsJ2),
+	NbPionsJ1 > 0,
+	choisirPoser([], Liste, ListePionsJ1, ListePionsJ2),
 	poseSansEtrePris(ListePionsJ1, ListePionsJ2, Liste, CaseJouee).
-
-% pose meme si on est pris (a supprimer)
+% pose meme si on est pris
 poserPions(ListePionsJ1, ListePionsJ2, NbPionsJ1, CaseJouee):-
-    NbPionsJ1 > 0,
-    choisirPoser([], [CaseJouee|_], ListePionsJ1, ListePionsJ2).
-	
+	NbPionsJ1 > 0,
+	choisirPoser([], [CaseJouee|_], ListePionsJ1, ListePionsJ2).
+
+% == Predicat poseSansEtrePris(ListePionsJ1, ListePionsJ2, Liste, CaseJouee) ==
+% retourne la premiere case possible (ou on peut poser un pion), sans etre pris
+% par l'adversaire
+% =============================================================================
 poseSansEtrePris(ListePionsJ1, ListePionsJ2, [Pion|_], CaseJouee):-
 	\+ peutEtrePris(Pion, ListePionsJ1, ListePionsJ2),
 	CaseJouee = Pion,!.
@@ -92,11 +108,20 @@ poseSansEtrePris(ListePionsJ1, ListePionsJ2, [_|Liste], CaseJouee):-
 
 
 % =============================================================================
+% =============================================================================
 % =============================== Peut etre pris ==============================
+% =============================================================================
+% =============================================================================
+
+% == Predicat peutEtrePrisPremierPossible(ListePionsJ1, ListePionsJ2, Case) ===
+% retourne le premier pion qui peut etre pris par l'adversaire
 % =============================================================================
 peutEtrePrisPremierPossible(ListePionsJ1, ListePionsJ2, Case):-
 	verifierPeutEtrePris(ListePionsJ1, ListePionsJ2, [Case|_]).
-	
+
+% ====== Predicat verifierPeutEtrePris(ListePionsJ1, ListePionsJ2, Res) =======
+% retourne la liste des pions qui peuvent etre pris par l'adversaire
+% =============================================================================
 verifierPeutEtrePris(ListePionsJ1, ListePionsJ2, Res):-
 	verifierPeutEtrePris(ListePionsJ1, ListePionsJ1, ListePionsJ2, [], Res).
 
@@ -113,6 +138,9 @@ verifierPeutEtrePris([_|Acc], ListePionsJ1, ListePionsJ2, AccRes, Res):-
 verifierPeutEtrePris([Pion|_], ListePionsJ1, ListePionsJ2, [Pion|_], _):-
 	peutEtrePris(Pion, ListePionsJ1, ListePionsJ2).	
 
+% ========== Predicat peutEtrePris(Pion, ListePionsJ1, ListePionsJ2) ==========
+% verifie si le pion peut etre pris par l'adversaire
+% =============================================================================
 peutEtrePris([X,Y], ListePionsJ1, ListePionsJ2):-
 	pionACote([X,Y], [X1,Y1]),
 	member([X1,Y1], ListePionsJ2),
@@ -160,6 +188,10 @@ pionACote([X,Y], [X,Y1]):-
 % =============================================================================
 % =============================================================================
 
+% == Predicat deplacePremierPossible(ListePionsJ1, ListePionsJ2, DernierDeplacement, CaseDepart, CaseArrivee) ==
+% retourne un coup qui va deplacer le premier pion possible qui ne pourra pas
+% etre pris par la suite
+% =============================================================================
 deplacePremierPossible(ListePionsJ1, ListePionsJ2, DernierDeplacement, CaseDepart, CaseArrivee):-
 	tsDeplacementPossible(ListePionsJ1, ListePionsJ2, DernierDeplacement, ListePossible),
 	deplaceSansEtrePris(ListePionsJ1, ListePionsJ2, ListePossible, CaseDepart, CaseArrivee).
@@ -170,7 +202,7 @@ deplacePremierPossible(ListePionsJ1, ListePionsJ2, DernierDeplacement, CaseDepar
 
 % == Predicat tsDeplacementPossible(ListePionsJ1, ListePionsJ2, DernierDeplacement, Res) ==
 % choisi un pion adverse que l'on va prendre comme 2eme pion lors d'une prise
-%==============================================================================
+% =============================================================================
 tsDeplacementPossible(ListePionsJ1, ListePionsJ2, DernierDeplacement, Res):-
 	tsDeplacementPossible(ListePionsJ1, ListePionsJ1, ListePionsJ2, DernierDeplacement, [], Res).
 
@@ -190,7 +222,7 @@ tsDeplacementPossible([Pion|_], ListePionsJ1, ListePionsJ2, DernierDeplacement, 
 
 % == Predicat deplacementPossible(A, ListePionsJ1, ListePionsJ2, DernierDeplacement, B) ==
 % verifie si un pion peut etre deplace
-%==============================================================================
+% =============================================================================
 deplacementPossible(A, ListePionsJ1, ListePionsJ2, DernierDeplacement, B):-
 	pionACote(A, B),
 	member(A, ListePionsJ1),
@@ -202,7 +234,7 @@ deplacementPossible(A, ListePionsJ1, ListePionsJ2, DernierDeplacement, B):-
 % == Predicat deplaceSansEtrePris(ListePionsJ1, ListePionsJ2, ListeDeplacementPossibles, CaseDepartJouee, CaseArriveeJouee) ==
 % deplace un pion sans qu'il puisse etre pris sur la case ou il arrivera,
 % prend en parametre une liste de couples de deplacements possibles (CaseDepart,CaseArrivee)
-%==============================================================================
+% =============================================================================
 deplaceSansEtrePris(ListePionsJ1, ListePionsJ2, [[CaseDepart,CaseArrivee]|_], CaseDepartJouee, CaseArriveeJouee):-
 	ajoutDebut(CaseArrivee,ListePionsJ1,ListePionsJ1Ajout),
 	supprimer(CaseDepart,ListePionsJ1Ajout,ListePionsJ1Suppr),
@@ -226,22 +258,21 @@ deplaceSansEtrePris(ListePionsJ1, ListePionsJ2, [_|Liste], CaseDepartJouee, Case
 
 % ========== Predicat prendPionAdversaire(ListePionsJ1, PionChoisi) ===========
 % choisi un pion adverse que l'on va prendre comme 2eme pion lors d'une prise
-%==============================================================================
+% =============================================================================
 prendPionAdversaire([Case|_], Case).
 prendPionAdversaire(_, [5,6]).
 
 
 % == Predicat prendPremierPossible(ListePionsJ1, ListePionsJ2, CaseDepart, Pris, CaseArrivee) ==
 % retourne un coup qui va prendre le premier pion adverse possible
-%==============================================================================
+% =============================================================================
 prendPremierPossible(ListePionsJ1, ListePionsJ2, CaseDepart, Pris, CaseArrivee):-
 	tsPrisePossible(ListePionsJ1, ListePionsJ2, [[CaseDepart,Pris,CaseArrivee]|_]).	
-	% verifier que \+ peutEtrePris(CaseArrivee, ListePionsJ1, ListePionsJ2).
 
 % ========= Predicat tsPrisePossible(ListePionsJ1, ListePionsJ2, Res) =========
 % permet d'obtenir la liste de toutes les prises possibles du joueur 1 (nous)
 % sur le plateau (liste de couples caseDepart, caseArrivee)
-%==============================================================================
+% =============================================================================
 tsPrisePossible(ListePionsJ1, ListePionsJ2, Res):-
 	tsPrisePossible(ListePionsJ1, ListePionsJ1, ListePionsJ2, [], Res).
 
@@ -262,7 +293,7 @@ tsPrisePossible([Pion|_], ListePionsJ1, ListePionsJ2, [[Pion,Pris,Case]|_], _):-
 % == Predicat prisePossible(Pion, ListePionsJ1, ListePionsJ2, PionPris ,CaseArrivee) ==
 % verifie si un pion donne en parametre peut prendre un pion adverse
 % retourne la case du pion qui sera pris, ainsi que la case d'arrivee de notre pion
-%==============================================================================
+% =============================================================================
 prisePossible([AX,AY], ListePionsJ1, ListePionsJ2, [BX, BY] ,[CX,CY]):-
 	pionACote([AX,AY], [BX,BY]),
 	member([AX,AY], ListePionsJ1),
@@ -287,18 +318,18 @@ prisePossible([AX,AY], ListePionsJ1, ListePionsJ2, [BX, BY] ,[CX,CY]):-
 % =============================================================================
 % =============================================================================
 % Predicat jouer(ListePionsJ1, ListePionsJ2, NbPionsJ1, DernierDeplacement, TypeCoups, CaseDepart, CaseArrivee, Prend2emePion).
-%     exemple : jouer([[0,0]], [[0,1], [0,3]], 11, [[1,0],[0,0]], TypeCoups, CaseDepart, CaseArrivee, Prend2emePion).
+%	exemple : jouer([[0,0]], [[0,1], [0,3]], 11, [[1,0],[0,0]], TypeCoups, CaseDepart, CaseArrivee, Prend2emePion).
 %
-%   parametres :
-%     ListePionsJ1 : Liste des coordonnees des pions que possede le joueur 1 (nous)
-%     ListePionsJ2 : Liste des coordonnees des pions que possede le joueur 2 (adversaire)
-%     NbPionsJ1 : nombre de pions qu'il reste dans la main du joueur 1 (nous)
-%     DernierDeplacement : ensemble de deux coordonnees : case de depart du dernier deplacement et 
-%                                                         case d'arrivee du dernier deplacement
-%     TypeCoups : type de coups que l'IA a choisi de jouer
-%     CaseDepart : case de depart du coups que l'IA a choisi de jouer
-%     CaseArrivee : case d'arrivee du coups que l'IA a choisi de jouer
-%     Prend2emePion : 2eme pion que l'IA a choisi de prendre
+%	parametres :
+%		ListePionsJ1 : Liste des coordonnees des pions que possede le joueur 1 (nous)
+%		ListePionsJ2 : Liste des coordonnees des pions que possede le joueur 2 (adversaire)
+%		NbPionsJ1 : nombre de pions qu'il reste dans la main du joueur 1 (nous)
+%		DernierDeplacement : ensemble de deux coordonnees : case de depart du dernier deplacement et 
+%															case d'arrivee du dernier deplacement
+%		TypeCoups : type de coups que l'IA a choisi de jouer
+%		CaseDepart : case de depart du coups que l'IA a choisi de jouer
+%		CaseArrivee : case d'arrivee du coups que l'IA a choisi de jouer
+%		Prend2emePion : 2eme pion que l'IA a choisi de prendre
 
 % Essaye de prendre un pion adverse si possible, sinon ne fait rien
 jouer(ListePionsJ1, ListePionsJ2, _, _, TypeCoups, CaseDepart, CaseArrivee, Prend2emePion):-
