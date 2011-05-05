@@ -1,2 +1,0 @@
----- que faire quand erreur pendant la partie ? quitter ou demander une nouvelle partie ?
----- Prise entraine forcément l'élimination d'un pion ? si pas d'autre pion adverse ? NULL ?
