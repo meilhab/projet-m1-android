@@ -1,5 +1,5 @@
-So now I'll tell you about the risks of wireless networks.
-Wireless networks are much more vulnerable than wired networks because they can’t physically limit.
+So now I would like to talk you about risks of wireless networks.
+Wireless networks are much more vulnerable than wired networks because they haven't physical limitations.
 Anyone can connect to networks and intercept data with a laptop without going into a room and connect a cable.
 Moreover, Wi-Fi often misses security.
 There are many possible attacks: for example denial of service, man in the middle and unauthorized use.
