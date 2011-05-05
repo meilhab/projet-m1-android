@@ -989,14 +989,14 @@ int main(int argc, char **argv){
 		traitementSiErreur(retour);
 	} while(retour != CODE_OK);
 
-	//do {
+	do {
 		retour = demandeNouvellePartie(socket, socketMoteurJava, idJoueur);
 		traitementSiErreur(retour);
-		/*
+		
 		if(retour != FIN_DE_JEU)
-		envoiMoteurJavaRestart(socketMoteurJava);
+		    envoiMoteurJavaRestart(socketMoteurJava);
 	} while(retour != FIN_DE_JEU);
-	*/
+	
 	fprintf(stdout, "Deconnexion du moteur Java\n");
 	deconnexion(socketMoteurJava);
 
