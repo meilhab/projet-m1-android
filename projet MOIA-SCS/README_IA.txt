@@ -4,6 +4,7 @@
 #                           (Master 1 Informatique)                           #
 ###############################################################################
 L'IA du jeu de yote est gere par le fichier prolog : ia.pl.
+Le fichier Prolog a ete teste en utilisant la version 4.1.3 de sicstus
 Elle permet de retourner un coup à jouer en donnant en parametre la liste des pions des 2 joueurs.
 Le principal prédicat est jouer, il est le seul qui sera appele par le joueur.
 
