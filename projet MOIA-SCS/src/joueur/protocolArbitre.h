@@ -7,7 +7,7 @@
  *
  * Ecrit par : LP, 15 / 02 / 11
  * 
-/***************************************/
+****************************************/
 
 #ifndef _protocolArbitre_h
 #define _protocolArbitre_h

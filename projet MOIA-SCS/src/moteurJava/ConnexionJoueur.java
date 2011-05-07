@@ -1,8 +1,11 @@
-package projet.moia.scs;
-
 import java.io.*;
 import java.net.*;
 
+/**
+ * @author Guillaume MONTAVON & Benoit MEILHAC (Master 1 Informatique)
+ * Gere la connexion avec le joueur (developper en C), en utilisant des sockets.
+ * Gere egalement la connexion avec l'IA
+ */
 public class ConnexionJoueur {
 
 	private ServerSocket ss;
@@ -13,24 +16,35 @@ public class ConnexionJoueur {
 	private Modele modele;
 	private String messageRecu;
 	private boolean commencePartie;
+	
 	public final static int TAILLE_MAX_BUFFER = 30;
+	public final static int NB_PION_MAIN = 12;
 	public final static String MOT_DE_PASSE = "chaussette";
+	public final static String CHEMIN_IA = "ia/ia.pl";
+	
 
+	/**
+	 * Constructeur qui initialise les variables
+	 * @param portJoueur port qui va servir de connexion entre le joueur et le moteur Java
+	 */
 	public ConnexionJoueur(int portJoueur) {
 
 		this.portJoueur = portJoueur;
 		ss = null;
 		socketJoueur = null;
 		coupsActuel = null;
-		modele = new Modele(12);
+		modele = new Modele(NB_PION_MAIN);
 		messageRecu = "";
-		cp = new ConnexionProlog("ia.pl", modele);
+		cp = new ConnexionProlog(CHEMIN_IA, modele);
 		commencePartie = false;
 		
 		etablirConnexion();
 
 	}
 	
+	/**
+	 * Attend que le joueur se connect au moteur Java
+	 */
 	public void etablirConnexion() {
 		
 		try {
@@ -45,6 +59,9 @@ public class ConnexionJoueur {
 		
 	}
 
+	/**
+	 * Demarre une partie avec le joueur
+	 */
 	public void demarrer() {
 
 		if(ss != null && socketJoueur != null) {
@@ -65,21 +82,16 @@ public class ConnexionJoueur {
 				if(messageRecu.equals(MOT_DE_PASSE)) {
 					
 					os.write(new String("OK").getBytes());
-					System.out.println("le client s'est correctement identifie");
+					System.out.println("JAVA : le client s'est correctement identifie");
 					
 					messageRecu = "start";
 					
-					while (!messageRecu.equals("fin")) {
+					while (!messageRecu.startsWith("fin")) {
 						
-						if(messageRecu.equals("restart") || messageRecu.equals("start")) {
+						if(messageRecu.startsWith("restart") || messageRecu.startsWith("start")) {
 							modele.restart();
 							
-							System.out.println("Demarrage d'une nouvelle partie");
-							
-							//commence par recevoir ou par envoyer
-							//buffer = new char[TAILLE_MAX_BUFFER];
-							//nbCaractereRecu = br.read(buffer);
-							//messageRecu = new String(buffer, 0, nbCaractereRecu);
+							System.out.println("JAVA : Demarrage d'une nouvelle partie");
 							
 							messageRecu = br.readLine();
 							
@@ -88,22 +100,22 @@ public class ConnexionJoueur {
 							else
 								commencePartie = false;
 							
-							System.out.println("commence : " + commencePartie);
+							System.out.println("JAVA : commence : " + commencePartie);
 							
 							if(!commencePartie)
 								recoiCoups(br);
 							
 							messageRecu = "";
 						}
-						else if(!messageRecu.equals("fin")) {
+						else if(!messageRecu.startsWith("fin")) {
 							
 							
-							//TODO a supprimer
 							try {
-								Thread.sleep(2500);
+								Thread.sleep(1000);
 							} catch (InterruptedException e) {
 								e.printStackTrace();
 							}
+							
 							
 							demandeCoups(os);
 							
@@ -113,7 +125,7 @@ public class ConnexionJoueur {
 					}
 				}
 				else
-					System.out.println("Un client inconnu s'est connecte, le mot de passe donne etait : " + messageRecu);
+					System.out.println("JAVA : Un client inconnu s'est connecte, le mot de passe donne etait : " + messageRecu);
 				
 				System.out.println("JAVA : Arret de l'envoi/reception de donnees avec le joueur");
 				
@@ -135,6 +147,11 @@ public class ConnexionJoueur {
 	}
 	
 	
+	/**
+	 * Demande un coup a l'IA puis envoie ce dernier au joueur
+	 * @param os
+	 * @throws IOException
+	 */
 	public void demandeCoups(OutputStream os) throws IOException {
 		
 		coupsActuel = cp.demanderCoups();
@@ -155,6 +172,11 @@ public class ConnexionJoueur {
 		
 	}
 	
+	/**
+	 * Recoie un coup du joueur adverse, le convertit, puis va le jouer dans le modele du moteur Java
+	 * @param br
+	 * @throws IOException
+	 */
 	public void recoiCoups(BufferedReader br) throws IOException {
 
 		char[] buffer = new char[TAILLE_MAX_BUFFER];
@@ -166,18 +188,18 @@ public class ConnexionJoueur {
 		
 		if(messageRecu.contains("[") && messageRecu.contains("]") && messageRecu.contains("-") && messageRecu.contains(",")) {
 			
-			System.out.println("Reception du coups " + messageRecu);
+			System.out.println("JAVA : Reception du coups " + messageRecu);
 			
 			coupsActuel = new Coups(messageRecu);
 			if(modele.valider(2, coupsActuel))
 				modele.jouer(2, coupsActuel);
 			else
-				System.out.println("Coup recu invalide : "+ coupsActuel.getReq());
+				System.out.println("JAVA : Coup recu invalide : "+ coupsActuel.getReq());
 			
 			System.out.println(modele.plateauToString());
 		}
-		else if(!messageRecu.equals("fin"))
-			System.out.println("Le message recu n'est pas correctement forme : " + messageRecu);
+		else if(!messageRecu.startsWith("fin"))
+			System.out.println("JAVA : Le message recu n'est pas correctement forme : " + messageRecu);
 	
 	}
 

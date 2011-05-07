@@ -18,23 +18,6 @@
 #include "connexionArbitre.h"
 
 /*
- * Fonction :    clearScanf
- *
- * Parametres :  rien
- *
- * Retour :      rien
- *
- * Description : libere le buffer du scanf
- *
- */
-void clearScanf(void){
-	char c;
-	while((c = getchar()) != EOF && c != '\n');
-
-	return;
-}
-
-/*
  * Fonction :    creationConnexion
  *
  * Parametres :  char *machine, nom de la machine distante
@@ -48,13 +31,13 @@ void clearScanf(void){
  *
  */
 RetourFonction creationConnexion(char *machine, int port, int *sock){
-	fprintf(stdout, "Procedure de connexion\n");
+	fprintf(stdout, "Procedure de connexion avec %s, port %d\n", machine, port);
 
 	(*sock) = socketClient(machine, port);
 	if((*sock) < 0)
 		return ECHEC_CONNEXION;
 
-	fprintf(stdout, "Connexion effectuee\n");
+	fprintf(stdout, "Connexion effectuee avec %s, port %d\n", machine, port);
 
 	return CODE_OK;
 }
@@ -99,7 +82,7 @@ RetourFonction deconnexion(int sock){
 RetourFonction identification(int sock, int *identifiant){
 	TypIdentificationReq req;
 	TypIdentificationRep rep;
-	char login[TAIL_CHAIN] = "bmeilhac";
+	char login[TAIL_CHAIN] = LOGIN;
 	int err;
 	
 	req.idRequest = IDENTIFICATION;
@@ -259,95 +242,18 @@ RetourFonction jouerUnCoup(int sock, int sockMoteurJava, int *numeroCoup){
 
 	TypCoupRep rep;
 	
-	/*TypPosition positionDepart;
-	TypPosition positionArrivee;*/
-	TypPosition positionPiecePrise2;
-
 	req.idRequest = COUP;
 
-	if((*numeroCoup) >= 50)
-		req.propCoup = NULLE;
-	/*else //TODO : type coup si pas NULLE
-		req.propCoup = POSE;
-
-	// traitement en fonction du coup a jouer
-	switch(req.propCoup){
-		case POSE:
-			positionDepart.ligne = retournerTypLigne(-1);
-			positionDepart.colonne = retournerTypColonne(-1);
-			req.caseDepart = positionDepart;
-
-			//TODO : positon arriv�e
-			positionArrivee.ligne = retournerTypLigne(0);
-			positionArrivee.colonne = retournerTypColonne(0);
-			req.caseArrivee = positionArrivee;
-
-			break;
-		case DEPLACE:
-			//TODO : positon d�part
-			positionDepart.ligne = retournerTypLigne(0);
-			positionDepart.colonne = retournerTypColonne(0);
-			req.caseDepart = positionDepart;
-
-			//TODO : positon arriv�e
-			positionArrivee.ligne = retournerTypLigne(1);
-			positionArrivee.colonne = retournerTypColonne(0);
-			req.caseArrivee = positionArrivee;
-
-			break;
-		case PRISE://TODO : Prise deuxi�me obligatoire ?
-			//TODO : positon d�part
-			positionDepart.ligne = retournerTypLigne(0);
-			positionDepart.colonne = retournerTypColonne(0);
-			req.caseDepart = positionDepart;
-
-			//TODO : positon arriv�e
-			positionArrivee.ligne = retournerTypLigne(2);
-			positionArrivee.colonne = retournerTypColonne(0);
-			req.caseArrivee = positionArrivee;
-
-
-			//TODO : position piecePrise2
-			TypPosition positionPiecePrise2;
-			positionPiecePrise2.ligne = retournerTypLigne(3);
-			positionPiecePrise2.colonne = retournerTypColonne(0);
-
-			(*numeroCoup) = 0;
-
-			break;
-		case GAGNE: //TODO : Prise ??
-			//TODO : positon d�part
-			positionDepart.ligne = retournerTypLigne(0);
-			positionDepart.colonne = retournerTypColonne(0);
-			req.caseDepart = positionDepart;
-
-			//TODO : positon arriv�e
-			positionArrivee.ligne = retournerTypLigne(2);
-			positionArrivee.colonne = retournerTypColonne(0);
-			req.caseArrivee = positionArrivee;
-
-			break;
-		case NULLE:
-			return RETOUR_PARTIE_NULLE;
-			break;
-		default:
-			return ECHEC_CODE_PROPCOUP_INCONNU;
-
-	}
-	*/
 	if(req.propCoup == PRISE)
 		(*numeroCoup) = 0;
 	else
 		(*numeroCoup) ++;
+
+	if((*numeroCoup) >= NB_COUPS_MAX)
+		req.propCoup = NULLE;
 	
 	req.numeroDuCoup  = (*numeroCoup);
-	/*
-	if(req.propCoup == PRISE) {
-		positionPiecePrise2.ligne = retournerTypLigne(0);
-		positionPiecePrise2.colonne = retournerTypColonne(5);
-		req.piecePrise2 = positionPiecePrise2;
-	}
-	*/
+	
 	// envoi du coup joue par l'ia
 	err = send(sock, (void*) &req, sizeof(req), 0);
 	if(err < 0){
@@ -368,6 +274,8 @@ RetourFonction jouerUnCoup(int sock, int sockMoteurJava, int *numeroCoup){
 		case VALID:
 			if(req.propCoup == GAGNE)
 				return RETOUR_VICTOIRE_NOUVELLE_PARTIE;
+			if(req.propCoup == NULLE)
+				return RETOUR_NULLE_NOUVELLE_PARTIE;
 			else
 				fprintf(stdout, "Coup valide, c'est le tour de l'adversaire\n");
 			break;
@@ -482,6 +390,8 @@ RetourFonction recevoirUnCoup(int sock, int sockMoteurJava, int *numeroCoup){
 		case VALID:
 			if(req.propCoup == GAGNE)
 				return RETOUR_DEFAITE_NOUVELLE_PARTIE;
+			else if(req.propCoup == NULLE)
+				return RETOUR_NULLE_NOUVELLE_PARTIE;
 			else
 				fprintf(stdout, "Coup adversaire valide, reception de ce coup\n");
 			break;
@@ -534,8 +444,7 @@ RetourFonction recevoirUnCoup(int sock, int sockMoteurJava, int *numeroCoup){
 RetourFonction identificationMoteurJava(int sock) {
 	
 	int err;
-	char motPasse[TAIL_CHAIN];
-	strcpy(motPasse, "chaussette");
+	char motPasse[TAIL_CHAIN] = MOT_PASSE;
 	// envoi du mot de passe
 	err = send(sock, (void*) motPasse, strlen(motPasse), 0);
 	if(err < 0){
@@ -657,7 +566,7 @@ TypCoupReq stringToTypCoupReq(char reponse[]) {
 		case 2:
 			req.propCoup = PRISE;
 			break;
-		case 3:
+		case 4:
 			req.propCoup = GAGNE;
 			break;
 		default:
@@ -781,10 +690,10 @@ void typCoupReqToString(TypCoupReq req, char* reqToString) {
 		case PRISE:
 			entierTemp = 2;
 			break;
-		case GAGNE:
+		case NULLE:
 			entierTemp = 3;
 			break;
-		case NULLE:
+		case GAGNE:
 			entierTemp = 4;
 			break;
 		default:
@@ -896,7 +805,7 @@ void traitementSiErreur(RetourFonction retour){
 			fprintf(stderr, "Code de reponse pour 'propCoup' inconnu\n");
 			break;
 		case RETOUR_PARTIE_NULLE :
-			fprintf(stderr, "50 coups sans prise : partie nulle\n");
+			fprintf(stderr, "%d coups sans prise : partie nulle\n", NB_COUPS_MAX);
 			break;
 		case RETOUR_TIMEOUT_FIN_PARTIE :
 			fprintf(stderr, "Temps d'attente depasse : fin de partie\n");
@@ -908,7 +817,10 @@ void traitementSiErreur(RetourFonction retour){
 			fprintf(stdout, "Victoire de l'IA !!!\n");
 			break;
 		case RETOUR_DEFAITE_NOUVELLE_PARTIE :
-			fprintf(stdout, "defaite de l'IA.\n");
+			fprintf(stdout, "defaite de l'IA !!!!\n");
+			break;
+		case RETOUR_NULLE_NOUVELLE_PARTIE :
+			fprintf(stdout, "match nul entre les 2 joueurs !!!!\n");
 			break;
 		case FIN_DE_JEU :
 			fprintf(stdout, "Toutes les parties ont deja ete effectuees\n");
@@ -948,9 +860,10 @@ void traitementSiErreur(RetourFonction retour){
  */
 int main(int argc, char **argv){
 	
-	if(argc != 3 && argc != 4){
-		fprintf(stderr, "Usage : ./connexionArbitre machine port\n");
-		fprintf(stderr, "ou : ./connexionArbitre machine port portMoteurJava\n");
+	if(argc != 3 && argc != 4 && argc != 5){
+		fprintf(stderr, "Usage : ./connexionArbitre adresse_arbitre port_arbitre\n");
+		fprintf(stderr, "   ou : ./connexionArbitre adresse_arbitre port_arbitre portMoteurJava\n");
+		fprintf(stderr, "   ou : ./connexionArbitre adresse_arbitre port_arbitre port_moteur_java adresse_moteur_java\n");
 		exit(1);
 	}
 
@@ -960,11 +873,15 @@ int main(int argc, char **argv){
 	strcpy(moteurJava, "localhost");
 	int port = atoi(argv[2]);
 	int portMoteurJava;
-	if(argc == 4)
+	if(argc == 4 || argc == 5)
 		portMoteurJava = atoi(argv[3]);
 	else
 		portMoteurJava = 2202;
-
+	
+	if(argc == 5)
+		strcpy(moteurJava, argv[4]);
+	else
+		strcpy(moteurJava, "localhost");
 	int socket;
 	int socketMoteurJava;
 	int idJoueur;
@@ -974,25 +891,32 @@ int main(int argc, char **argv){
 		fprintf(stdout, "Connexion au moteur Java\n");
 		retour = creationConnexion(moteurJava, portMoteurJava, &socketMoteurJava);
 		traitementSiErreur(retour);
+		sleep(1);
 	} while(retour != CODE_OK);
-
-	retour = identificationMoteurJava(socketMoteurJava);
-	traitementSiErreur(retour);
+	
+	do {
+		retour = identificationMoteurJava(socketMoteurJava);
+		traitementSiErreur(retour);
+		sleep(1);
+	} while(retour != CODE_OK);
+	
 	
 	do {
 		retour = creationConnexion(machine, port, &socket);
 		traitementSiErreur(retour);
+		sleep(1);
 	} while(retour != CODE_OK);
 
 	do {
 		retour = identification(socket, &idJoueur);
 		traitementSiErreur(retour);
+		sleep(1);
 	} while(retour != CODE_OK);
 
 	do {
 		retour = demandeNouvellePartie(socket, socketMoteurJava, idJoueur);
 		traitementSiErreur(retour);
-		
+		sleep(1);
 		if(retour != FIN_DE_JEU)
 		    envoiMoteurJavaRestart(socketMoteurJava);
 	} while(retour != FIN_DE_JEU);

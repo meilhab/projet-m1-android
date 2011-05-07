@@ -1,17 +1,29 @@
-package projet.moia.scs;
 import java.util.Comparator;
 
-
+/**
+ * @author Guillaume MONTAVON & Benoit MEILHAC (Master 1 Informatique)
+ * Represente une case sur le plateau (avec position en X et en Y)
+ */
 public class Position {
 
 	private int x;
 	private int y;
 	
+	/**
+	 * Constructeur
+	 * @param x coordonnee en X de la case
+	 * @param y coordonnee en Y de la case
+	 */
 	public Position(int x, int y) {
 		this.x = x;
 		this.y = y;
 	}
 	
+	/**
+	 * Permet de modifier les coordonnees de la case
+	 * @param x nouvelle coordonnee en X de la case
+	 * @param y nouvelle coordonnee en Y de la case
+	 */
 	public void deplacer(int x, int y) {
 		this.x = x;
 		this.y = y;
@@ -33,6 +45,9 @@ public class Position {
 		this.y = y;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		return "[" + x + "," + y + "]";
@@ -40,6 +55,10 @@ public class Position {
 	
 }
 
+/**
+ * @author Guillaume MONTAVON & Benoit MEILHAC (Master 1 Informatique)
+ * Compare deux cases (classe permettant de trier les cases)
+ */
 class ComparateurPosition implements Comparator<Position> {
 	public int compare(Position p1, Position p2){
 		if(p1.getX() > p2.getX())

@@ -6,6 +6,9 @@
 #include <unistd.h>
 #include <string.h>
 
+#define LOGIN "bmeilhac"
+#define MOT_PASSE "chaussette"
+#define NB_COUPS_MAX 100
 
 typedef enum {
 	ECHEC_CONNEXION,
@@ -30,6 +33,7 @@ typedef enum {
 	RETOUR_TIMEOUT_FIN_PARTIE,
 	RETOUR_TRICHE_FIN_PARTIE,
 	RETOUR_VICTOIRE_NOUVELLE_PARTIE,
+	RETOUR_NULLE_NOUVELLE_PARTIE,
 	RETOUR_DEFAITE_NOUVELLE_PARTIE,
 	FIN_DE_JEU,
 	CODE_OK,
@@ -40,7 +44,6 @@ typedef enum {
 } RetourFonction;
 
 
-void clearScanf(void);
 RetourFonction creationConnexion(char *machine, int port, int *sock);
 RetourFonction deconnexion(int sock);
 RetourFonction identification(int sock, int *identifiant);

@@ -1,12 +1,13 @@
-package projet.moia.scs;
-
 import java.util.*;
 
-
+/**
+ * @author Guillaume MONTAVON & Benoit MEILHAC (Master 1 Informatique)
+ * Gestion du modele de l'application (plateau, dernier deplacement, nombre de pions restants, ...).
+ */
 public class Modele {
 
-	private ArrayList<Position> pionsJoueur1;
-	private ArrayList<Position> pionsJoueur2;
+	private ArrayList<Position> pionsJoueur1; //nous
+	private ArrayList<Position> pionsJoueur2; //adversaire
 	private Position anciennePositionDernierPion1;
 	private Position dernierPionJoue1;
 	private Position anciennePositionDernierPion2;
@@ -17,13 +18,17 @@ public class Modele {
 	private int hauteur; // nombre de lignes (x)
 	private int largeur; //nombre de colonnes (y)
 	
-    public static final int POSE = 0;
-    public static final int DEPLACE = 1;
-    public static final int PRISE = 2;
-    public static final int NULLE = 3;
-    public static final int GAGNE = 4;
+	public static final int POSE = 0;
+	public static final int DEPLACE = 1;
+	public static final int PRISE = 2;
+	public static final int NULLE = 3;
+	public static final int GAGNE = 4;
     
 
+	/**
+	 * Constructeur
+	 * @param nbPionsMain nombre de pions disponible dans la main de chaque joueur au debut de partie
+	 */
 	public Modele(int nbPionsMain) {
 		pionsJoueur1 = new ArrayList<Position>();
 		pionsJoueur2 = new ArrayList<Position>();
@@ -38,6 +43,16 @@ public class Modele {
 		largeur = 6;
 	}
 	
+	/**
+	 * Prend un pion adverse
+	 * @param numJoueur numero du joueur qui prend le pion (1 ou 2)
+	 * @param x1 coordonnee en X de la case de depart
+	 * @param y1 coordonnee en Y de la case de depart
+	 * @param x2 coordonnee en X de la case d'arrivee
+	 * @param y2 coordonnee en Y de la case d'arrivee
+	 * @param x2emePion coordonnee en X de la deuxieme case a prendre
+	 * @param y2emePion coordonnee en Y de la deuxieme case a prendre
+	 */
 	public void prendre(int numJoueur, int x1, int y1, int x2, int y2, int x2emePion, int y2emePion) {
 		
 		deplacer(numJoueur, x1, y1, x2, y2);
@@ -70,6 +85,12 @@ public class Modele {
 		
 	}
 		
+	/**
+	 * Pose un pion
+	 * @param numJoueur numero du joueur qui pose le pion (1 ou 2)
+	 * @param x coordonnee en X de la case d'arrivee
+	 * @param y coordonnee en Y de la case d'arrivee
+	 */
 	public void poser(int numJoueur, int x, int y) {
 		
 		if(numJoueur == 2) {
@@ -87,6 +108,14 @@ public class Modele {
 		
 	}
 	
+	/**
+	 * Deplace un pion sur le plateau
+	 * @param numJoueur numero du joueur qui deplace le pion (1 ou 2)
+	 * @param x1 coordonnee en X de la case de depart
+	 * @param y1 coordonnee en Y de la case de depart
+	 * @param x2 coordonnee en X de la case d'arrivee
+	 * @param y2 coordonnee en Y de la case d'arrivee
+	 */
 	public void deplacer(int numJoueur, int x1, int y1, int x2, int y2) {
 		
 		getPositionToJoueur(numJoueur, x1, y1).deplacer(x2, y2);
@@ -101,6 +130,10 @@ public class Modele {
 		
 	}
 	
+	/**
+	 * Trie les pions du joueur donne en parametre
+	 * @param numJoueur numero du joueur (1 ou 2)
+	 */
 	public void trierPions(int numJoueur) {
 		if(numJoueur == 2)
 			Collections.sort(pionsJoueur2, new ComparateurPosition());
@@ -108,6 +141,9 @@ public class Modele {
 			Collections.sort(pionsJoueur1, new ComparateurPosition());
 	}
 	
+	/**
+	 * Trie tous les pions des 2 joueurs dans leur liste
+	 */
 	public void trierTousPions() {
 		trierPions(1);
 		trierPions(2);
@@ -121,6 +157,13 @@ public class Modele {
 		return pionsJoueur2;
 	}
 	
+	/**
+	 * Permet d'obtenir un pion (Case) d'un joueur en donnant en parametre ses coordonnees.
+	 * @param numJoueur numero du joueur choisi (1 ou 2)
+	 * @param x coordonnee en X du pion voulu
+	 * @param y coordonnee en Y du pion voulu
+	 * @return Pion du joueur choisi ou null si il ne possede pas ce pion
+	 */
 	public Position getPositionToJoueur(int numJoueur, int x, int y) {
 		
 		Position positionTemp = null;
@@ -140,6 +183,11 @@ public class Modele {
 		
 	}
 	
+	/**
+	 * Permet d'obtenir une chaine de caracteres contenant la liste des pions du joueur choisi
+	 * @param numJoueur numero du joueur choisi (1 ou 2)
+	 * @return chaine de caracteres contenant la liste des pions du joueur choisi
+	 */
 	public String getPionsJoueurToString(int numJoueur) {
 		String retourne = "[";
 		
@@ -158,6 +206,11 @@ public class Modele {
 		return retourne;
 	}
 	
+	/**
+	 * Permet de faire jouer un coup, donne en parametre au joueur choisi
+	 * @param numJoueur numero du joueur choisi (1 ou 2)
+	 * @param coups coup a jouer
+	 */
 	public void jouer(int numJoueur, Coups coups) {
 		switch (coups.getTypeCoups()) {
 			case POSE:
@@ -176,6 +229,11 @@ public class Modele {
 		
 	}
 	
+	/**
+	 * Obtenir le nombre de pions dans la main du joueur choisi
+	 * @param numJoueur numero du joueur choisi (1 ou 2)
+	 * @return nombre de pions dans la main du joueur choisi
+	 */
 	public int getNbPionMain(int numJoueur) {
 		if(numJoueur == 2)
 			return nbPionsRestantsMain2;
@@ -183,6 +241,11 @@ public class Modele {
 			return nbPionsRestantsMain1;
 	}
 	
+	/**
+	 * Obtenir la position du dernier pion joue par le joueur demande
+	 * @param numJoueur umero du joueur choisi (1 ou 2)
+	 * @return position du dernier pion joue par le joueur demande
+	 */
 	public Position getDernierPionJoue(int numJoueur) {
 		if(numJoueur == 2)
 			return dernierPionJoue2;
@@ -190,6 +253,11 @@ public class Modele {
 			return dernierPionJoue1;
 	}
 
+	/**
+	 * Obtenir l'ancienne position du dernier pion joue
+	 * @param numJoueur numero du joueur choisi (1 ou 2)
+	 * @return ancienne position du dernier pion joue
+	 */
 	public Position getAnciennePositionDernierPion(int numJoueur) {
 		if(numJoueur == 2)
 			return anciennePositionDernierPion2;
@@ -197,6 +265,11 @@ public class Modele {
 			return anciennePositionDernierPion1;
 	}
 	
+	/**
+	 * Obtenir la liste des pions du joueur demande
+	 * @param numJoueur numero du joueur demande (1 ou 2)
+	 * @return liste des pions du joueur demande
+	 */
 	public ArrayList<Position> getPionsJoueur(int numJoueur) {
 		if(numJoueur == 2)
 			return pionsJoueur2;
@@ -204,6 +277,11 @@ public class Modele {
 			return pionsJoueur1;
 	}
 	
+	/**
+	 * Verifie si le joueur choisi a gagne la partie ou non
+	 * @param numJoueur numero du joueur choisi (1 ou 2)
+	 * @return true si le joueur a gagne, false sinon
+	 */
 	public boolean aGagne(int numJoueur) {
 		
 		boolean aGagne = false;
@@ -223,6 +301,12 @@ public class Modele {
 		
 	}
 	
+	/**
+	 * Verifie si le pion donne en paramtre du joueur choisi peut etre deplace ou non
+	 * @param numJoueur numero du joueur choisi (1 ou 2)
+	 * @param pion pion choisi
+	 * @return true si le pion peut etre deplace, false sinon
+	 */
 	public boolean pionPeutEtreDeplace(int numJoueur, Position pion) {
 		
 		boolean peutBouger = false;
@@ -242,6 +326,12 @@ public class Modele {
 		
 	}
 	
+	/**
+	 * Verifie que le coup joue est valide
+	 * @param numJoueur numero du joueur choisi
+	 * @param coups coup a verifier si il est valide
+	 * @return true si le coup est valide, false sinon
+	 */
 	public boolean valider(int numJoueur, Coups coups) {
 
 		int diffX = Math.abs(coups.getX1()-coups.getX2());
@@ -291,6 +381,10 @@ public class Modele {
 		return estValide;
 	}
 	
+	/**
+	 * Retourne une chaine de caracteres qui represente le plateau de jeu
+	 * @return chaine de caracteres qui represente le plateau de jeu
+	 */
 	public String plateauToString() {
 		
 		String plateau = "______";
@@ -319,6 +413,9 @@ public class Modele {
 		
 	}
 	
+	/**
+	 * Permet de redemarrer une partie
+	 */
 	public void restart() {
 		pionsJoueur1 = new ArrayList<Position>();
 		pionsJoueur2 = new ArrayList<Position>();
@@ -332,6 +429,11 @@ public class Modele {
 		largeur = 6;
 	}
 	
+	/**
+	 * Permet d'obtenir le numero de l'adversaire suivant le numero du joueur donne en parametre
+	 * @param numJoueur numero du joueur choisi
+	 * @return numero de l'adversaire
+	 */
 	public int adversaire(int numJoueur) {
 		
 		if(numJoueur == 2)
@@ -341,6 +443,12 @@ public class Modele {
 		
 	}
 	
+	/**
+	 * Verifie si une case existe et n'est pas vide
+	 * @param x coordonnee en X de la case demandee
+	 * @param y coordonnee en Y de la case demandee
+	 * @return true si la case case existe et est vide
+	 */
 	public boolean caseVideEtExiste(int x, int y) {
 		
 		if(getPositionToJoueur(1, x, y) == null && getPositionToJoueur(2, x, y) == null && x >= 0 && y >=0 && x < hauteur && y < largeur)
