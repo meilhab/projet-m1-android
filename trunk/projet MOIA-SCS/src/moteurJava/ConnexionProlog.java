@@ -1,9 +1,11 @@
-package projet.moia.scs;
-
 import java.util.HashMap;
 import se.sics.jasper.*;
 
-
+/**
+ * @author Guillaume MONTAVON & Benoit MEILHAC (Master 1 Informatique)
+ * Gestion de la connexion avec l'IA (faite en prolog) a l'aide de Jasper.
+ * l'IA nous retournera un coup valide.
+ */
 public class ConnexionProlog {
 
 	private SICStus sp;
@@ -16,6 +18,11 @@ public class ConnexionProlog {
 	private String cheminFichier;
 	private Modele modele;
 	
+	/**
+	 * Constructeur
+	 * @param cheminFichier chemin du fichier prolog qui contient l'IA du programme
+	 * @param modele modele du projet
+	 */
 	public ConnexionProlog(String cheminFichier, Modele modele) {
 		
 		this.cheminFichier = cheminFichier;
@@ -38,6 +45,10 @@ public class ConnexionProlog {
 		
 	}
 	
+	/**
+	 * Permet de demander a l'IA de choisir un coup valide
+	 * @return coup choisi par l'IA
+	 */
 	public Coups demanderCoups() {
 		
 		Coups coups = null;
@@ -58,7 +69,7 @@ public class ConnexionProlog {
 				else
 					dernierPionJoue = "[5,6]";
 				
-				System.out.println("JASPER : predicat prolog : " + "jouer("+modele.getPionsJoueurToString(1)+","+modele.getPionsJoueurToString(2)+", "+modele.getNbPionMain(1)+", TypeCoups, CaseDepart, CaseArrivee, Prend2emePion).");
+				System.out.println("JASPER : predicat envoye a prolog : " + "jouer("+modele.getPionsJoueurToString(1)+","+modele.getPionsJoueurToString(2)+", "+modele.getNbPionMain(1)+", TypeCoups, CaseDepart, CaseArrivee, Prend2emePion).");
 				
 			    HashMap<String, SPTerm> results = new HashMap<String, SPTerm>();
 			    SPQuery query = sp.openQuery("jouer("+modele.getPionsJoueurToString(1)+","+modele.getPionsJoueurToString(2)+", "+modele.getNbPionMain(1)+", ["+anciennePositionDernierPion+","+dernierPionJoue+"], TypeCoups, CaseDepart, CaseArrivee, Prend2emePion).",results);
@@ -90,6 +101,13 @@ public class ConnexionProlog {
 		
 	}
 	
+	/**
+	 * Permet d'obtenir un coups choisi par l'IA sous forme d'objet de type Coups
+	 * @return coups choisi par l'IA sous forme d'objet de type Coups
+	 * @throws ConversionFailedException
+	 * @throws IllegalTermException
+	 * @throws Exception
+	 */
 	public Coups CoupsChoisi() throws ConversionFailedException, IllegalTermException, Exception {
 		
 		int type = -1;
@@ -105,7 +123,15 @@ public class ConnexionProlog {
 	
 	}
 	
-	
+	/**
+	 * Converti un element d'une liste de type SPTerm en un entier
+	 * @param term liste de type SPTerm
+	 * @param index index de l'element voulu dans la liste
+	 * @return entier demande
+	 * @throws ConversionFailedException
+	 * @throws IllegalTermException
+	 * @throws Exception
+	 */
 	public int getIntToList(SPTerm term, int index) throws ConversionFailedException, IllegalTermException, Exception {
 		
 		int position = -1;

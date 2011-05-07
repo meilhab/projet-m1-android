@@ -1,6 +1,7 @@
-package projet.moia.scs;
-
-
+/**
+ * @author Guillaume MONTAVON & Benoit MEILHAC (Master 1 Informatique)
+ * Gestion d'un coup joue soit par notre joueur, soit par l'adversaire
+ */
 public class Coups {
 	
 	private int typeCoups;
@@ -8,6 +9,16 @@ public class Coups {
 	private Position caseArrivee;
 	private Position piecePrise2;
 
+	/**
+	 * Constructeur
+	 * @param typeCoups type de coup (defini dans la classe modele)
+	 * @param x1 coordonnee en X de la case de depart
+	 * @param y1 coordonnee en Y de la case de depart
+	 * @param x2 coordonnee en X de la case d'arrivee
+	 * @param y2 coordonnee en Y de la case d'arrivee
+	 * @param x2emePion coordonnee en X du deuxieme pion pris
+	 * @param y2emePion coordonnee en Y du deuxieme pion pris
+	 */
 	public Coups(int typeCoups, int x1, int y1, int x2, int y2, int x2emePion, int y2emePion) {
 		this.typeCoups = typeCoups;
 		caseDepart = new Position(x1, y1);
@@ -15,6 +26,10 @@ public class Coups {
 		piecePrise2 = new Position(x2emePion, y2emePion);
 	}
 	
+	/**
+	 * Deuxieme constructeur
+	 * @param rep coup sous forme de chaine de caracteres qui sera donc converti en un objet de ce type
+	 */
 	public Coups(String rep) {
 		
 		try {
@@ -97,6 +112,11 @@ public class Coups {
 		this.typeCoups = typeCoups;
 	}
 	
+	/**
+	 * Converti un coup en une chaine de caracteres qui contient les informations, chacune separee par des tirets.
+	 * Ce dernier pourra etre envoye au joueur afin qu'il le convertisse a nouveau pour l'envoyer au serveur
+	 * @return coup converti en une chaine de caracteres
+	 */
 	public String getReq() {
 		return typeCoups + "-" + caseDepart.toString() + "-" + caseArrivee.toString() + "-" + piecePrise2.toString();
 	}
