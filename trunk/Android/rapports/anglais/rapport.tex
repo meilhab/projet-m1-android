@@ -58,7 +58,8 @@ pdfborder = {0 0 0} 					% Style de bordure : ici, rien
 
 
 % Pour les marges de la page
-\geometry{a4paper, top=2.5cm, bottom=3.5cm, left=1.5cm, right=1.5cm, marginparwidth=1.2cm}
+%\geometry{a4paper, top=2.5cm, bottom=3.5cm, left=1.5cm, right=1.5cm, marginparwidth=1.2cm}
+\geometry{a4paper}
 
 % Pour les entetes de page
 \usepackage{fancyhdr}
@@ -107,25 +108,25 @@ pdfborder = {0 0 0} 					% Style de bordure : ici, rien
     \vspace*{0.5cm}% ICI La taille que tu veux avant le titre
     
     \begin{center}%
-    
-    {\textbf{\LARGE \@title} \par}%
-    \vskip 2em%
-    
     {\large
      \lineskip .75em%
       \begin{tabular}[t]{c}%
         \@author
       \end{tabular}\par}%
-      \vskip 1.5em%
+    \vskip 2em%
+    
     {\large \@date \par}%       % Set date in \large size.
+    
+      \vskip 1.5em%
+    {\textbf{\LARGE \@title} \par}%
     \end{center}\par
     \vskip 1.5em%
 	\thispagestyle{empty}% virer numérotation
 	\setcounter{page}{0}% remettre compteur au début
+	\clearpage
+	\newpage
 }
 \makeatother
-
-
 
 %Couverture 
 
@@ -133,45 +134,55 @@ pdfborder = {0 0 0} 					% Style de bordure : ici, rien
 	\normalsize{Département Informatique\\
 	Université de Franche-Comté\\
 	Projet tuteuré\\
-	Année 2010-2011}\\
+	Year 2010-2011}\\
 	\vspace{15mm}
-	\Huge{\textbf{\'Etude et développement avec la plate-forme Android}}
 }
 
-\author{MONTAVON Guillaume\\ MEILHAC Benoît %rajouter un \\ au besoin
+\author{Guillaume MONTAVON\\Benoît MEILHAC  %rajouter un \\ au besoin
 	\vspace{5mm}
 }
 
 \date{
 	\begin{center} 
-		\includegraphics[width=14cm,height=6cm]{android.jpg}
+		\includegraphics[width=7cm,height=6cm]{ufc.png}
 	\end{center}
 	\vspace{10mm}
-	\Huge{\textbf{Rapport de projet tuteuré}}\\
+	\Huge{\textbf{Study and development with the Android platform}}\\
 	\vspace{16mm}
-	\normalsize{Université de Franche-Comté\\
-	16 route de Gray\\
-	Besançon\\ 
-	\vspace{5mm}	
-	Responsables de stage :\\
-        M. PIAT\\
-        M. TATIBOUET
+	\normalsize{	
+	Supervisors :\\
+        Mr PIAT\\
+        Mr TATIBOUET
 	}
 }
 
 
 \begin{document}
-
+\pagestyle{empty}
 \maketitle
+
+\pagenumbering{Roman} 
+\setcounter{page}{1} 
+
+\input{Abstract}
+
+\input{Acknowledgment}
+
+\tableofcontents
+\clearpage
+\newpage
 
 %\input{Remerciements}
 
 %\sommaire
-\addcontentsline{toc}{chapter}{Sommaire}
-\clearpage
+%\addcontentsline{toc}{chapter}{Sommaire}
+%\clearpage
 
 % Pour avoir un interligne de 1,5
 \begin{onehalfspace}
+
+\pagenumbering{arabic} 
+\setcounter{page}{1} 
 
 \input{Introduction}
 
@@ -206,7 +217,7 @@ pdfborder = {0 0 0} 					% Style de bordure : ici, rien
 \bibliographystyle{plain}
 %% Ecrire la biblio ici
 %\bibliography{Bibliographie}
-\addcontentsline{toc}{chapter}{Bibliographie}
+\addcontentsline{toc}{chapter}{Bibliography}
 
 \clearpage
 \newpage
@@ -218,15 +229,12 @@ pdfborder = {0 0 0} 					% Style de bordure : ici, rien
 \appendix
 
 \listoftables
-\addcontentsline{toc}{chapter}{Liste des tableaux}
+\addcontentsline{toc}{chapter}{List of Tables}
 \clearpage
 
 \listoffigures
-\addcontentsline{toc}{chapter}{Table des figures}
+\addcontentsline{toc}{chapter}{List des Figures}
 \clearpage
-
-\tableofcontents
-\addcontentsline{toc}{chapter}{Table des matières}
 
 \clearpage
 
