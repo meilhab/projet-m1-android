@@ -69,21 +69,21 @@ public class ConnexionProlog {
 				else
 					dernierPionJoue = "[5,6]";
 				
-				System.out.println("JASPER : predicat envoye a prolog : " + "jouer("+modele.getPionsJoueurToString(1)+","+modele.getPionsJoueurToString(2)+", "+modele.getNbPionMain(1)+", TypeCoups, CaseDepart, CaseArrivee, Prend2emePion).");
+				//System.out.println("JASPER : predicat envoye a prolog : " + "jouer("+modele.getPionsJoueurToString(1)+","+modele.getPionsJoueurToString(2)+", "+modele.getNbPionMain(1)+", TypeCoups, CaseDepart, CaseArrivee, Prend2emePion).");
 				
-			    HashMap<String, SPTerm> results = new HashMap<String, SPTerm>();
-			    SPQuery query = sp.openQuery("jouer("+modele.getPionsJoueurToString(1)+","+modele.getPionsJoueurToString(2)+", "+modele.getNbPionMain(1)+", ["+anciennePositionDernierPion+","+dernierPionJoue+"], TypeCoups, CaseDepart, CaseArrivee, Prend2emePion).",results);
-			    
-			    query.nextSolution();
-			    
-			    typeCoups = results.get("TypeCoups");
-			    caseDepart = results.get("CaseDepart");
-			    caseArrivee = results.get("CaseArrivee");
-			    prend2emePion = results.get("Prend2emePion");
-
-			    coups = CoupsChoisi();
-			    
-			    query.close();
+				HashMap<String, SPTerm> results = new HashMap<String, SPTerm>();
+				SPQuery query = sp.openQuery("jouer("+modele.getPionsJoueurToString(1)+","+modele.getPionsJoueurToString(2)+", "+modele.getNbPionMain(1)+", ["+anciennePositionDernierPion+","+dernierPionJoue+"], TypeCoups, CaseDepart, CaseArrivee, Prend2emePion).",results);
+				
+				query.nextSolution();
+				
+				typeCoups = results.get("TypeCoups");
+				caseDepart = results.get("CaseDepart");
+				caseArrivee = results.get("CaseArrivee");
+				prend2emePion = results.get("Prend2emePion");
+				
+				coups = CoupsChoisi();
+				
+				query.close();
 			    
 			} catch (ConversionFailedException e) {
 				System.out.println("JASPER : erreur : " + e);
@@ -135,10 +135,10 @@ public class ConnexionProlog {
 	public int getIntToList(SPTerm term, int index) throws ConversionFailedException, IllegalTermException, Exception {
 		
 		int position = -1;
-
-	    Term[] listPosition = term.toPrologTermArray();
-	    if(listPosition.length > index)
-	    	position = (int) listPosition[index].getInteger();
+		
+		Term[] listPosition = term.toPrologTermArray();
+		if(listPosition.length > index)
+			position = (int) listPosition[index].getInteger();
 		
 		return position;		
 	}

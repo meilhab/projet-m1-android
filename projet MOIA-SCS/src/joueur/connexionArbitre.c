@@ -31,13 +31,13 @@
  *
  */
 RetourFonction creationConnexion(char *machine, int port, int *sock){
-	fprintf(stdout, "Procedure de connexion avec %s, port %d\n", machine, port);
+	fprintf(stdout, "C : Procedure de connexion avec %s, port %d\n", machine, port);
 
 	(*sock) = socketClient(machine, port);
 	if((*sock) < 0)
 		return ECHEC_CONNEXION;
 
-	fprintf(stdout, "Connexion effectuee avec %s, port %d\n", machine, port);
+	fprintf(stdout, "C : Connexion effectuee avec %s, port %d\n", machine, port);
 
 	return CODE_OK;
 }
@@ -55,7 +55,7 @@ RetourFonction creationConnexion(char *machine, int port, int *sock){
 RetourFonction deconnexion(int sock){
 	int err;
 
-	fprintf(stdout, "Procedure de deconnexion\n");
+	fprintf(stdout, "C : Procedure de deconnexion\n");
 
 	shutdown(sock, 2);
 	err = close(sock);
@@ -63,7 +63,7 @@ RetourFonction deconnexion(int sock){
 	if(err < 0)
 		return ECHEC_DECONNEXION;
 
-	fprintf(stdout, "Deconnexion effectuee\n");
+	fprintf(stdout, "C : Deconnexion effectuee\n");
 
 	return CODE_OK;
 }
@@ -88,7 +88,7 @@ RetourFonction identification(int sock, int *identifiant){
 	req.idRequest = IDENTIFICATION;
 	strcpy(req.nom, login);
 
-	fprintf(stdout, "Procedure d'identification\n");
+	fprintf(stdout, "C : Procedure d'identification\n");
 
 	err = send(sock, (void*) &req, sizeof(req), 0);
 	if(err < 0)
@@ -103,7 +103,7 @@ RetourFonction identification(int sock, int *identifiant){
 
 	(*identifiant) = rep.joueur;
 
-	fprintf(stdout, "Identification effectuee\n");
+	fprintf(stdout, "C : Identification effectuee\n");
 	
 	return CODE_OK;
 }
@@ -124,29 +124,41 @@ RetourFonction demandeNouvellePartie(int sock, int sockMoteurJava, int identifia
 	TypPartieReq req;
 	TypPartieRep rep;
 	int err;
-
+	
 	req.idRequest = PARTIE;
 	req.joueur = identifiant;
-
-	fprintf(stdout, "Procedure de demande de nouvelle partie\n");
-
+	
+	rep.premier = FAUX;
+	
+	fprintf(stdout, "C : Procedure de demande de nouvelle partie ..... \n\n");
+	
 	err = send(sock, (void*) &req, sizeof(req), 0);
+	
+	int err2 = recv(sock, (void*) &rep, sizeof(rep), 0);
+	
+	printf("send : %d \n", err);
+	printf("recv : %d \n", err2);
+	
 	if(err < 0)
 		return ECHEC_ENVOI_NOUVELLE_PARTIE;
-
-	err = recv(sock, (void*) &rep, sizeof(rep), 0);
-	if(err < 0)
+	if(err2 < 0)
 		return ECHEC_RECEPTION_NOUVELLE_PARTIE;
-
+	
+	printf("rep.err : %d \n", rep.err);
+	printf("req.idRequest = %d\n", req.idRequest);
+	printf("req.joueur = %d\n", req.joueur);
+	printf("rep.finTournoi = %d\n", rep.finTournoi);
+	printf("rep.premier = %d\n", rep.premier);
+	
 	if(rep.err != ERR_OK)
 		return ECHEC_RETOUR_NOUVELLE_PARTIE;
-
+	
 	switch(rep.finTournoi){
 		case VRAI:
 			deconnexion(sock);
 			return FIN_DE_JEU;
 		case FAUX:
-			fprintf(stdout, "Demande de nouvelle partie effectuee\n");
+			fprintf(stdout, "C : Demande de nouvelle partie effectuee\n");
 			switch(rep.premier){
 				case VRAI:
 					return debutePartie(sock, sockMoteurJava);
@@ -174,6 +186,7 @@ RetourFonction demandeNouvellePartie(int sock, int sockMoteurJava, int identifia
  *
  */
 RetourFonction debutePartie(int sock, int sockMoteurJava){
+	
 	int numeroCoup = 0;
 	RetourFonction retour;
 
@@ -227,7 +240,6 @@ RetourFonction attendPremierCoup(int sock, int sockMoteurJava){
  *
  */
 RetourFonction jouerUnCoup(int sock, int sockMoteurJava, int *numeroCoup){
-	fprintf(stdout, "L'IA commence a jouer un coup\n");
 
 	TypCoupReq req;
 	int err;
@@ -238,8 +250,8 @@ RetourFonction jouerUnCoup(int sock, int sockMoteurJava, int *numeroCoup){
 		return ECHEC_RECEPTION_DERNIER_COUP;
 	req = stringToTypCoupReq(stringReq);
 	
-	fprintf(stdout, "on envoie a l'arbitre : %s\n", stringReq);
-
+	fprintf(stdout, "C : Envoie a l'arbitre du coup : %s\n", stringReq);
+	
 	TypCoupRep rep;
 	
 	req.idRequest = COUP;
@@ -257,7 +269,7 @@ RetourFonction jouerUnCoup(int sock, int sockMoteurJava, int *numeroCoup){
 	// envoi du coup joue par l'ia
 	err = send(sock, (void*) &req, sizeof(req), 0);
 	if(err < 0){
-		fprintf(stderr, "Echec d'envoi du dernier coup\n");
+		fprintf(stderr, "C : Echec d'envoi du dernier coup\n");
 		return ECHEC_ENVOI_DERNIER_COUP;
 	}
 
@@ -277,7 +289,7 @@ RetourFonction jouerUnCoup(int sock, int sockMoteurJava, int *numeroCoup){
 			if(req.propCoup == NULLE)
 				return RETOUR_NULLE_NOUVELLE_PARTIE;
 			else
-				fprintf(stdout, "Coup valide, c'est le tour de l'adversaire\n");
+				fprintf(stdout, "C : Coup valide, c'est le tour de l'adversaire\n");
 			break;
 		case TIMEOUT:
 			return RETOUR_TIMEOUT_FIN_PARTIE;
@@ -289,7 +301,7 @@ RetourFonction jouerUnCoup(int sock, int sockMoteurJava, int *numeroCoup){
 			return ECHEC_CODE_VALIDCOUP_INCONNU;
 	}
 
-	fprintf(stdout, "Nombre de coups joues : %d\n", (*numeroCoup));
+	//fprintf(stdout, "C : Nombre de coups joues : %d\n", (*numeroCoup));
 
 	return CODE_OK;
 }
@@ -312,15 +324,15 @@ RetourFonction envoiMoteurJavaDebute(int sock, int commence) {
 	char envoi[TAIL_CHAIN] = "";
 	if(commence == 1) {
 		strcpy(envoi, "commence\n");
-		fprintf(stdout, "Le joueur va commencer\n");
+		fprintf(stdout, "C : Le joueur va commencer\n");
 	}
 	else {
 		strcpy(envoi, "attend\n");
-		fprintf(stdout, "Le joueur va attendre le coup de l'adversaire\n");
+		fprintf(stdout, "C : Le joueur va attendre le coup de l'adversaire\n\n\n");
 	}
 	err = send(sock, (void*) envoi, strlen(envoi), 0);
 	if(err < 0){
-		fprintf(stderr, "Echec d'envoi au moteur Java si il commence\n");
+		fprintf(stderr, "C : Echec d'envoi au moteur Java si il commence\n\n\n");
 		return ECHEC_ENVOI_COMMENCE;
 	}
 	
@@ -343,11 +355,11 @@ RetourFonction envoiMoteurJavaRestart(int sock) {
 	int err;
 	char envoi[TAIL_CHAIN] = "";
 	strcpy(envoi, "restart");
-	fprintf(stdout, "Une nouvelle partie commence\n");
+	fprintf(stdout, "C : Une nouvelle partie commence\n");
 
 	err = send(sock, (void*) envoi, strlen(envoi), 0);
 	if(err < 0){
-		fprintf(stderr, "Echec d'envoi au moteur Java qu'il doit redemarrer une partie\n");
+		fprintf(stderr, "C : Echec d'envoi au moteur Java qu'il doit redemarrer une partie\n");
 		return ECHEC_ENVOI_COMMENCE;
 	}
 	
@@ -372,7 +384,9 @@ RetourFonction recevoirUnCoup(int sock, int sockMoteurJava, int *numeroCoup){
 	TypCoupReq req;
 	TypCoupRep rep;
 	int err;
-
+	
+	printf("C : Attente d'un coup adverse .....\n\n\n");
+	
 	// reception de l'arbitre concernant la validite du coup de l'adversaire
 	err = recv(sock, (void*) &rep, sizeof(rep), 0);
 	if(err < 0)
@@ -384,7 +398,7 @@ RetourFonction recevoirUnCoup(int sock, int sockMoteurJava, int *numeroCoup){
 		return ECHEC_CONFIRMATION_DERNIER_COUP_ADVERSAIRE;
 	if(err < 0)
 		return ECHEC_RECEPTION_COUP_VALIDE_ADVERSAIRE;
-	
+
 	// traitement de la validite du coup
 	switch(rep.validCoup){
 		case VALID:
@@ -393,7 +407,7 @@ RetourFonction recevoirUnCoup(int sock, int sockMoteurJava, int *numeroCoup){
 			else if(req.propCoup == NULLE)
 				return RETOUR_NULLE_NOUVELLE_PARTIE;
 			else
-				fprintf(stdout, "Coup adversaire valide, reception de ce coup\n");
+				fprintf(stdout, "C : Coup adversaire valide, reception de ce coup\n");
 			break;
 		case TIMEOUT:
 			return RETOUR_TIMEOUT_FIN_PARTIE;
@@ -417,14 +431,14 @@ RetourFonction recevoirUnCoup(int sock, int sockMoteurJava, int *numeroCoup){
 	char reqToString[TAIL_CHAIN] = "";
 	typCoupReqToString(req, reqToString);
 
-	fprintf(stdout, "On recoit %s\n\n", reqToString);
+	fprintf(stdout, "C : On recoit %s\n", reqToString);
 	err = send(sockMoteurJava, (void*) &reqToString, strlen(reqToString), 0);
 	if(err < 0){
-		fprintf(stderr, "Echec d'envoi du dernier coup au moteur Java\n");
+		fprintf(stderr, "C : Echec d'envoi du dernier coup au moteur Java\n");
 		return ECHEC_ENVOI_DERNIER_COUP;
 	}
 
-	fprintf(stdout, "Nombre de coups joues : %d\n", (*numeroCoup));
+	//fprintf(stdout, "C : Nombre de coups joues : %d\n", (*numeroCoup));
 
 	return CODE_OK;
 }
@@ -452,13 +466,13 @@ RetourFonction identificationMoteurJava(int sock) {
 		return ECHEC_ENVOI_MOT_PASSE;
 	}
 	
-	char repMotPasse[TAIL_CHAIN];
+	char repMotPasse[TAIL_CHAIN] = "";
 	// reception du moteur java
 	err = recv(sock, (void*) &repMotPasse, TAIL_CHAIN, 0);
 	if(err < 0)
 		return ECHEC_RECEPTION_MOT_PASSE;
 
-	fprintf(stdout, "mot de passe : %s\n", repMotPasse);
+	//fprintf(stdout, "Mot de passe : %s\n", repMotPasse);
 	
 	if(strcmp(repMotPasse, "OK") != 0)
 		return ECHEC_CONFIRMATION_MOT_PASSE;
@@ -751,96 +765,102 @@ void traitementSiErreur(RetourFonction retour){
 	
 	switch(retour){
 		case ECHEC_CONNEXION :
-			fprintf(stderr, "Echec de connexion a l'arbitre\n");
+			fprintf(stderr, "C : Echec de connexion a l'arbitre\n");
 			break;
 		case ECHEC_DECONNEXION :
-			fprintf(stderr, "Probl�me de deconnexion a l'arbitre\n");
+			fprintf(stderr, "C : Probl�me de deconnexion a l'arbitre\n");
 			break;
 		case ECHEC_ENVOI_IDENTIFICATION :
-			fprintf(stderr, "Echec d'identification sur l'arbitre\n");
+			fprintf(stderr, "C : Echec d'identification sur l'arbitre\n");
 			break;
 		case ECHEC_RECEPTION_IDENTIFICATION :
-			fprintf(stderr, "Echec reception identification de l'arbitre\n");
+			fprintf(stderr, "C : Echec reception identification de l'arbitre\n");
 			break;
 		case ECHEC_CONFIRMATION_IDENTIFICATION :
-			fprintf(stderr, "Erreur identification wesson\n");
+			fprintf(stderr, "C : Erreur identification wesson\n");
 			break;
 		case ECHEC_ENVOI_NOUVELLE_PARTIE :
-			fprintf(stderr, "Echec de demande de nouvelle partie sur l'arbitre\n");
+			fprintf(stderr, "C : Echec de demande de nouvelle partie sur l'arbitre\n");
 			break;
 		case ECHEC_RECEPTION_NOUVELLE_PARTIE :
-			fprintf(stderr, "Echec reception de la demande de nouvelle partie de l'arbitre\n");
+			fprintf(stderr, "C : Echec reception de la demande de nouvelle partie de l'arbitre\n");
 			break;
 		case ECHEC_RETOUR_NOUVELLE_PARTIE :
-			fprintf(stderr, "Erreur de la demande de nouvelle partie\n");
+			fprintf(stderr, "C : Erreur de la demande de nouvelle partie\n");
 			break;
 		case ECHEC_CODE_FINTOURNOI_INCONNU :
-			fprintf(stderr, "Code de reponse de 'finTournoi' inconnu\n");
+			fprintf(stderr, "C : Code de reponse de 'finTournoi' inconnu\n");
 			break;
 		case ECHEC_CODE_PREMIER_INCONNU :
-			fprintf(stderr, "Code de reponse de 'premier' inconnu\n");
+			fprintf(stderr, "C : Code de reponse de 'premier' inconnu\n");
 			break;
 		case ECHEC_ENVOI_DERNIER_COUP :
-			fprintf(stderr, "Echec d'envoi du dernier coup\n");
+			fprintf(stderr, "C : Echec d'envoi du dernier coup\n");
 			break;
 		case ECHEC_RECEPTION_DERNIER_COUP :
-			fprintf(stderr, "Echec reception de la confirmation du dernier coup\n");
+			fprintf(stderr, "C : Echec reception de la confirmation du dernier coup\n");
 			break;
 		case ECHEC_RECEPTION_DERNIER_COUP_ADVERSAIRE :
-			fprintf(stderr, "Echec reception de la confirmation du dernier coup\n");
+			fprintf(stderr, "C : Echec reception de la confirmation du dernier coup\n");
 			break;
 		case ECHEC_CONFIRMATION_DERNIER_COUP :
-			fprintf(stderr, "Echec de l'envoi du dernier coup\n");
+			fprintf(stderr, "C : Echec de l'envoi du dernier coup\n");
 			break;
 		case ECHEC_CONFIRMATION_DERNIER_COUP_ADVERSAIRE :
-			fprintf(stderr, "Echec de l'envoi du dernier coup\n");
+			fprintf(stderr, "C : Echec de l'envoi du dernier coup\n");
 			break;
 		case ECHEC_RECEPTION_COUP_VALIDE_ADVERSAIRE :
-			fprintf(stderr, "Echec reception du coup de l'adversaire\n");
+			fprintf(stderr, "C : Echec reception du coup de l'adversaire\n");
 			break;
 		case ECHEC_CODE_VALIDCOUP_INCONNU :
-			fprintf(stderr, "Code de reponse pour 'validCoup' inconnu\n");
+			fprintf(stderr, "C : Code de reponse pour 'validCoup' inconnu\n");
 			break;
 		case ECHEC_CODE_PROPCOUP_INCONNU :
-			fprintf(stderr, "Code de reponse pour 'propCoup' inconnu\n");
+			fprintf(stderr, "C : Code de reponse pour 'propCoup' inconnu\n");
 			break;
 		case RETOUR_PARTIE_NULLE :
-			fprintf(stderr, "%d coups sans prise : partie nulle\n", NB_COUPS_MAX);
+			fprintf(stderr, "C : %d coups sans prise : partie nulle\n", NB_COUPS_MAX);
 			break;
 		case RETOUR_TIMEOUT_FIN_PARTIE :
-			fprintf(stderr, "Temps d'attente depasse : fin de partie\n");
+			fprintf(stderr, "C : Temps d'attente depasse : fin de partie\n");
 			break;
 		case RETOUR_TRICHE_FIN_PARTIE :
-			fprintf(stderr, "Triche detectee : fin de partie\n");
+			fprintf(stderr, "C : Triche detectee : fin de partie\n");
 			break;
 		case RETOUR_VICTOIRE_NOUVELLE_PARTIE :
-			fprintf(stdout, "Victoire de l'IA !!!\n");
+			fprintf(stdout, "\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+			fprintf(stdout, "!!!!!!!!!!!! Victoire de l'IA !!!!!!!!!!\n");
+			fprintf(stdout, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\n");
 			break;
 		case RETOUR_DEFAITE_NOUVELLE_PARTIE :
-			fprintf(stdout, "defaite de l'IA !!!!\n");
+			fprintf(stdout, "\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+			fprintf(stdout, "!!!!!!!!!!!! Defaite de l'IA !!!!!!!!!!!\n");
+			fprintf(stdout, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\n");
 			break;
 		case RETOUR_NULLE_NOUVELLE_PARTIE :
-			fprintf(stdout, "match nul entre les 2 joueurs !!!!\n");
+			fprintf(stdout, "\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+			fprintf(stdout, "!!!!! Match nul entre les 2 joueurs !!!!\n");
+			fprintf(stdout, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
 			break;
 		case FIN_DE_JEU :
-			fprintf(stdout, "Toutes les parties ont deja ete effectuees\n");
+			fprintf(stdout, "C : Toutes les parties ont deja ete effectuees\n");
 			break;
 		case CODE_OK :
 			break;
 		case ECHEC_ENVOI_MOT_PASSE :
-			fprintf(stderr, "Echec lors de l'envoi du mot de passe au moteur Java\n");
+			fprintf(stderr, "C : Echec lors de l'envoi du mot de passe au moteur Java\n");
 			break;
 		case ECHEC_RECEPTION_MOT_PASSE :
-			fprintf(stderr, "Echec lors de la reception de la validation du mot de passe par le moteur Java\n");
+			fprintf(stderr, "C : Echec lors de la reception de la validation du mot de passe par le moteur Java\n");
 			break;
 		case ECHEC_CONFIRMATION_MOT_PASSE :
-			fprintf(stderr, "Le mot de passe envoye au moteur Java est incorrect\n");
+			fprintf(stderr, "C : Le mot de passe envoye au moteur Java est incorrect\n");
 			break;
 		case ECHEC_ENVOI_COMMENCE :
-			fprintf(stderr, "Echec lors de l'envoi au moteur Java si il commence\n");
+			fprintf(stderr, "C : Echec lors de l'envoi au moteur Java si il commence\n");
 			break;
 		default:
-			fprintf(stderr, "Code d'erreur inconnu\n");
+			fprintf(stderr, "C : Code d'erreur inconnu\n");
 	}
 
 	return;
@@ -860,13 +880,31 @@ void traitementSiErreur(RetourFonction retour){
  */
 int main(int argc, char **argv){
 	
+	fprintf(stdout, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+	fprintf(stdout, "!!!!!!!!!!!! Projet MOIA-SCS : Jeu de Yote !!!!!!!!!!!\n");
+	fprintf(stdout, "!! Realise par Guillaume MONTAVON et Benoit MEILHAC !!\n");
+	fprintf(stdout, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\n");
+	
 	if(argc != 3 && argc != 4 && argc != 5){
 		fprintf(stderr, "Usage : ./connexionArbitre adresse_arbitre port_arbitre\n");
 		fprintf(stderr, "   ou : ./connexionArbitre adresse_arbitre port_arbitre portMoteurJava\n");
 		fprintf(stderr, "   ou : ./connexionArbitre adresse_arbitre port_arbitre port_moteur_java adresse_moteur_java\n");
 		exit(1);
 	}
-
+	
+	TypIdentificationReq tirq;
+	TypIdentificationRep tirp;
+	TypPartieReq tprq;
+	TypPartieRep tprp;
+	TypCoupRep tcrp;
+	TypCoupReq tcrq;
+	printf("moi : tirq : %d\n", sizeof(tirq));
+	printf("arbitre : tirp : %d\n", sizeof(tirp));
+	printf("moi : tprq : %d\n", sizeof(tprq));
+	printf("arbitre : tprp : %d\n", sizeof(tprp));
+	printf("moi : tcrq : %d\n", sizeof(tcrq));
+	printf("arbitre : tcrp : %d\n", sizeof(tcrp));
+	
 	char machine[TAIL_CHAIN];
 	char moteurJava[TAIL_CHAIN];
 	strcpy(machine, argv[1]);
@@ -888,40 +926,46 @@ int main(int argc, char **argv){
 	RetourFonction retour;
 	
 	do {
-		fprintf(stdout, "Connexion au moteur Java\n");
+		fprintf(stdout, "\nC : Connexion au moteur Java\n");
 		retour = creationConnexion(moteurJava, portMoteurJava, &socketMoteurJava);
 		traitementSiErreur(retour);
-		sleep(1);
+		if(retour != CODE_OK)
+			sleep(1);
 	} while(retour != CODE_OK);
 	
 	do {
 		retour = identificationMoteurJava(socketMoteurJava);
 		traitementSiErreur(retour);
-		sleep(1);
+		if(retour != CODE_OK)
+			sleep(1);
 	} while(retour != CODE_OK);
 	
 	
 	do {
 		retour = creationConnexion(machine, port, &socket);
 		traitementSiErreur(retour);
-		sleep(1);
+		if(retour != CODE_OK)
+			sleep(1);
 	} while(retour != CODE_OK);
 
 	do {
 		retour = identification(socket, &idJoueur);
 		traitementSiErreur(retour);
-		sleep(1);
+		if(retour != CODE_OK)
+			sleep(1);
 	} while(retour != CODE_OK);
 
 	do {
 		retour = demandeNouvellePartie(socket, socketMoteurJava, idJoueur);
 		traitementSiErreur(retour);
-		sleep(1);
+		if(retour != CODE_OK && retour != FIN_DE_JEU && retour != RETOUR_NULLE_NOUVELLE_PARTIE 
+		  && retour != RETOUR_VICTOIRE_NOUVELLE_PARTIE && retour != RETOUR_DEFAITE_NOUVELLE_PARTIE)
+			sleep(1);
 		if(retour != FIN_DE_JEU)
-		    envoiMoteurJavaRestart(socketMoteurJava);
+			envoiMoteurJavaRestart(socketMoteurJava);
 	} while(retour != FIN_DE_JEU);
 	
-	fprintf(stdout, "Deconnexion du moteur Java\n");
+	fprintf(stdout, "C : Deconnexion du moteur Java\n");
 	deconnexion(socketMoteurJava);
 
 	return 0;
