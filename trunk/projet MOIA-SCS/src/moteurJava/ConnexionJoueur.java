@@ -91,21 +91,33 @@ public class ConnexionJoueur {
 						if(messageRecu.startsWith("restart") || messageRecu.startsWith("start")) {
 							modele.restart();
 							
-							System.out.println("JAVA : Demarrage d'une nouvelle partie");
+							System.out.println("JAVA : Demarrage d'une nouvelle partie\n");
 							
 							messageRecu = br.readLine();
 							
-							if(messageRecu.equals("commence"))
-								commencePartie = true;
-							else
-								commencePartie = false;
+							if(messageRecu.startsWith("commence") || messageRecu.startsWith("attend")) {
+								
+								if(messageRecu.startsWith("commence"))
+									commencePartie = true;
+								else
+									commencePartie = false;
+								
+								System.out.println("JAVA : commence : " + commencePartie + "\n\n");
+								
+								if(!commencePartie)
+									recoiCoups(br);
+								
+								messageRecu = "";
+							}
+							else {
+								buffer = new char[TAILLE_MAX_BUFFER];
+								nbCaractereRecu = br.read(buffer);
+								if(nbCaractereRecu > 0)
+									messageRecu = new String(buffer, 0, nbCaractereRecu);
+								else
+									messageRecu = "restart";
+							}
 							
-							System.out.println("JAVA : commence : " + commencePartie);
-							
-							if(!commencePartie)
-								recoiCoups(br);
-							
-							messageRecu = "";
 						}
 						else if(!messageRecu.startsWith("fin")) {
 							
@@ -122,6 +134,8 @@ public class ConnexionJoueur {
 							recoiCoups(br);
 							
 						}
+						else
+							messageRecu = "fin";
 					}
 				}
 				else
@@ -154,19 +168,21 @@ public class ConnexionJoueur {
 	 */
 	public void demandeCoups(OutputStream os) throws IOException {
 		
+		System.out.println("JAVA : Attente du coups de l'IA ....\n\n");
+		
 		coupsActuel = cp.demanderCoups();
 		
 		if(modele.valider(1, coupsActuel))
 			modele.jouer(1, coupsActuel);
 		else
-			System.out.println("Coup genere invalide : "+ coupsActuel.getReq());
-		
-		System.out.println(modele.plateauToString());
+			System.out.println("JAVA : Coup genere par l'IA invalide : "+ coupsActuel.getReq());
 		
 		if(modele.aGagne(1))
 			coupsActuel.setTypeCoups(Modele.GAGNE);
 		
-		System.out.println("envoie au joueur du coups " + coupsActuel.getReq());
+		System.out.println("JAVA : L'IA a choisi le coups : " + coupsActuel.getReq());
+		
+		System.out.println(modele.plateauToString());
 		
 		os.write(coupsActuel.getReq().getBytes());
 		
@@ -188,7 +204,7 @@ public class ConnexionJoueur {
 		
 		if(messageRecu.contains("[") && messageRecu.contains("]") && messageRecu.contains("-") && messageRecu.contains(",")) {
 			
-			System.out.println("JAVA : Reception du coups " + messageRecu);
+			System.out.println("JAVA : Reception du coups adverse : " + messageRecu);
 			
 			coupsActuel = new Coups(messageRecu);
 			if(modele.valider(2, coupsActuel))
@@ -198,7 +214,7 @@ public class ConnexionJoueur {
 			
 			System.out.println(modele.plateauToString());
 		}
-		else if(!messageRecu.startsWith("fin"))
+		else if(!messageRecu.startsWith("fin") && !messageRecu.startsWith("restart"))
 			System.out.println("JAVA : Le message recu n'est pas correctement forme : " + messageRecu);
 	
 	}
