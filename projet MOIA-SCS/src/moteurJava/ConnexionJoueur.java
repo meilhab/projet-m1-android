@@ -172,11 +172,10 @@ public class ConnexionJoueur {
 		
 		coupsActuel = cp.demanderCoups();
 		
-		if(modele.valider(1, coupsActuel))
-			modele.jouer(1, coupsActuel);
-		else
+		if(!modele.valider(1, coupsActuel))
 			System.out.println("JAVA : Coup genere par l'IA invalide : "+ coupsActuel.getReq());
-		
+        modele.jouer(1, coupsActuel);
+
 		if(modele.aGagne(1))
 			coupsActuel.setTypeCoups(Modele.GAGNE);
 		
@@ -207,10 +206,9 @@ public class ConnexionJoueur {
 			System.out.println("JAVA : Reception du coups adverse : " + messageRecu);
 			
 			coupsActuel = new Coups(messageRecu);
-			if(modele.valider(2, coupsActuel))
-				modele.jouer(2, coupsActuel);
-			else
+            if(!modele.valider(2, coupsActuel))
 				System.out.println("JAVA : Coup recu invalide : "+ coupsActuel.getReq());
+            modele.jouer(2, coupsActuel);
 			
 			System.out.println(modele.plateauToString());
 		}

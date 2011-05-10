@@ -30,8 +30,8 @@ adresseMoteurJava=localhost
 #export LD_LIBRARY_PATH=/applis/sicstus-3.11.2/lib/
 #export CLASSPATH=.:bin/moteurJava:/applis/sicstus-3.11.2/lib/sicstus-3.11.2/bin/jasper.jar #ou -cp <classpath>
 
-export LD_LIBRARY_PATH=/usr/local/sicstus4.1.3/lib/
-export CLASSPATH=.:bin/moteurJava:/usr/local/sicstus4.1.3/lib/sicstus-4.1.3/bin/jasper.jar #ou -cp <classpath>
+export LD_LIBRARY_PATH=/applis/sicstus-4.1.3/lib/
+export CLASSPATH=.:bin/moteurJava:/applis/sicstus-4.1.3/lib/sicstus-4.1.3/bin/jasper.jar #ou -cp <classpath>
 
 
 

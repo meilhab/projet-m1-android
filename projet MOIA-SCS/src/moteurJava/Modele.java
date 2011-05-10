@@ -347,7 +347,7 @@ public class Modele {
 			estValide = false;
 		else if((coups.getTypeCoups() == DEPLACE || coups.getTypeCoups() == PRISE) && (getPositionToJoueur(numJoueur, coups.getX1(), coups.getY1()) == null || getPositionToJoueur(1, coups.getX2(), coups.getY2()) != null || getPositionToJoueur(2, coups.getX2(), coups.getY2()) != null))
 			estValide = false;
-		else if((coups.getTypeCoups() == PRISE) && getPositionToJoueur(adversaire(numJoueur), coups.getX2emePion(), coups.getY2emePion()) == null)
+		else if((coups.getTypeCoups() == PRISE) && getPositionToJoueur(numJoueur, coups.getX2emePion(), coups.getY2emePion()) != null)
 			estValide = false;
 		else if((coups.getTypeCoups() == DEPLACE || coups.getTypeCoups() == PRISE) && getAnciennePositionDernierPion(numJoueur) != null && 
 				getDernierPionJoue(numJoueur) != null && getDernierPionJoue(numJoueur).getX() == coups.getCaseDepart().getX() && 
