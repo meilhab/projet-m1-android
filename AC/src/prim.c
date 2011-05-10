@@ -87,17 +87,14 @@ int extraireMinTab(int *tas[], int cle[], int *tailleTas) {
  */
 casErreur Prim(TypGraphe *graphe, int sommetDepart) {
 	
-	if(estNonOriente(graphe) < 1) {
-		  fprintf(stdout, "Votre graphe est oriente et ne peut donc pas");
-		  fprintf(stdout, " etre utilise par l'algorithme de prim\n");
-		  return;
-	}
+	if(estNonOriente(graphe) < 1) 
+		  return NON_ORIENTE;
 	
 	fprintf(stdout, "##################### ACM : ##################\n");
 	
 	int nbMaxSommets = graphe->nbMaxSommets;
 	int i = 0;
-	int j = 0;
+//	int j = 0;
 	int cle[nbMaxSommets];
 	int prec[nbMaxSommets];
 	int tas[nbMaxSommets];
@@ -255,3 +252,4 @@ int estNonOriente(TypGraphe *graphe) {
 	return estNonOriente;
 	
 }
+
