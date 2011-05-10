@@ -898,12 +898,12 @@ int main(int argc, char **argv){
 	TypPartieRep tprp;
 	TypCoupRep tcrp;
 	TypCoupReq tcrq;
-	printf("moi : tirq : %d\n", sizeof(tirq));
+/*	printf("moi : tirq : %d\n", sizeof(tirq));
 	printf("arbitre : tirp : %d\n", sizeof(tirp));
 	printf("moi : tprq : %d\n", sizeof(tprq));
 	printf("arbitre : tprp : %d\n", sizeof(tprp));
 	printf("moi : tcrq : %d\n", sizeof(tcrq));
-	printf("arbitre : tcrp : %d\n", sizeof(tcrp));
+	printf("arbitre : tcrp : %d\n", sizeof(tcrp));*/
 	
 	char machine[TAIL_CHAIN];
 	char moteurJava[TAIL_CHAIN];
