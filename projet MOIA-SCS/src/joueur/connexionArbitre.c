@@ -136,9 +136,6 @@ RetourFonction demandeNouvellePartie(int sock, int sockMoteurJava, int identifia
 	
 	int err2 = recv(sock, (void*) &rep, sizeof(rep), 0);
 	
-	printf("send : %d \n", err);
-	printf("recv : %d \n", err2);
-	
 	if(err < 0)
 		return ECHEC_ENVOI_NOUVELLE_PARTIE;
 	if(err2 < 0)
