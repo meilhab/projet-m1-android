@@ -140,7 +140,7 @@ void actionsMenu(TypGraphe** grapheCourant) {
 			break;
 			//ACM Prim
 		case PRIM:
-			lancerPrim(*grapheCourant, 0);
+			lancerPrim(*grapheCourant, 1);
 			break;
 			//Affichage du graphe
 		case AFFICHAGE :
@@ -264,6 +264,10 @@ void afficherErreur(casErreur erreur) {
 			strcpy(erreur2String, "Une arete fait reference a un sommet ");
 			strcat(erreur2String, "qui n'a pas été créé");
 			break;
+        case NON_ORIENTE :
+            strcpy(erreur2String, "Votre graphe est oriente et ne peut donc pas");
+            strcat(erreur2String, " etre utilise par l'algorithme de prim\n");
+            break;
 		default : break;
 
 	}
@@ -598,8 +602,24 @@ void lancerKruskal(TypGraphe *grapheCourant){
  *
  */
 void lancerPrim(TypGraphe *grapheCourant, int sommetDepart){
-	
-	casErreur erreur = Prim(grapheCourant, sommetDepart);
+/*
+    char choix;
+    do {
+        fprintf(stdout, "Choisir un sommet de depart ?(o/n)\n->");
+        scanf("%c", &choix);
+        clearScanf();
+    } while(choix !='o' && choix != 'n');
+
+    if(choix == 'o'){
+        do {
+            fprintf(stdout, "sommet de depart\n->");
+            scanf("%d", &sommetDepart);
+            clearScanf();
+        } while(sommetDepart - 1 < 0 || sommetDepart - 1 > grapheCourant->nbMaxSommets);
+    }*/
+
+
+	casErreur erreur = Prim(grapheCourant, sommetDepart - 1);
 	if(erreur != PAS_ERREUR)
 		afficherErreur(erreur);
 	
