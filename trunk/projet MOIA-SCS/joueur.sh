@@ -14,8 +14,8 @@ then
 	portArbitre=$2
 	adresseArbitre=$1
 else
-	portArbitre=2222
-	adresseArbitre=localhost
+	portArbitre=5000
+	adresseArbitre=lx12
 fi
 
 if [ $# -eq 3 ]
