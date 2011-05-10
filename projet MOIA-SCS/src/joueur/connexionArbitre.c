@@ -144,12 +144,6 @@ RetourFonction demandeNouvellePartie(int sock, int sockMoteurJava, int identifia
 	if(err2 < 0)
 		return ECHEC_RECEPTION_NOUVELLE_PARTIE;
 	
-	printf("rep.err : %d \n", rep.err);
-	printf("req.idRequest = %d\n", req.idRequest);
-	printf("req.joueur = %d\n", req.joueur);
-	printf("rep.finTournoi = %d\n", rep.finTournoi);
-	printf("rep.premier = %d\n", rep.premier);
-	
 	if(rep.err != ERR_OK)
 		return ECHEC_RETOUR_NOUVELLE_PARTIE;
 	
@@ -891,19 +885,6 @@ int main(int argc, char **argv){
 		fprintf(stderr, "   ou : ./connexionArbitre adresse_arbitre port_arbitre port_moteur_java adresse_moteur_java\n");
 		exit(1);
 	}
-	
-	TypIdentificationReq tirq;
-	TypIdentificationRep tirp;
-	TypPartieReq tprq;
-	TypPartieRep tprp;
-	TypCoupRep tcrp;
-	TypCoupReq tcrq;
-/*	printf("moi : tirq : %d\n", sizeof(tirq));
-	printf("arbitre : tirp : %d\n", sizeof(tirp));
-	printf("moi : tprq : %d\n", sizeof(tprq));
-	printf("arbitre : tprp : %d\n", sizeof(tprp));
-	printf("moi : tcrq : %d\n", sizeof(tcrq));
-	printf("arbitre : tcrp : %d\n", sizeof(tcrp));*/
 	
 	char machine[TAIL_CHAIN];
 	char moteurJava[TAIL_CHAIN];

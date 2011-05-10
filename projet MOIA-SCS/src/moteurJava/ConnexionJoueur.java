@@ -94,8 +94,11 @@ public class ConnexionJoueur {
 							System.out.println("JAVA : Demarrage d'une nouvelle partie\n");
 							
 							messageRecu = br.readLine();
-							
-							if(messageRecu.startsWith("commence") || messageRecu.startsWith("attend")) {
+						
+                            if(messageRecu == null)
+                                messageRecu = "fin";
+
+							else if(messageRecu.startsWith("commence") || messageRecu.startsWith("attend")) {
 								
 								if(messageRecu.startsWith("commence"))
 									commencePartie = true;
@@ -121,12 +124,12 @@ public class ConnexionJoueur {
 						}
 						else if(!messageRecu.startsWith("fin")) {
 							
-							
+							/*
 							try {
 								Thread.sleep(1000);
 							} catch (InterruptedException e) {
 								e.printStackTrace();
-							}
+							}*/
 							
 							
 							demandeCoups(os);
