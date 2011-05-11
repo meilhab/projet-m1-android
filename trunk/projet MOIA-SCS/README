@@ -8,13 +8,14 @@ La partie SCS (Java + C) se trouve dans le dossier src :
      - Java dans le dossier moteurJava
      - C dans le dossier joueur
 
+Prelude :
+Pensez a modifier les exports, au besoin, se trouvant dans les fichiers compile.sh et joueur.sh.
+Ces exports permettent de definir le chemin vers sicstus et jasper.
+
 compilation du programme : ./compile.sh
 
 lancement du joueur : ./joueur.sh
                  ou : ./joueur.sh <adresse_arbitre> <port_arbitre>
+                 ou : ./joueur.sh <adresse_arbitre> <port_arbitre> <port_moteur_java>
 
-#########################################################################################
-a demander :
-- que faire quand erreur pendant la partie ? quitter ou demander une nouvelle partie ?
-- Prise entraine forcément l'élimination d'un pion ? si pas d'autre pion adverse ? NULL ?
-#########################################################################################
+guillaume.laville@univ-fcomte.fr
