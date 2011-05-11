@@ -383,7 +383,7 @@ RetourFonction recevoirUnCoup(int sock, int sockMoteurJava, int *numeroCoup){
 	if(err < 0)
 		return ECHEC_RECEPTION_DERNIER_COUP_ADVERSAIRE;
 	
-	if(rep.validCoup != RETOUR_TIMEOUT_FIN_PARTIE && rep.validCoup != RETOUR_TRICHE_FIN_PARTIE) {
+	if(rep.validCoup != TIMEOUT && rep.validCoup != TRICHE) {
 		// reception du coup de l'adversaire
 		err = recv(sock, (void*) &req, sizeof(req), 0);
 		if(rep.err != ERR_OK)
