@@ -26,6 +26,19 @@
 %\usepackage{subfig}
 
 
+\setlength{\topmargin}{-6mm}
+\setlength{\textheight}{230mm}
+\setlength{\textwidth}{160mm}
+\setlength{\evensidemargin}{-5.45mm}
+\setlength{\oddsidemargin}{-5.45mm}
+ 
+\newcommand{\no}{n\textsuperscript{o}}
+\newcommand{\nos}{n\textsuperscript{os}}
+
+\renewcommand{\labelitemi}{---}
+\renewcommand{\labelitemii}{$\star$}
+
+
 \usepackage[pdftex, 					% Paramétrage de la navigation
 bookmarks = true, 						% Signets
 bookmarksnumbered = true, 				% Signets numérotés
@@ -66,9 +79,9 @@ pdfborder = {0 0 0} 					% Style de bordure : ici, rien
 
 % Pour les entetes de page
 \usepackage{fancyhdr}
-\pagestyle{fancy}
-\renewcommand{\sectionmark}[1]{\markboth{#1}{}} 
-\renewcommand{\subsectionmark}[1]{\markright{#1}} 
+%\pagestyle{fancy}
+%\renewcommand{\sectionmark}[1]{\markboth{#1}{}} 
+%\renewcommand{\subsectionmark}[1]{\markright{#1}} 
 
 \parskip=5pt %% distance entre les (paragraphe)
 \sloppy %% respecter toujours la marge de droite 
@@ -188,6 +201,9 @@ pdfborder = {0 0 0} 					% Style de bordure : ici, rien
 \pagenumbering{arabic} 
 \setcounter{page}{1} 
 
+\pagestyle{fancy}
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}} 
+\renewcommand{\sectionmark}[1]{\markright{#1}} 
 \input{Introduction}
 
 %\input{Presentation}
