@@ -6,7 +6,7 @@
 \usepackage[T1]{fontenc}
 \usepackage[latin1]{inputenc}
 \usepackage {lmodern}
-%\usepackage {picins} %image avec texte a côté
+\usepackage {picins} %image avec texte a côté
 \usepackage{url} % Pour avoir de belles url
 \usepackage {geometry}
 %\usepackage{slashbox} %backslash dans tableau
@@ -79,9 +79,7 @@ pdfborder = {0 0 0} 					% Style de bordure : ici, rien
 
 % Pour les entetes de page
 \usepackage{fancyhdr}
-%\pagestyle{fancy}
-%\renewcommand{\sectionmark}[1]{\markboth{#1}{}} 
-%\renewcommand{\subsectionmark}[1]{\markright{#1}} 
+
 
 \parskip=5pt %% distance entre les (paragraphe)
 \sloppy %% respecter toujours la marge de droite 
@@ -160,7 +158,6 @@ pdfborder = {0 0 0} 					% Style de bordure : ici, rien
 
 \date{
 	\begin{center} 
-		%\includegraphics[width=7cm,height=6cm]{ufr.jpeg}
 		\includegraphics{ufc.png}
 	\end{center}
 	\vspace{10mm}
@@ -183,13 +180,11 @@ pdfborder = {0 0 0} 					% Style de bordure : ici, rien
 
 \input{Abstract}
 
-\input{Acknowledgment}
+%\input{Acknowledgment}
 
 \tableofcontents
 \clearpage
 \newpage
-
-%\input{Remerciements}
 
 %\sommaire
 %\addcontentsline{toc}{chapter}{Sommaire}
@@ -204,19 +199,12 @@ pdfborder = {0 0 0} 					% Style de bordure : ici, rien
 \pagestyle{fancy}
 \renewcommand{\chaptermark}[1]{\markboth{#1}{}} 
 \renewcommand{\sectionmark}[1]{\markright{#1}} 
-\input{Introduction}
 
-%\input{Presentation}
+\input{Introduction}
 
 \input{Sujet}
 
 \input{Achievement}
-
-%\input{Cahier}
-
-%\input{Mise}
-
-%\input{Bilan}
 
 \input{Conclusion}
 
@@ -244,8 +232,6 @@ pdfborder = {0 0 0} 					% Style de bordure : ici, rien
 \clearpage
 \newpage
 
-%\input{Annexe}
-
 \printindex
 
 \appendix
@@ -258,8 +244,5 @@ pdfborder = {0 0 0} 					% Style de bordure : ici, rien
 \addcontentsline{toc}{chapter}{List des Figures}
 \clearpage
 
-\clearpage
-
-%\input{Couv}
 
 \end{document}
