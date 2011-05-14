@@ -20,11 +20,14 @@ The third part, the most important, was the development of a functional applicat
 
 When launching the application on his smartphone or on the emulator, the home screen below appears.
 
-\begin{figure}[!ht]
-    \centering
-    \includegraphics[height=6cm]{home.png}
-    \caption{Home Screen of the application}
-\end{figure}
+%\begin{figure}[!ht]
+%    \centering
+%    \parpic[r]{\includegraphics[height=6cm]{home.png}}
+%    \caption{Home Screen of the application}
+%\end{figure}
+
+\piccaption{Home Screen of the application}
+\parpic[r]{\includegraphics[height=6cm]{home.png}}
 
 \noindent The top bar displays the application name and the number of tasks it has.
 At the top of the homepage, is situated 3 buttons. Between them is displayed the name of the current task. The first button takes you back to the display of all root tasks (tasks that have no daughter). The second takes you back to the parent task and the third adds a new sub-task to the current task.
@@ -71,33 +74,32 @@ The management of preferences lets users modify settings of the application. To 
 
 \section{Add an user account}
 
+\piccaption{Add an user account}
+\parpic[r]{\includegraphics[height=6cm]{add_user.png}}
+
 Management is achieved through synchronization, including user accounts. Indeed, the server can save a list of tasks and tags associated with a user. Therefore, if the application user wants to synchronize its activities on the server, you must first create a user account using the menu "Add User".
 To do so, he enters the requested information (name, password, mail, ...), a message will indicate if the account has been created and if he wants to connect automatically. Otherwise, he can always connect later in the application preferences.
 
-\begin{figure}[!ht]
-    \centering
-    \includegraphics[height=6cm]{add_user.png}
-    \caption{Add an user account}
-\end{figure}
+\vspace{3cm}
 
 \section{Synchronization}
 
 There are already many task manager on the Android Market, but the main advantage of this application is that users can synchronize their tasks on a remote server.
 3 synchronization modes are available:
+
 \begin{description}
     \item[$\Rightarrow$ Overwrite] the server with the mobile;
     \item[$\Rightarrow$ Crush] the mobile data server;
     \item[$\Rightarrow$ Combining data] from the server with those of the smartphone.
 \end{description}
 
-\begin{figure}[!ht]
-    \centering
-    \includegraphics[height=6cm]{synchronise.png}
-    \caption{Choice of synchronization mode}
-\end{figure}
+\piccaption{Choice of synchronization mode}
+\parpic[r]{\includegraphics[height=6cm]{synchronise.png}}
 
-\noindent To synchronize its tasks on the remote server, the user must first create a user account (see previous section), then enter their username and password in the settings of the application (see chapter on preferences). He can, then, synchronize his tasks by going to the menu, then pressing "Sync" and then finally by selecting the mode of synchronization which he wishes.
+\noindent To synchronize its tasks on the remote server, the user must first create a user account (see previous section), then enter their username and password in the settings of the application (see chapter on preferences). He can, then, synchronize his tasks by going to the menu, then pressing "Synchronization" and then finally by selecting the mode of synchronization which he wishes.
 
 \noindent The data sent between the remote server and the smartphone are encoded in JSON\protect\footnote{JavaScript Object Notation}. The remote server has been coded in PHP\protect\footnote{Hypertext Preprocessor} during the project.
+
+\vspace{3cm}
 
 \clearpage
